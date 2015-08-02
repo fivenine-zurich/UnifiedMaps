@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="2.8.1">
+    <id>UnifiedMaps</id>
+    <version>0.0.0.1</version>
+    <title>UnifiedMaps</title>
+    <authors>Tobias Herrmann, Jan Humbel, Michael Höhn</authors>
+    <owners>fivenine digital</owners>
+    <licenseUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/fiveninedigital/UnifiedMaps/master/Icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Unified Maps provides a Xamarin.Froms map control for all major platforms.</description>
+    <summary>Unified Maps provides a Xamarin.Froms map control for all major platforms.</summary>
+    <tags>map portable pcl winrt android ios xamarin monoandroid monodroid xamarin.forms uap windows.universal</tags>
+    <releaseNotes>
+      1.0.0
+      ---------------------
+      - Initial version of the package
+    </releaseNotes>
+    <dependencies>
+      <group>
+        <dependency id="Xamarin.Forms" version="1.4.4.6392" />
+      </group>
+      <group targetFramework="MonoAndroid1.0">
+        <dependency id="Xamarin.GooglePlayServices.Maps" version="22.0.0.0" />
+        <dependency id="Xamarin.Forms" version="1.4.4.6392" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <!--PCL Profile259-->
+    <file src="bin\PCL\UnifiedMap.dll" target="lib\portable-net45+win+wpa81+wp80\" />
+    <file src="bin\PCL\UnifiedMap.xml" target="lib\portable-net45+win+wpa81+wp80\" />
+
+    <!--Xamarin.iOS Unified API-->
+    <file src="bin\Xamarin.iOS10\UnifiedMap*.dll" target="lib\Xamarin.iOS10\" />
+    <file src="bin\Xamarin.iOS10\UnifiedMap*.xml" target="lib\Xamarin.iOS10\" />
+
+    <!--Xamarin.Mac Unified API-->
+    <file src="bin\Xamarin.iOS10\UnifiedMap*.dll" target="lib\Xamarin.Mac20\" />
+    <file src="bin\Xamarin.iOS10\UnifiedMap*.xml" target="lib\Xamarin.Mac20\" />
+
+    <!--Xamarin Android-->
+    <file src="bin\monoandroid\UnifiedMap*.dll" target="lib\monoandroid\" />
+    <file src="bin\monoandroid\UnifiedMap*.xml" target="lib\monoandroid\" />
+
+    <!--Windows Storage (Windows Phone 8.1, Windows Store 8.1)-->
+    <file src="bin\Portable-Win81+Wpa81\UnifiedMap*.dll" target="lib\Portable-Win81+Wpa81\" />
+    <file src="bin\Portable-Win81+Wpa81\UnifiedMap*.xml" target="lib\Portable-Win81+Wpa81\" />
+
+  </files>
+</package>

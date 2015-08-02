@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:unifiedMaps="clr-namespace:fivenine.UnifiedMaps;assembly=UnifiedMap"
+             x:Class="Sample.MapPage"
+                  Title="UnifiedMaps Sample">
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu">
+            <StackLayout Orientation="Vertical">
+                <Button Text="Add Pin"></Button>     
+                <Button Text="Change map type"></Button>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <ContentPage Title="Map">
+            <unifiedMaps:UnifiedMap Pins="{Binding Pins}" PinCalloutTappedCommand="{Binding PinSelectedCommand}">
+            </unifiedMaps:UnifiedMap>
+        </ContentPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>
