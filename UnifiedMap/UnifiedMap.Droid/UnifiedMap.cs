@@ -6,7 +6,7 @@ using Android.Content;
 using Android.Gms.Maps;
 using Android.OS;
 using fivenine.UnifiedMaps.Droid;
-using static Android.Gms.Common.GooglePlayServicesUtil;
+using Android.Gms.Common;
 
 namespace fivenine
 {
@@ -23,7 +23,9 @@ namespace fivenine
             IsInitialized = true;
             Context = activity;
             UnifiedMapRenderer.Bundle = bundle;
-            if (IsGooglePlayServicesAvailable(Context) == 0)
+
+            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(Context);
+            if (resultCode == ConnectionResult.Success)
             {
                 try
                 {
@@ -34,6 +36,10 @@ namespace fivenine
                     Console.WriteLine("Google Play Services Not Found");
                     Console.WriteLine("Exception: {0}", ex);
                 }
+            }
+            else
+            {
+                Console.WriteLine("Google Play services not available");
             }
         }
     }
