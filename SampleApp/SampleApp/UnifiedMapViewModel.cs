@@ -14,11 +14,16 @@ namespace Sample
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly ICommand _pinSelectedCommand;
+        private readonly ICommand _changeMapTypeCommand;
+        private MapType _mapType = MapType.Street;
 
         public UnifiedMapViewModel()
         {
             _pinSelectedCommand =
                 new Command<MapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
+
+            _changeMapTypeCommand =
+                new Command<MapType>(m => MapDisplayType = m);
 
             Pins = new ObservableCollection<MapPin>(
                 new[]
@@ -59,6 +64,18 @@ namespace Sample
 
         public ObservableCollection<MapPin> Pins { get; set; }
 
+        public MapType MapDisplayType
+        {
+            get{ return _mapType;}
+            set 
+            {
+                _mapType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand PinSelectedCommand => _pinSelectedCommand;
+
+        public ICommand ChangeMapTypeCommand => _changeMapTypeCommand;
     }
 }

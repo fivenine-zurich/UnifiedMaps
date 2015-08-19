@@ -4,37 +4,19 @@ using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Droid;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Android.App;
-using Android.Runtime;
-using System;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.Droid
 {
-    public class UnifiedMapRenderer : ViewRenderer, GoogleMap.IOnCameraChangeListener, IJavaObject, IDisposable
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapView>, GoogleMap.IOnCameraChangeListener, IOnMapReadyCallback
     {
         private static Bundle _bundle;
+        private GoogleMap _googleMap;
 
         public UnifiedMapRenderer()
         {
             AutoPackage = false;
-        }
-
-        protected GoogleMap NativeMap
-        {
-            get
-            {
-                return ((MapView) this.Control).Map;
-            }
-        }
-
-        protected UnifiedMap Map
-        {
-            get
-            {
-                return (UnifiedMap) Element;
-            }
         }
 
         internal static Bundle Bundle
@@ -44,36 +26,62 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void OnMapReady(GoogleMap googleMap)
         {
-            
+            _googleMap = googleMap;
         }
 
         public void OnCameraChange(Android.Gms.Maps.Model.CameraPosition position)
         {
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<View> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
             base.OnElementChanged(e);
 
-            MapView mapView1 = (MapView)this.Control;
-            MapView mapView2 = new MapView(((Android.Views.View) this).Context);
-
-            mapView2.OnCreate(_bundle);
-            mapView2.OnResume();
-            SetNativeControl(mapView2);
             if (e.OldElement != null)
             {
-                if (mapView1.Map != null)
+                if(_googleMap != null )
                 {
+                    _googleMap.Dispose();
                 }
-                ((Java.Lang.Object) mapView1).Dispose();
             }
-            GoogleMap nativeMap = this.NativeMap;
-            if (nativeMap != null)
+
+            var mapView = new MapView(Context);
+
+            mapView.OnCreate(_bundle);
+            mapView.OnResume();
+
+            SetNativeControl(mapView);
+
+            mapView.GetMapAsync(this);
+        }
+
+        protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            UpdateMapType();
+        }
+
+        private void UpdateMapType()
+        {
+            if (_googleMap == null)
             {
-                nativeMap.SetOnCameraChangeListener((GoogleMap.IOnCameraChangeListener) this);
-                GoogleMap googleMap = nativeMap;
-                bool isShowingUser;
+                return;
+            }
+
+            switch (Element.MapType)
+            {
+                case MapType.Street:
+                    _googleMap.MapType = GoogleMap.MapTypeNormal;
+                    break;
+                case MapType.Satellite:
+                    _googleMap.MapType = GoogleMap.MapTypeSatellite;
+                    break;
+                case MapType.Hybrid:
+                    _googleMap.MapType = GoogleMap.MapTypeHybrid;
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -15,7 +15,8 @@
         <ContentPage Title="Map">
             <StackLayout>
                 <unifiedMaps:UnifiedMap 
-                    Pins="{Binding Pins}" 
+                    Pins="{Binding Pins}"
+                    MapType="{Binding MapDisplayType}" 
                     PinCalloutTappedCommand="{Binding PinSelectedCommand}"
                     HeightRequest="100"
                     WidthRequest="960"
@@ -28,9 +29,9 @@
                     HorizontalOptions="CenterAndExpand"
                     Spacing="30">
 
-                    <Button Text="Street" />
-                    <Button Text="Satellite" />
-                    <Button Text="Hybrid" />
+                    <Button Text="Street" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Street}" />
+                    <Button Text="Satellite" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Satellite}" />
+                    <Button Text="Hybrid" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Hybrid}" />
 
                 </StackLayout>
             </StackLayout>
