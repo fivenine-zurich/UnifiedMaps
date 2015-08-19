@@ -20,6 +20,7 @@ namespace fivenine
         {
             if (IsInitialized)
                 return;
+            
             IsInitialized = true;
             Context = activity;
             UnifiedMapRenderer.Bundle = bundle;

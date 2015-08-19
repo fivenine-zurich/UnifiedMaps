@@ -8,14 +8,32 @@
         <ContentPage Title="Menu">
             <StackLayout Orientation="Vertical">
                 <Button Text="Add Pin"></Button>     
-                <Button Text="Change map type"></Button>
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>
     <MasterDetailPage.Detail>
         <ContentPage Title="Map">
-            <unifiedMaps:UnifiedMap Pins="{Binding Pins}" PinCalloutTappedCommand="{Binding PinSelectedCommand}">
-            </unifiedMaps:UnifiedMap>
+            <StackLayout>
+                <unifiedMaps:UnifiedMap 
+                    Pins="{Binding Pins}" 
+                    PinCalloutTappedCommand="{Binding PinSelectedCommand}"
+                    HeightRequest="100"
+                    WidthRequest="960"
+                    VerticalOptions="FillAndExpand"
+                    >
+                </unifiedMaps:UnifiedMap>
+
+                <StackLayout 
+                    Orientation="Horizontal"
+                    HorizontalOptions="CenterAndExpand"
+                    Spacing="30">
+
+                    <Button Text="Street" />
+                    <Button Text="Satellite" />
+                    <Button Text="Hybrid" />
+
+                </StackLayout>
+            </StackLayout>
         </ContentPage>
     </MasterDetailPage.Detail>
 </MasterDetailPage>
