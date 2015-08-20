@@ -138,7 +138,8 @@ namespace fivenine.UnifiedMaps.iOS
             {
                 Data = pin,
                 Title = pin.Title,
-                Coordinate = new CLLocationCoordinate2D(pin.Location.Latitude, pin.Location.Longitude)
+                Subtitle = pin.Snippet,
+                Coordinate = new CLLocationCoordinate2D(pin.Location.Latitude, pin.Location.Longitude),
             };
 
             pin.Id = mapPin;

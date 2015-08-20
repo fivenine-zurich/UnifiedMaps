@@ -45,6 +45,7 @@ namespace Sample
                     new MapPin
                     {
                         Title = "Zürich",
+                        Snippet = "It's awesome",
                         Location = new Position(47.3667, 8.5500),
                         Color = PinColor.Purple
                     },

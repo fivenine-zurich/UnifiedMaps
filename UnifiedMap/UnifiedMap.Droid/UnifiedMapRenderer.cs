@@ -167,6 +167,7 @@ namespace fivenine.UnifiedMaps.Droid
             mapPin.SetTitle(pin.Title);
             mapPin.SetPosition(new LatLng(pin.Location.Latitude, pin.Location.Longitude));
             mapPin.SetIcon(pin.Color.ToStandardMarkerIcon());
+            mapPin.SetSnippet(pin.Snippet);
 
             var marker = _googleMap.AddMarker(mapPin);
             _markers.AddLast(new Tuple<Marker, MapPin>(marker, pin));
