@@ -1,8 +1,15 @@
-﻿using System.Windows.Input;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
 {
+    public enum PinColor
+    {
+        Default,
+        Red,
+        Green,
+        Purple
+    }
+
     /// <summary>
     /// A map pin annotation.
     /// </summary>
@@ -13,6 +20,9 @@ namespace fivenine.UnifiedMaps
 
         public static readonly BindableProperty TitleProperty = BindableProperty.Create("Title",
             typeof (string), typeof (MapPin), null);
+
+        public static readonly BindableProperty ColorProperty = BindableProperty.Create("Color",
+            typeof(PinColor), typeof(MapPin), PinColor.Default);
 
         /// <summary>
         /// Gets or sets the title of the MapPin.
@@ -36,6 +46,18 @@ namespace fivenine.UnifiedMaps
         {
             get { return (Position) GetValue(PositionProperty); }
             set { SetValue(PositionProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the color of the MapPin.
+        /// </summary>
+        /// <value>
+        /// The color.
+        /// </value>
+        public PinColor Color
+        {
+            get { return (PinColor) GetValue(ColorProperty); }
+            set { SetValue(ColorProperty, value); }
         }
     }
 }

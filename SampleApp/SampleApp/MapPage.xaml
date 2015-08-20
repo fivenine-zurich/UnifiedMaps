@@ -5,9 +5,12 @@
              x:Class="Sample.MapPage"
                   Title="UnifiedMaps Sample">
     <MasterDetailPage.Master>
-        <ContentPage Title="Menu">
+        <ContentPage 
+            Title="Menu"
+            Icon="settings.png">
             <StackLayout Orientation="Vertical">
-                <Button Text="Add Pin"></Button>     
+                <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
+                <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" /> 
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>

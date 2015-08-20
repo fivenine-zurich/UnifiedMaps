@@ -28,6 +28,7 @@ namespace fivenine.UnifiedMaps.iOS
                              new MKPinAnnotationView(annotation, PinIdentifier)
                              {
                                  CanShowCallout = string.IsNullOrWhiteSpace(pinAnnotation.Data.Title) == false,
+                                 PinColor = pinAnnotation.Data.Color.ToMKPinAnnotationColor()
                              };
 
                 if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null )

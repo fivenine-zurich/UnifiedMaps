@@ -3337,14 +3337,17 @@ namespace SampleApp.Droid
 			// aapt resource value: 0x7f02007f
 			public const int mr_ic_settings_light = 2130837631;
 			
-			// aapt resource value: 0x7f020082
-			public const int notification_template_icon_bg = 2130837634;
+			// aapt resource value: 0x7f020083
+			public const int notification_template_icon_bg = 2130837635;
 			
 			// aapt resource value: 0x7f020080
 			public const int powered_by_google_dark = 2130837632;
 			
 			// aapt resource value: 0x7f020081
 			public const int powered_by_google_light = 2130837633;
+			
+			// aapt resource value: 0x7f020082
+			public const int settings = 2130837634;
 			
 			static Drawable()
 			{

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using CoreLocation;
-using fivenine.UnifiedMaps;
-using fivenine.UnifiedMaps.iOS;
-using Foundation;
 using MapKit;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+
+using fivenine.UnifiedMaps;
+using fivenine.UnifiedMaps.iOS;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -21,15 +25,12 @@ namespace fivenine.UnifiedMaps.iOS
 
             if (e.OldElement != null)
             {
-                if (Element.Pins != null)
-                {
-                    Element.Pins.CollectionChanged -= PinsOnCollectionChanged;
-                }
+                RemoveEvents(e.OldElement);
             }
 
-            if( e.NewElement == null)
+            if (e.NewElement != null)
             {
-                return;
+                RegisterEvents(e.NewElement);
             }
 
             if (Control == null)
@@ -41,23 +42,19 @@ namespace fivenine.UnifiedMaps.iOS
 
                 SetNativeControl(map);
 
-                MessagingCenter.Subscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion,
-                    (unifiedMap, span) =>
-                    {
-                        if (unifiedMap.LastMoveToRegion != null)
-                        {
-                            MoveToRegion(unifiedMap.LastMoveToRegion, false);
-                        }
-                    });
-
                 UpdateMapType();
 
-                if (Element.Pins != null)
-                {
-                    Element.Pins.CollectionChanged += PinsOnCollectionChanged;
-                }
-
                 LoadPins();
+            }
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+
+            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
+            {
+                UpdateMapType();
             }
         }
 
@@ -65,13 +62,7 @@ namespace fivenine.UnifiedMaps.iOS
         {
             if (disposing)
             {
-                if (Element != null)
-                {
-                    var unifiedMap = Element;
-
-                    MessagingCenter.Unsubscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion);
-                    unifiedMap.Pins.CollectionChanged -= PinsOnCollectionChanged;
-                }
+                RemoveEvents(Element);
 
                 if (Control != null)
                 {
@@ -80,6 +71,33 @@ namespace fivenine.UnifiedMaps.iOS
             }
 
             base.Dispose(disposing);
+        }
+
+        private void RegisterEvents(UnifiedMap map)
+        {
+            if (map.Pins != null)
+            {
+                map.Pins.CollectionChanged += PinsOnCollectionChanged;
+            }
+
+            MessagingCenter.Subscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion,
+            (unifiedMap, span) =>
+            {
+                if (unifiedMap.LastMoveToRegion != null)
+                {
+                    MoveToRegion(unifiedMap.LastMoveToRegion, false);
+                }
+            });
+        }
+
+        private void RemoveEvents(UnifiedMap map)
+        {
+            MessagingCenter.Unsubscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion);
+
+            if (map.Pins != null)
+            {
+                map.Pins.CollectionChanged -= PinsOnCollectionChanged;
+            }
         }
 
         private void MoveToRegion(MapRegion mapRegion, bool animated = true)
@@ -106,7 +124,11 @@ namespace fivenine.UnifiedMaps.iOS
                     Control.MapType = MKMapType.Hybrid;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                {
+                    Control.MapType = MKMapType.Standard;
+                    Debug.Fail(string.Format("The map type {0} is not supported on iOS, falling back to Standard", Element.MapType));
+                    break;
+                }
             }
         }
 
@@ -123,6 +145,15 @@ namespace fivenine.UnifiedMaps.iOS
             Control.AddAnnotation(mapPin);
         }
 
+        private void RemovePin(MapPin pin)
+        {
+            var pins = Control.Annotations
+                .OfType<UnifiedPointAnnotation>()
+                .Where( point => point.Data == pin);
+
+            Control.RemoveAnnotations(pins.ToArray());
+        }
+
         private void LoadPins()
         {
             foreach (var pin in Element.Pins)
@@ -136,20 +167,24 @@ namespace fivenine.UnifiedMaps.iOS
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    foreach (var item in e.NewItems)
                     {
-                        CreatePin((MapPin) item);
-                    }
+                        foreach (var item in e.NewItems)
+                        {
+                            CreatePin((MapPin)item);
+                        }
 
-                    break;
-                }
-                case NotifyCollectionChangedAction.Move:
-                    break;
+                        break;
+                    }
                 case NotifyCollectionChangedAction.Remove:
-                    break;
+                    {
+                        foreach (var item in e.OldItems)
+                        {
+                            RemovePin((MapPin)item);
+                        }
+                        break;
+                    }
+                case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     break;
                 default:
