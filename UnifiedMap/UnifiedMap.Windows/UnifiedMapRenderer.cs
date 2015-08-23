@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using Windows.Devices.Geolocation;
 using Windows.UI.Xaml.Controls.Maps;
+using Windows.UI.Xaml.Shapes;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
@@ -22,11 +25,16 @@ namespace fivenine.UnifiedMaps.Windows
                 map.Loaded += OnControlLoaded;
 
                 SetNativeControl(map);
+            }
+        }
 
-                Element.Pins.CollectionChanged += OnPinsCollectionChanged;
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
 
+            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
+            {
                 UpdateMapType();
-                LoadPins();
             }
         }
 
@@ -64,6 +72,11 @@ namespace fivenine.UnifiedMaps.Windows
             {
                 Control.MapServiceToken = serviceToken;
             }
+
+            Element.Pins.CollectionChanged += OnPinsCollectionChanged;
+
+            UpdateMapType();
+            LoadPins();
         }
 
         private void LoadPin(MapPin pin)
@@ -103,7 +116,11 @@ namespace fivenine.UnifiedMaps.Windows
                     Control.Style = MapStyle.AerialWithRoads;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                {
+                    Control.Style = MapStyle.Road;
+                    Debug.Fail($"The map type {Element.MapType} is not supported on Windows, falling back to Road");
+                    break;
+                }
             }
         }
     }

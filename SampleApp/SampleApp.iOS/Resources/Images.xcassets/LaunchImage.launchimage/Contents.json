@@ -2,44 +2,58 @@
   "images": [
     {
       "orientation": "portrait",
-      "idiom": "iphone",
       "extent": "full-screen",
-      "filename": "Default.png",
-      "size": "320x480",
-      "scale": "1x"
+      "minimum-system-version": "7.0",
+      "idiom": "iphone",
+      "scale": "2x",
+      "filename": "LaunchImage-Default@2x~iphone_640x960.png",
+      "size": "640x960"
     },
     {
       "orientation": "portrait",
-      "idiom": "iphone",
       "extent": "full-screen",
-      "filename": "Default@2x.png",
-      "size": "320x480",
-      "scale": "2x"
-    },
-    {
-      "orientation": "portrait",
-      "idiom": "iphone",
-      "extent": "full-screen",
-      "filename": "Default-568h@2x.png",
-      "size": "320x568",
+      "minimum-system-version": "7.0",
       "subtype": "retina4",
-      "scale": "2x"
+      "idiom": "iphone",
+      "scale": "2x",
+      "filename": "LaunchImage-Default-568h@2x~iphone_640x1136.png",
+      "size": "640x1136"
     },
     {
       "orientation": "portrait",
-      "idiom": "ipad",
       "extent": "full-screen",
-      "filename": "Default-Portrait.png",
-      "size": "768x1004",
-      "scale": "1x"
+      "minimum-system-version": "7.0",
+      "idiom": "ipad",
+      "scale": "1x",
+      "filename": "LaunchImage-Default-Portrait~ipad_768x1024.png",
+      "size": "768x1024"
     },
     {
       "orientation": "portrait",
-      "idiom": "ipad",
       "extent": "full-screen",
-      "filename": "Default-Portrait@2x.png",
-      "size": "768x1004",
-      "scale": "2x"
+      "minimum-system-version": "7.0",
+      "idiom": "ipad",
+      "scale": "2x",
+      "filename": "LaunchImage-Default-Portrait@2x~ipad_1536x2048.png",
+      "size": "1536x2048"
+    },
+    {
+      "orientation": "landscape",
+      "extent": "full-screen",
+      "minimum-system-version": "7.0",
+      "idiom": "ipad",
+      "scale": "1x",
+      "filename": "LaunchImage-Default-Landscape~ipad_1024x768.png",
+      "size": "1024x768"
+    },
+    {
+      "orientation": "landscape",
+      "extent": "full-screen",
+      "minimum-system-version": "7.0",
+      "idiom": "ipad",
+      "scale": "2x",
+      "filename": "LaunchImage-Default-Landscape@2x~ipad_2048x1536.png",
+      "size": "2048x1536"
     }
   ],
   "info": {

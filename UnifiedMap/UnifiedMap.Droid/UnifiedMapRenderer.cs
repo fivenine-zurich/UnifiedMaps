@@ -9,6 +9,7 @@ using System;
 using Android.Gms.Maps.Model;
 using System.Collections.Generic;
 using System.Linq;
+using Android.Util;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -71,11 +72,7 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 var element = e.OldElement;
 
-                if (_googleMap != null)
-                {
-                    _googleMap.Dispose();
-                }
-
+                _googleMap?.Dispose();
                 RemoveEvents(element);
             }
 
@@ -153,7 +150,11 @@ namespace fivenine.UnifiedMaps.Droid
                     _googleMap.MapType = GoogleMap.MapTypeHybrid;
                     break;
                 default:
+                {
+                    _googleMap.MapType = GoogleMap.MapTypeNormal;
+                    Log.Error("error", $"The map type {Element.MapType} is not supported on Android, falling back to Street");
                     break;
+                }
             }
         }
 

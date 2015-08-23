@@ -126,7 +126,7 @@ namespace fivenine.UnifiedMaps.iOS
                 default:
                 {
                     Control.MapType = MKMapType.Standard;
-                    Debug.Fail(string.Format("The map type {0} is not supported on iOS, falling back to Standard", Element.MapType));
+                    Debug.Fail($"The map type {Element.MapType} is not supported on iOS, falling back to Standard");
                     break;
                 }
             }

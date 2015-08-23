@@ -33,15 +33,27 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public class MapPin : MapItem
     {
+        /// <summary>
+        /// The position property.
+        /// </summary>
         public static readonly BindableProperty PositionProperty = BindableProperty.Create("Location",
             typeof(Position), typeof(MapPin), new Position());
 
+        /// <summary>
+        /// The title property.
+        /// </summary>
         public static readonly BindableProperty TitleProperty = BindableProperty.Create("Title",
             typeof (string), typeof (MapPin), null);
 
+        /// <summary>
+        /// The color property.
+        /// </summary>
         public static readonly BindableProperty ColorProperty = BindableProperty.Create("Color",
             typeof(PinColor), typeof(MapPin), PinColor.Default);
 
+        /// <summary>
+        /// The snippet property.
+        /// </summary>
         public static readonly BindableProperty SnippetProperty = BindableProperty.Create("Snippet",
             typeof (string), typeof (MapPin), null);
 
