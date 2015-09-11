@@ -7,7 +7,7 @@ namespace Sample
         public App()
         {
             BindingContext = new UnifiedMapViewModel();
-            MainPage = new MapPage();
+            MainPage = new HomeView();
         }
 
         protected override void OnStart()

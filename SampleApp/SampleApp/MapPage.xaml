@@ -1,43 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:unifiedMaps="clr-namespace:fivenine.UnifiedMaps;assembly=UnifiedMap"
              x:Class="Sample.MapPage"
-                  Title="UnifiedMaps Sample">
-    <MasterDetailPage.Master>
-        <ContentPage 
-            Title="Menu"
-            Icon="settings.png">
-            <StackLayout Orientation="Vertical">
-                <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
-                <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" /> 
-            </StackLayout>
-        </ContentPage>
-    </MasterDetailPage.Master>
-    <MasterDetailPage.Detail>
-        <ContentPage Title="Map">
-            <StackLayout>
-                <unifiedMaps:UnifiedMap 
-                    Pins="{Binding Pins}"
-                    MapType="{Binding MapDisplayType}" 
-                    PinCalloutTappedCommand="{Binding PinSelectedCommand}"
-                    HeightRequest="100"
-                    WidthRequest="960"
-                    VerticalOptions="FillAndExpand"
-                    >
-                </unifiedMaps:UnifiedMap>
+             Title="UnifiedMaps Sample">
+    <StackLayout>
+        <unifiedMaps:UnifiedMap 
+            Pins="{Binding Pins}"
+            MapType="{Binding MapDisplayType}" 
+            PinCalloutTappedCommand="{Binding PinSelectedCommand}"
+            HeightRequest="100"
+            WidthRequest="960"
+            VerticalOptions="FillAndExpand"
+            >
+        </unifiedMaps:UnifiedMap>
 
-                <StackLayout 
-                    Orientation="Horizontal"
-                    HorizontalOptions="CenterAndExpand"
-                    Spacing="30">
+        <StackLayout 
+            Orientation="Horizontal"
+            HorizontalOptions="CenterAndExpand"
+            Spacing="30">
 
-                    <Button Text="Street" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Street}" />
-                    <Button Text="Satellite" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Satellite}" />
-                    <Button Text="Hybrid" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Hybrid}" />
+            <Button Text="Street" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Street}" />
+            <Button Text="Satellite" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Satellite}" />
+            <Button Text="Hybrid" Command="{Binding ChangeMapTypeCommand}" CommandParameter="{x:Static unifiedMaps:MapType.Hybrid}" />
 
-                </StackLayout>
-            </StackLayout>
-        </ContentPage>
-    </MasterDetailPage.Detail>
-</MasterDetailPage>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

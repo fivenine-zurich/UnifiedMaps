@@ -88,72 +88,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-60@2x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-60@3x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-76.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-76@2x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small-40.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small-40@2x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small-40@3x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small@2x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/AppIcons.appiconset/Icon-Small@3x.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default-568h@2x~iphone_640x1136.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default-Landscape@2x~ipad_2048x1536.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default-Landscape~ipad_1024x768.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default-Portrait@2x~ipad_1536x2048.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default-Portrait~ipad_768x1024.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/iOS@%25Resources@%25splash@%25Default@2x~iphone_640x960.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default-568h@2x~iphone_640x1136.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default-Landscape@2x~ipad_2048x1536.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default-Landscape~ipad_1024x768.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default-Portrait@2x~ipad_1536x2048.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default-Portrait~ipad_768x1024.png">
-      <InProject>false</InProject>
-    </ImageAsset>
-    <ImageAsset Include="Resources/Images.xcassets/LaunchImage.launchimage/LaunchImage-Default@2x~iphone_640x960.png">
-      <InProject>false</InProject>
-    </ImageAsset>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
       <InProject>false</InProject>
     </ImageAsset>
@@ -205,6 +139,18 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-Portrait%402x.png">
       <InProject>false</InProject>
     </ImageAsset>
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default-568h%402x~iphone_640x1136.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default-Landscape%402x~ipad_2048x1536.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default-Landscape~ipad_1024x768.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default-Portrait%402x~ipad_1536x2048.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default-Portrait~ipad_768x1024.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\iOS%40%25Resources%40%25splash%40%25Default%402x~iphone_640x960.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default-568h%402x~iphone_640x1136.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default-Landscape%402x~ipad_2048x1536.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default-Landscape~ipad_1024x768.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default-Portrait%402x~ipad_1536x2048.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default-Portrait~ipad_768x1024.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\LaunchImage-Default%402x~iphone_640x960.png" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\ITunesArtwork" />
