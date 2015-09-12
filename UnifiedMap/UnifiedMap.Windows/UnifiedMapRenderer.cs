@@ -2,9 +2,9 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using Windows.Devices.Geolocation;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Shapes;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
@@ -51,14 +51,21 @@ namespace fivenine.UnifiedMaps.Windows
 
                     break;
                 }
-                case NotifyCollectionChangedAction.Move:
-                    break;
+
                 case NotifyCollectionChangedAction.Remove:
+                {
+                    foreach (var item in e.OldItems)
+                    {
+                        RemovePin((MapPin) item);
+                    }
                     break;
+                }
+
+                case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
-                    break;
                 case NotifyCollectionChangedAction.Reset:
-                    break;
+                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -91,6 +98,7 @@ namespace fivenine.UnifiedMaps.Windows
                 })
             };
 
+            pin.Id = mapPin;
             Control.MapElements.Add(mapPin);
         }
 
@@ -99,6 +107,19 @@ namespace fivenine.UnifiedMaps.Windows
             foreach (var pin in Element.Pins)
             {
                 LoadPin(pin);
+            }
+        }
+
+        private void RemovePin(MapPin pin)
+        {
+            var pins = Control.MapElements
+                .OfType<MapIcon>()
+                .Where(point => point == pin.Id)
+                .ToArray();
+
+            foreach (var icon in pins)
+            {
+                Control.MapElements.Remove(icon);
             }
         }
 

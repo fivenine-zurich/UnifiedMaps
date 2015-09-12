@@ -206,7 +206,7 @@ namespace fivenine.UnifiedMaps.Droid
                 {
                     foreach (var item in e.NewItems)
                     {
-                        CreatePin((MapPin)item);
+                        CreatePin((MapPin) item);
                     }
 
                     break;
@@ -215,14 +215,15 @@ namespace fivenine.UnifiedMaps.Droid
                 {
                     foreach (var item in e.OldItems)
                     {
-                        RemovePin((MapPin)item);
+                        RemovePin((MapPin) item);
                     }
                     break;
                 }
                 case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
-                    break;
+                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

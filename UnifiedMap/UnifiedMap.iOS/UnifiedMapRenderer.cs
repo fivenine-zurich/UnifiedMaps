@@ -168,26 +168,26 @@ namespace fivenine.UnifiedMaps.iOS
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
+                {
+                    foreach (var item in e.NewItems)
                     {
-                        foreach (var item in e.NewItems)
-                        {
-                            CreatePin((MapPin)item);
-                        }
+                        CreatePin((MapPin) item);
+                    }
 
-                        break;
-                    }
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
+                {
+                    foreach (var item in e.OldItems)
                     {
-                        foreach (var item in e.OldItems)
-                        {
-                            RemovePin((MapPin)item);
-                        }
-                        break;
+                        RemovePin((MapPin) item);
                     }
+                    break;
+                }
                 case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
-                    break;
+                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
