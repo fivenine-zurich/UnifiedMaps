@@ -45,6 +45,17 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RemoveEvents(Element);
+                Control.Loaded -= OnControlLoaded;
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)

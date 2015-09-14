@@ -10,6 +10,7 @@ using Android.Gms.Maps.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Android.Util;
+using Java.Lang;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -44,6 +45,8 @@ namespace fivenine.UnifiedMaps.Droid
             // Initialize the new map control
             UpdateMapType();
             LoadPins();
+
+
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -78,12 +81,7 @@ namespace fivenine.UnifiedMaps.Droid
 
             if( e.NewElement != null )
             {
-                var element = e.NewElement;
-
-                if( element.Pins != null )
-                {
-                    element.Pins.CollectionChanged += PinsOnCollectionChanged;
-                }
+                RegisterEvents(e.NewElement);
 
                 if( Control == null )
                 {
@@ -125,11 +123,47 @@ namespace fivenine.UnifiedMaps.Droid
             base.Dispose(disposing);
         }
 
+        private void RegisterEvents(UnifiedMap map)
+        {
+            if (map.Pins != null)
+            {
+                map.Pins.CollectionChanged += PinsOnCollectionChanged;
+            }
+
+            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
+                (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
+        }
+
         private void RemoveEvents(UnifiedMap map)
         {
             if (map.Pins != null)
             {
                 map.Pins.CollectionChanged -= PinsOnCollectionChanged;
+            }
+        }
+
+        private void MoveToRegion(MapRegion region, bool animated)
+        {
+            if (_googleMap == null)
+            {
+                return;
+            }
+
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
+
+            try
+            {
+                if (animated)
+                {
+                    _googleMap.AnimateCamera(cameraUpdate);
+                }
+                else
+                {
+                    _googleMap.MoveCamera(cameraUpdate);
+                }
+            }
+            catch (IllegalStateException)
+            {
             }
         }
 
