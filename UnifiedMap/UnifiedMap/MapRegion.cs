@@ -23,6 +23,11 @@ namespace fivenine.UnifiedMaps
             maxX = maxY = double.MinValue;
             minX = minY = double.MaxValue;
 
+            if (positions.Length == 0)
+            {
+                return new MapRegion(-180, 90, 180, -90);
+            }
+
             foreach (var position in positions)
             {
                 maxX = Math.Max(maxX, position.Longitude);
@@ -56,20 +61,11 @@ namespace fivenine.UnifiedMaps
         /// <param name="minY">Minimium Y value (latitude), southern most coordinate.</param>
         public MapRegion(double minX, double maxY, double maxX, double minY)
         {
-            _height = maxY - minY;
-            _width = (maxX - minX) % 360;
+            _height = Math.Abs(maxY - minY)%180;
+            _width = Math.Abs(maxX - minX)%360;
 
             var cLat = maxY - _height / 2;
             var cLon = minX + _width / 2;
-
-            if (cLon > 180)
-            {
-                cLon -= 360;
-            }
-            else if (cLon < -180)
-            {
-                cLon += 360;
-            }
 
             _center = new Position(cLat, cLon);
         }

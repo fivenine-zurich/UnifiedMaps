@@ -14,6 +14,7 @@
             </ContentView>
 
             <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
-            <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" /> 
+            <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" />
+            <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
         </StackLayout>
 </ContentPage>

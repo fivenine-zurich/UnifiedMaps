@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="UnifiedMapDelegate.cs" />
     <Compile Include="UnifiedMap.cs" />
+    <Compile Include="UnifiedMapExtensions.cs" />
     <Compile Include="UnifiedMapRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnifiedPointAnnotation.cs" />

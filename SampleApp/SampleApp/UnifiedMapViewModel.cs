@@ -19,6 +19,7 @@ namespace Sample
         private readonly ICommand _changeMapTypeCommand;
         private readonly Command _addPinCommand;
         private readonly Command _removePinCommand;
+        private readonly ICommand _moveToRegionCommand;
 
         private readonly LinkedList<MapPin> _allPins;
         private MapType _mapType = MapType.Street;
@@ -37,6 +38,9 @@ namespace Sample
             _removePinCommand =
                 new Command(RemovePin, o => Pins.Any());
 
+            _moveToRegionCommand =
+                new Command(() => Map.MoveToRegion(animated: true));
+      
             _allPins = new LinkedList<MapPin>(
                 new []
                 {
@@ -82,6 +86,8 @@ namespace Sample
             AddPin(null);
         }
 
+        internal UnifiedMap Map { get; set; }
+
         public ObservableCollection<MapPin> Pins { get; set; }
 
         public MapType MapDisplayType
@@ -102,6 +108,8 @@ namespace Sample
 
         public ICommand RemovePinCommand => _removePinCommand;
 
+        public ICommand MoveToRegionCommand => _moveToRegionCommand;
+        
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

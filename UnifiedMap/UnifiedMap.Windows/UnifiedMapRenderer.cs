@@ -8,9 +8,9 @@ using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Data;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
 using Binding = Windows.UI.Xaml.Data.Binding;
 
@@ -78,7 +78,7 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void OnControlLoaded(object sender, global::Windows.UI.Xaml.RoutedEventArgs e)
+        private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             var serviceToken = fivenine.UnifiedMap.AuthenticationToken;
 
@@ -87,29 +87,66 @@ namespace fivenine.UnifiedMaps.Windows
                 Control.MapServiceToken = serviceToken;
             }
 
-            Element.Pins.CollectionChanged += OnPinsCollectionChanged;
+            RegisterEvents(Element);
 
             UpdateMapType();
             LoadPins();
+        }
 
-            _infoWindow = new InfoWindow
+        private void RegisterEvents(UnifiedMap map)
+        {
+            if (map.Pins != null)
             {
-                Visibility = Visibility.Collapsed,
-                DataContext = new MapPin()
-            };
+                map.Pins.CollectionChanged += OnPinsCollectionChanged;
+            }
 
-            Control.Children.Add(_infoWindow);
+            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
+                (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
 
-            _infoWindow.SetBinding(InfoWindow.TitleProperty,
-                new Binding { Path = new PropertyPath(MapPin.TitleProperty.PropertyName) });
+            if (Control != null)
+            {
+                _infoWindow = new InfoWindow
+                {
+                    Visibility = Visibility.Collapsed,
+                    DataContext = new MapPin()
+                };
 
-            _infoWindow.SetBinding(InfoWindow.SnippetProperty,
-                new Binding { Path = new PropertyPath(MapPin.SnippetProperty.PropertyName) });
+                Control.Children.Add(_infoWindow);
 
-            _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
+                _infoWindow.SetBinding(InfoWindow.TitleProperty,
+                    new Binding {Path = new PropertyPath(MapPin.TitleProperty.PropertyName)});
 
-            Control.MapElementClick += Control_MapElementClick;
-            Control.MapTapped += OnMapTapped;
+                _infoWindow.SetBinding(InfoWindow.SnippetProperty,
+                    new Binding {Path = new PropertyPath(MapPin.SnippetProperty.PropertyName)});
+
+                _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
+
+                Control.MapElementClick += Control_MapElementClick;
+                Control.MapTapped += OnMapTapped;
+            }
+        }
+
+        private void MoveToRegion(MapRegion region, bool animated)
+        {
+            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
+                null, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
+        }
+
+        private void RemoveEvents(UnifiedMap map)
+        {
+            MessagingCenter.Unsubscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion);
+
+            if (map.Pins != null)
+            {
+                map.Pins.CollectionChanged -= OnPinsCollectionChanged;
+            }
+
+            if (Control != null)
+            {
+                _infoWindow = null;
+                Control.MapElementClick -= Control_MapElementClick;
+                Control.MapTapped -= OnMapTapped;
+            }
         }
 
         private void OnMapTapped(MapControl sender, MapInputEventArgs args)
@@ -124,13 +161,16 @@ namespace fivenine.UnifiedMaps.Windows
         private void Control_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             var element = args.MapElements.FirstOrDefault() as MapIcon;
+            if (element != null)
+            {
 
-            var mapPin = Element.Pins.FirstOrDefault(p => p.Id == element);
+                var mapPin = Element.Pins.FirstOrDefault(p => p.Id == element);
 
-            _infoWindow.DataContext = mapPin;
-            _infoWindow.Visibility = Visibility.Visible;
-            
-            MapControl.SetLocation(_infoWindow, element.Location);
+                _infoWindow.DataContext = mapPin;
+                _infoWindow.Visibility = Visibility.Visible;
+
+                MapControl.SetLocation(_infoWindow, element.Location);
+            }
         }
 
         private void LoadPin(MapPin pin)

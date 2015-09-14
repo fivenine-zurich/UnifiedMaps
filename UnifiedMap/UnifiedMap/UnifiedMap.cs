@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
@@ -138,18 +139,20 @@ namespace fivenine.UnifiedMaps
         /// Makes the map move to the new region.
         /// </summary>
         /// <param name="region">The region to display.</param>
+        /// <param name="animated">Animate the move.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public void MoveToRegion(MapRegion region)
+        public void MoveToRegion(MapRegion region = null, bool animated = false)
         {
             if (region == null)
             {
-                throw new ArgumentNullException(nameof(region));
+                region = MapRegion.FromPositions(
+                    Pins.Select(p => p.Location).ToArray());
             }
 
             LastMoveToRegion = region;
 
             // Send the move message to the platform renderer
-            MessagingCenter.Send(this, MessageMapMoveToRegion, region);
+            MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
         }
 
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

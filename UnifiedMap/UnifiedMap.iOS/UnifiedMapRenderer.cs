@@ -80,14 +80,8 @@ namespace fivenine.UnifiedMaps.iOS
                 map.Pins.CollectionChanged += PinsOnCollectionChanged;
             }
 
-            MessagingCenter.Subscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion,
-            (unifiedMap, span) =>
-            {
-                if (unifiedMap.LastMoveToRegion != null)
-                {
-                    MoveToRegion(unifiedMap.LastMoveToRegion, false);
-                }
-            });
+            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
+                (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
         }
 
         private void RemoveEvents(UnifiedMap map)
@@ -102,12 +96,9 @@ namespace fivenine.UnifiedMaps.iOS
 
         private void MoveToRegion(MapRegion mapRegion, bool animated = true)
         {
-            Position center = mapRegion.Center;
-
-            //Control.SetRegion(new MKCoordinateRegion(
-            //    new CLLocationCoordinate2D(center.Latitude, center.Longitude), 
-            //    new MKCoordinateSpan(MapRegion.LatitudeDegrees, MapRegion.LongitudeDegrees)), 
-            //    animated);
+            Control.SetRegion(new MKCoordinateRegion(
+                mapRegion.Center.ToCoordinate(),
+                mapRegion.ToSpan()), animated);
         }
 
         private void UpdateMapType()
