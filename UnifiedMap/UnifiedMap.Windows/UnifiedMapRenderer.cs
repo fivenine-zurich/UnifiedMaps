@@ -4,10 +4,15 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Devices.Geolocation;
+using Windows.Foundation;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
+using Windows.UI.Xaml.Data;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
+using Binding = Windows.UI.Xaml.Data.Binding;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -15,6 +20,8 @@ namespace fivenine.UnifiedMaps.Windows
 {
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>
     {
+        private InfoWindow _infoWindow;
+
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
             base.OnElementChanged(e);
@@ -84,18 +91,59 @@ namespace fivenine.UnifiedMaps.Windows
 
             UpdateMapType();
             LoadPins();
+
+            _infoWindow = new InfoWindow
+            {
+                Visibility = Visibility.Collapsed,
+                DataContext = new MapPin()
+            };
+
+            Control.Children.Add(_infoWindow);
+
+            _infoWindow.SetBinding(InfoWindow.TitleProperty,
+                new Binding { Path = new PropertyPath(MapPin.TitleProperty.PropertyName) });
+
+            _infoWindow.SetBinding(InfoWindow.SnippetProperty,
+                new Binding { Path = new PropertyPath(MapPin.SnippetProperty.PropertyName) });
+
+            _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
+
+            Control.MapElementClick += Control_MapElementClick;
+            Control.MapTapped += OnMapTapped;
+        }
+
+        private void OnMapTapped(MapControl sender, MapInputEventArgs args)
+        {
+            var items = Control.FindMapElementsAtOffset(args.Position);
+            if (items.Any() == false)
+            {
+                _infoWindow.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void Control_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        {
+            var element = args.MapElements.FirstOrDefault() as MapIcon;
+
+            var mapPin = Element.Pins.FirstOrDefault(p => p.Id == element);
+
+            _infoWindow.DataContext = mapPin;
+            _infoWindow.Visibility = Visibility.Visible;
+            
+            MapControl.SetLocation(_infoWindow, element.Location);
         }
 
         private void LoadPin(MapPin pin)
         {
             var mapPin = new MapIcon
             {
-                Title = pin.Title,
                 Location = new Geopoint(new BasicGeoposition
                 {
                     Latitude = pin.Location.Latitude,
                     Longitude = pin.Location.Longitude
-                })
+                }),
+                Image = RandomAccessStreamReference.CreateFromUri(
+                    new Uri("ms-appx:///UnifiedMap.Windows/Assets/pin_black.png"))
             };
 
             pin.Id = mapPin;

@@ -23,7 +23,6 @@ namespace Sample
         private readonly LinkedList<MapPin> _allPins;
         private MapType _mapType = MapType.Street;
 
-
         public UnifiedMapViewModel()
         {
             _pinSelectedCommand =
@@ -58,6 +57,7 @@ namespace Sample
                     new MapPin
                     {
                         Title = "Wolfenschiessen",
+                        Snippet = "... nothing to see here",
                         Location = new Position(46.905180, 8.398110),
                         Color = PinColor.Green
                     },

@@ -150,9 +150,10 @@ namespace fivenine.UnifiedMaps.iOS
         {
             var pins = Control.Annotations
                 .OfType<UnifiedPointAnnotation>()
-                .Where( point => point.Data == pin);
+                .Where( point => point.Data == pin)
+                .ToArray();
 
-            Control.RemoveAnnotations(pins.ToArray());
+            Control.RemoveAnnotations(pins);
         }
 
         private void LoadPins()
