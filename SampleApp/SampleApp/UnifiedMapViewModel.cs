@@ -20,6 +20,7 @@ namespace Sample
         private readonly Command _addPinCommand;
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
+        private readonly ICommand _showAllAnnotationsCommand;
 
         private readonly LinkedList<MapPin> _allPins;
         private MapType _mapType = MapType.Street;
@@ -40,6 +41,9 @@ namespace Sample
 
             _moveToRegionCommand =
                 new Command(() => Map.MoveToRegion(animated: true));
+
+            _showAllAnnotationsCommand =
+                new Command(() => Map.ShowAllAnnotations(animated: true));
       
             _allPins = new LinkedList<MapPin>(
                 new []
@@ -109,7 +113,9 @@ namespace Sample
         public ICommand RemovePinCommand => _removePinCommand;
 
         public ICommand MoveToRegionCommand => _moveToRegionCommand;
-        
+
+        public ICommand ShowAllAnnotationsCommand => _showAllAnnotationsCommand;
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

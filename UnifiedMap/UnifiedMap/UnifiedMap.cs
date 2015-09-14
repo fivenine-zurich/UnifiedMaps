@@ -21,6 +21,8 @@ namespace fivenine.UnifiedMaps
 
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";
 
+        internal const string MessageShowAllAnnotations = "ShowAllAnnotations";
+
         /// <summary>
         /// Identifies the <see cref="MapType"/> bindable property.
         /// </summary>
@@ -153,6 +155,15 @@ namespace fivenine.UnifiedMaps
 
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
+        }
+
+        /// <summary>
+        /// Makes the map move to the region that ensures all annotations are visible.
+        /// </summary>
+        /// <param name="animated">if set to <c>true</c> [animated].</param>
+        public void ShowAllAnnotations(bool animated = false)
+        {
+            MessagingCenter.Send(this, MessageShowAllAnnotations, animated);
         }
 
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

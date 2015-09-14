@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Devices.Geolocation;
-using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
@@ -13,6 +12,7 @@ using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
 using Binding = Windows.UI.Xaml.Data.Binding;
+using Thickness = Windows.UI.Xaml.Thickness;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -76,6 +76,7 @@ namespace fivenine.UnifiedMaps.Windows
                     {
                         RemovePin((MapPin) item);
                     }
+
                     break;
                 }
 
@@ -114,6 +115,9 @@ namespace fivenine.UnifiedMaps.Windows
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
 
+            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations,
+                (unifiedMap, b) => ShowAllAnnotations(b));
+
             if (Control != null)
             {
                 _infoWindow = new InfoWindow
@@ -132,20 +136,15 @@ namespace fivenine.UnifiedMaps.Windows
 
                 _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
 
-                Control.MapElementClick += Control_MapElementClick;
+                Control.MapElementClick += OnMapElementClick;
                 Control.MapTapped += OnMapTapped;
             }
         }
-
-        private void MoveToRegion(MapRegion region, bool animated)
-        {
-            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
-                null, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
-        }
-
+        
         private void RemoveEvents(UnifiedMap map)
         {
-            MessagingCenter.Unsubscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations);
 
             if (map.Pins != null)
             {
@@ -155,9 +154,23 @@ namespace fivenine.UnifiedMaps.Windows
             if (Control != null)
             {
                 _infoWindow = null;
-                Control.MapElementClick -= Control_MapElementClick;
+                Control.MapElementClick -= OnMapElementClick;
                 Control.MapTapped -= OnMapTapped;
             }
+        }
+
+        private void MoveToRegion(MapRegion region, bool animated)
+        {
+            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
+                null, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
+        }
+
+        private void ShowAllAnnotations(bool animated)
+        {
+            var region = MapRegion.FromPositions(Element.Pins.Select(p => p.Location).ToArray());
+
+            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
+                new Thickness(100), animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
         }
 
         private void OnMapTapped(MapControl sender, MapInputEventArgs args)
@@ -169,7 +182,7 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void Control_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        private void OnMapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             var element = args.MapElements.FirstOrDefault() as MapIcon;
             if (element != null)

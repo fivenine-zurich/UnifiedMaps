@@ -132,10 +132,16 @@ namespace fivenine.UnifiedMaps.Droid
 
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
+
+            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations,
+                (unifiedMap, b) => ShowAllAnnotations(b));
         }
 
         private void RemoveEvents(UnifiedMap map)
         {
+            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations);
+
             if (map.Pins != null)
             {
                 map.Pins.CollectionChanged -= PinsOnCollectionChanged;
@@ -165,6 +171,11 @@ namespace fivenine.UnifiedMaps.Droid
             catch (IllegalStateException)
             {
             }
+        }
+
+        private void ShowAllAnnotations(bool animated)
+        {
+            // Todo: Implement this
         }
 
         private void UpdateMapType()

@@ -16,5 +16,6 @@
             <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
             <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" />
             <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
+            <Button Text="Show all annotations" Command="{Binding ShowAllAnnotationsCommand}" />
         </StackLayout>
 </ContentPage>

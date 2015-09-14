@@ -82,11 +82,15 @@ namespace fivenine.UnifiedMaps.iOS
 
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
+
+            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations,
+                (unifiedMap, b) => ShowAllAnnotations(b));
         }
 
         private void RemoveEvents(UnifiedMap map)
         {
-            MessagingCenter.Unsubscribe<UnifiedMap, MapRegion>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations);
 
             if (map.Pins != null)
             {
@@ -94,11 +98,16 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
-        private void MoveToRegion(MapRegion mapRegion, bool animated = true)
+        private void MoveToRegion(MapRegion mapRegion, bool animated)
         {
             Control.SetRegion(new MKCoordinateRegion(
                 mapRegion.Center.ToCoordinate(),
                 mapRegion.ToSpan()), animated);
+        }
+
+        private void ShowAllAnnotations(bool animated)
+        {
+            Control.ShowAnnotations(Control.Annotations, animated);
         }
 
         private void UpdateMapType()
