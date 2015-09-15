@@ -3,14 +3,15 @@
 
 UnifiedMaps uses the native map APIs on each platform. This provides a fast, familiar maps experience for users, but means that some configuration steps are needed to adhere to each platforms specific API requirements. Once configured, the Map control works just like any other Xamarin.Forms element in common code.
 
+UnifiedMaps is designed from the ground up with *MVVM* in mind. In contrast to other implementations all map related tasks can be used with data-binding. It provides *bindable* properties for *map annotations* and various other elements. Interaction logic can be used by binding 'ICommand' objects or calling the methods directly on the UnifiedMap object.  
+
 ## Maps Initialization
 After installing the NuGet package, the following initialization code is required in each application project:
 
 ```c#
 fivenine.UnifiedMap.Init();
 ```
-T
-his call should be made after the Xamarin.Forms.Forms.Init() method call. The Xamarin.Forms templates have this call in the following files for each platform:
+This call should be made after the `Xamarin.Forms.Forms.Init()` method call. It is recommended to place this call in the following files for each platform:
 
  * iOS - AppDelegate.cs file, in the FinishedLaunching method.
  * Android - MainActivity.cs file, in the OnCreate method.
