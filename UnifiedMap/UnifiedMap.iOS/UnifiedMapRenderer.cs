@@ -64,6 +64,21 @@ namespace fivenine.UnifiedMaps.iOS
             {
                 UpdateMapType();
             }
+
+            if (e.PropertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
+            {
+                Control.ShowsUserLocation = Element.IsShowingUser;
+            }
+
+            if (e.PropertyName == UnifiedMap.HasZoomEnabledProperty.PropertyName)
+            {
+                Control.ZoomEnabled = Element.HasZoomEnabled;
+            }
+
+            if (e.PropertyName == UnifiedMap.HasScrollEnabledProperty.PropertyName)
+            {
+                Control.ScrollEnabled = Element.HasScrollEnabled;
+            }
         }
 
         protected override void Dispose(bool disposing)

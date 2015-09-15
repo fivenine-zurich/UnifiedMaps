@@ -23,6 +23,9 @@ namespace Sample
 
         private readonly LinkedList<MapPin> _allPins;
         private MapType _mapType = MapType.Street;
+        private bool _hasScrollEnabled = true;
+        private bool _hasZoomEnabled = true;
+        private bool _isShowingUserLocation = false;
 
         public UnifiedMapViewModel()
         {
@@ -96,6 +99,36 @@ namespace Sample
             set 
             {
                 _mapType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasScrollEnabled
+        {
+            get { return _hasScrollEnabled; }
+            set
+            {
+                _hasScrollEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasZoomEnabled
+        {
+            get { return _hasZoomEnabled; }
+            set
+            {
+                _hasZoomEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsShowingUserLocation
+        {
+            get { return _isShowingUserLocation; }
+            set
+            {
+                _isShowingUserLocation = value;
                 OnPropertyChanged();
             }
         }

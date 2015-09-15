@@ -107,9 +107,27 @@ namespace fivenine.UnifiedMaps.Droid
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
+            if (_googleMap != null)
             {
-                UpdateMapType();
+                if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
+                {
+                    UpdateMapType();
+                }
+                if (e.PropertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
+                {
+                    _googleMap.UiSettings.MyLocationButtonEnabled = Element.IsShowingUser;
+                }
+
+                if (e.PropertyName == UnifiedMap.HasZoomEnabledProperty.PropertyName)
+                {
+                    _googleMap.UiSettings.ZoomGesturesEnabled = Element.HasZoomEnabled;
+                    _googleMap.UiSettings.ZoomControlsEnabled = Element.HasZoomEnabled;
+                }
+
+                if (e.PropertyName == UnifiedMap.HasScrollEnabledProperty.PropertyName)
+                {
+                    _googleMap.UiSettings.ScrollGesturesEnabled = Element.HasScrollEnabled;
+                }
             }
         }
 

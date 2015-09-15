@@ -53,6 +53,25 @@ namespace fivenine.UnifiedMaps.Windows
             {
                 UpdateMapType();
             }
+
+            if (e.PropertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
+            {
+                // TODO See https://msdn.microsoft.com/en-us/library/windows/apps/mt219698.aspx
+            }
+
+            if (e.PropertyName == UnifiedMap.HasZoomEnabledProperty.PropertyName)
+            {
+                Control.ZoomInteractionMode = Element.HasZoomEnabled 
+                    ? MapInteractionMode.Auto 
+                    : MapInteractionMode.Disabled;
+            }
+
+            if (e.PropertyName == UnifiedMap.HasScrollEnabledProperty.PropertyName)
+            {
+                Control.PanInteractionMode = Element.HasScrollEnabled
+                    ? MapPanInteractionMode.Auto
+                    : MapPanInteractionMode.Disabled;
+            }
         }
 
         protected override void Dispose(bool disposing)

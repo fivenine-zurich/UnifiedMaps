@@ -4,17 +4,29 @@
     x:Class="Sample.MenuPage"
     Title="Menu"
     Icon="settings.png">
-        <StackLayout 
-            Orientation="Vertical">
-            <ContentView
-                Padding="10, 36, 0, 5">
-                <Label 
-                    Text="MENU"
-                    FontSize="Medium"/>
-            </ContentView>
+  <StackLayout
+      Orientation="Vertical">
+    <ContentView
+        Padding="10, 36, 0, 5">
+      <Label
+          Text="MENU"
+          FontSize="Medium"/>
+    </ContentView>
 
-            <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
-            <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" />
-            <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
-        </StackLayout>
+    <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
+    <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" />
+    <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
+    <StackLayout>
+      <Label>Zoom enabled</Label>
+      <Switch IsToggled="{Binding HasZoomEnabled}"/>
+    </StackLayout>
+    <StackLayout>
+      <Label>Scroll enabled</Label>
+      <Switch IsToggled="{Binding HasScrollEnabled}"/>
+    </StackLayout>
+    <StackLayout>
+      <Label>Show user location</Label>
+      <Switch IsToggled="{Binding IsShowingUserLocation}"/>
+    </StackLayout>
+  </StackLayout>
 </ContentPage>
