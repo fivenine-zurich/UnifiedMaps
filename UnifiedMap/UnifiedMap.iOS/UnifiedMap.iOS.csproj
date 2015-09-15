@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="UnifiedMapDelegate.cs" />
     <Compile Include="UnifiedMap.cs" />
+    <Compile Include="UnifiedMapExtensions.cs" />
     <Compile Include="UnifiedMapRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnifiedPointAnnotation.cs" />
@@ -46,8 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ObjectModel" />
-    <Reference Include="System.Runtime" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />

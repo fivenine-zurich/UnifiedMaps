@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
@@ -43,6 +44,12 @@ namespace fivenine.UnifiedMaps
         /// </summary>
         public static readonly BindableProperty PolylinesProperty = BindableProperty.Create("Polylines",
             typeof(ObservableCollection<MapPolyline>), typeof(UnifiedMap), new ObservableCollection<MapPolyline>());
+
+        /// <summary>
+        /// The autofitallannotations property
+        /// </summary>
+        public static readonly BindableProperty AutoFitAllAnnotationsProperty = BindableProperty.Create("AutoFitAllAnnotations",
+                typeof (bool), typeof (UnifiedMap), true);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnifiedMap"/> class.
@@ -105,6 +112,18 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
+        /// Gets or sets whether to automatically fit the view to display all annotations.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if auto fitting should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool AutoFitAllAnnotations
+        {
+            get { return (bool)GetValue(AutoFitAllAnnotationsProperty); }
+            set { SetValue(AutoFitAllAnnotationsProperty, value); }
+        }
+
+        /// <summary>
         /// Gets the visible region.
         /// </summary>
         /// <value>
@@ -135,21 +154,18 @@ namespace fivenine.UnifiedMaps
         internal MapRegion LastMoveToRegion { get; private set; }
 
         /// <summary>
-        /// Makes the map move to the new region.
+        /// Makes the map move to the new region. If no region is specified the map will be moved
+        /// to fit all annotations that are currently displayed.
         /// </summary>
         /// <param name="region">The region to display.</param>
+        /// <param name="animated">Wether to animate the move.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public void MoveToRegion(MapRegion region)
+        public void MoveToRegion(MapRegion region = null, bool animated = false)
         {
-            if (region == null)
-            {
-                throw new ArgumentNullException(nameof(region));
-            }
-
             LastMoveToRegion = region;
 
             // Send the move message to the platform renderer
-            MessagingCenter.Send(this, MessageMapMoveToRegion, region);
+            MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
         }
 
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

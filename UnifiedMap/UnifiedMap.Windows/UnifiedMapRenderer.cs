@@ -1,26 +1,36 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Devices.Geolocation;
-using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Data;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
 using Binding = Windows.UI.Xaml.Data.Binding;
+using Thickness = Windows.UI.Xaml.Thickness;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.Windows
 {
-    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>, IUnifiedMapRenderer
     {
+        private readonly RendererBehavior _behavior;
+        private readonly Thickness _mapPadding = new Thickness(20);
+
         private InfoWindow _infoWindow;
+        
+        public UnifiedMapRenderer()
+        {
+            _behavior = new RendererBehavior(this);
+        }
+
+        public UnifiedMap Map => Element;
+
+        protected virtual Thickness MapPadding => _mapPadding;
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
@@ -45,40 +55,18 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void Dispose(bool disposing)
         {
-            switch (e.Action)
+            if (disposing)
             {
-                case NotifyCollectionChangedAction.Add:
-                {
-                    foreach (var item in e.NewItems)
-                    {
-                        LoadPin((MapPin) item);
-                    }
-
-                    break;
-                }
-
-                case NotifyCollectionChangedAction.Remove:
-                {
-                    foreach (var item in e.OldItems)
-                    {
-                        RemovePin((MapPin) item);
-                    }
-                    break;
-                }
-
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
-
-                default:
-                    throw new ArgumentOutOfRangeException();
+                RemoveEvents(Element);
+                Control.Loaded -= OnControlLoaded;
             }
-        }
 
-        private void OnControlLoaded(object sender, global::Windows.UI.Xaml.RoutedEventArgs e)
+            base.Dispose(disposing);
+        }
+        
+        private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             var serviceToken = fivenine.UnifiedMap.AuthenticationToken;
 
@@ -87,29 +75,61 @@ namespace fivenine.UnifiedMaps.Windows
                 Control.MapServiceToken = serviceToken;
             }
 
-            Element.Pins.CollectionChanged += OnPinsCollectionChanged;
+            RegisterEvents(Element);
 
             UpdateMapType();
             LoadPins();
+        }
 
-            _infoWindow = new InfoWindow
+        private void RegisterEvents(UnifiedMap map)
+        {
+            _behavior.RegisterEvents(map);
+
+            if (Control != null)
             {
-                Visibility = Visibility.Collapsed,
-                DataContext = new MapPin()
-            };
+                _infoWindow = new InfoWindow
+                {
+                    Visibility = Visibility.Collapsed,
+                    DataContext = new MapPin()
+                };
 
-            Control.Children.Add(_infoWindow);
+                Control.Children.Add(_infoWindow);
 
-            _infoWindow.SetBinding(InfoWindow.TitleProperty,
-                new Binding { Path = new PropertyPath(MapPin.TitleProperty.PropertyName) });
+                _infoWindow.SetBinding(InfoWindow.TitleProperty,
+                    new Binding {Path = new PropertyPath(MapPin.TitleProperty.PropertyName)});
 
-            _infoWindow.SetBinding(InfoWindow.SnippetProperty,
-                new Binding { Path = new PropertyPath(MapPin.SnippetProperty.PropertyName) });
+                _infoWindow.SetBinding(InfoWindow.SnippetProperty,
+                    new Binding {Path = new PropertyPath(MapPin.SnippetProperty.PropertyName)});
 
-            _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
+                _infoWindow.SelectedCommand = Element.PinCalloutTappedCommand;
 
-            Control.MapElementClick += Control_MapElementClick;
-            Control.MapTapped += OnMapTapped;
+                Control.MapElementClick += OnMapElementClick;
+                Control.MapTapped += OnMapTapped;
+            }
+        }
+        
+        private void RemoveEvents(UnifiedMap map)
+        {
+            _behavior.RemoveEvents(map);
+
+            if (Control != null)
+            {
+                _infoWindow = null;
+                Control.MapElementClick -= OnMapElementClick;
+                Control.MapTapped -= OnMapTapped;
+            }
+        }
+
+        public void MoveToRegion(MapRegion region, bool animated)
+        {
+            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
+                MapPadding, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
+        }
+
+        public void FitAllAnnotations(bool animated)
+        {
+            var region = _behavior.GetRegionForAllAnnotations();
+            MoveToRegion(region, animated);
         }
 
         private void OnMapTapped(MapControl sender, MapInputEventArgs args)
@@ -121,19 +141,22 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void Control_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        private void OnMapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             var element = args.MapElements.FirstOrDefault() as MapIcon;
+            if (element != null)
+            {
 
-            var mapPin = Element.Pins.FirstOrDefault(p => p.Id == element);
+                var mapPin = Element.Pins.FirstOrDefault(p => p.Id == element);
 
-            _infoWindow.DataContext = mapPin;
-            _infoWindow.Visibility = Visibility.Visible;
-            
-            MapControl.SetLocation(_infoWindow, element.Location);
+                _infoWindow.DataContext = mapPin;
+                _infoWindow.Visibility = Visibility.Visible;
+
+                MapControl.SetLocation(_infoWindow, element.Location);
+            }
         }
 
-        private void LoadPin(MapPin pin)
+        public void AddPin(MapPin pin)
         {
             var mapPin = new MapIcon
             {
@@ -154,11 +177,11 @@ namespace fivenine.UnifiedMaps.Windows
         {
             foreach (var pin in Element.Pins)
             {
-                LoadPin(pin);
+                AddPin(pin);
             }
         }
 
-        private void RemovePin(MapPin pin)
+        public void RemovePin(MapPin pin)
         {
             var pins = Control.MapElements
                 .OfType<MapIcon>()

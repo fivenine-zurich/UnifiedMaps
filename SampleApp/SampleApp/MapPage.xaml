@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:unifiedMaps="clr-namespace:fivenine.UnifiedMaps;assembly=UnifiedMap"
              x:Class="Sample.MapPage"
-             Title="UnifiedMaps Sample">
+             Title="UnifiedMaps Sample"
+             Appearing="MapPage_OnAppearing">
     <StackLayout>
-        <unifiedMaps:UnifiedMap 
+        <unifiedMaps:UnifiedMap
+            x:Name="Map"
             Pins="{Binding Pins}"
             MapType="{Binding MapDisplayType}" 
             PinCalloutTappedCommand="{Binding PinSelectedCommand}"

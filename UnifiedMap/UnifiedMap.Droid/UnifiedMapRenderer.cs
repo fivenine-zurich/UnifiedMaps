@@ -4,22 +4,24 @@ using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Droid;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using System.Collections.Specialized;
 using System;
 using Android.Gms.Maps.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Android.Util;
+using Java.Lang;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.Droid
 {
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapView>, GoogleMap.IOnCameraChangeListener, 
-        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener
+        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, IUnifiedMapRenderer
     {
         private static Bundle _bundle;
+        private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
+        private readonly Thickness _mapPadding = new Thickness(20);
 
         private GoogleMap _googleMap;
 
@@ -27,12 +29,17 @@ namespace fivenine.UnifiedMaps.Droid
         {
             AutoPackage = false;
             _markers = new LinkedList<Tuple<Marker, MapPin>>();
+            _behavior = new RendererBehavior(this);
         }
 
+        public UnifiedMap Map => Element;
+        
         internal static Bundle Bundle
         {
             set { _bundle = value; }
         }
+
+        protected virtual Thickness MapPadding => _mapPadding;
 
         public void OnMapReady(GoogleMap googleMap)
         {
@@ -44,6 +51,8 @@ namespace fivenine.UnifiedMaps.Droid
             // Initialize the new map control
             UpdateMapType();
             LoadPins();
+
+            ApplyPadding();
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -78,12 +87,7 @@ namespace fivenine.UnifiedMaps.Droid
 
             if( e.NewElement != null )
             {
-                var element = e.NewElement;
-
-                if( element.Pins != null )
-                {
-                    element.Pins.CollectionChanged += PinsOnCollectionChanged;
-                }
+                RegisterEvents(e.NewElement);
 
                 if( Control == null )
                 {
@@ -125,11 +129,38 @@ namespace fivenine.UnifiedMaps.Droid
             base.Dispose(disposing);
         }
 
+        private void RegisterEvents(UnifiedMap map)
+        {
+            _behavior.RegisterEvents(map);
+        }
+
         private void RemoveEvents(UnifiedMap map)
         {
-            if (map.Pins != null)
+            _behavior.RemoveEvents(map);
+        }
+        
+        public void MoveToRegion(MapRegion region, bool animated)
+        {
+            if (_googleMap == null)
             {
-                map.Pins.CollectionChanged -= PinsOnCollectionChanged;
+                return;
+            }
+
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
+
+            try
+            {
+                if (animated)
+                {
+                    _googleMap.AnimateCamera(cameraUpdate);
+                }
+                else
+                {
+                    _googleMap.MoveCamera(cameraUpdate);
+                }
+            }
+            catch (IllegalStateException)
+            {
             }
         }
 
@@ -158,7 +189,7 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        private void CreatePin(MapPin pin)
+        public void AddPin(MapPin pin)
         {
             if (_googleMap == null)
                 return;
@@ -174,7 +205,7 @@ namespace fivenine.UnifiedMaps.Droid
             _markers.AddLast(new Tuple<Marker, MapPin>(marker, pin));
         }
 
-        private void RemovePin(MapPin pin)
+        public void RemovePin(MapPin pin)
         {
             if (_googleMap == null || pin == null)
                 return;
@@ -190,43 +221,24 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
+        public void FitAllAnnotations(bool animated)
+        {
+            var region = _behavior.GetRegionForAllAnnotations();
+            MoveToRegion(region, animated);
+        }
+
         private void LoadPins()
         {
             foreach (var pin in Element.Pins)
             {
-                CreatePin(pin);
+                AddPin(pin);
             }
         }
 
-        private void PinsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ApplyPadding()
         {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                {
-                    foreach (var item in e.NewItems)
-                    {
-                        CreatePin((MapPin) item);
-                    }
-
-                    break;
-                }
-                case NotifyCollectionChangedAction.Remove:
-                {
-                    foreach (var item in e.OldItems)
-                    {
-                        RemovePin((MapPin) item);
-                    }
-                    break;
-                }
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var padding = MapPadding;
+            _googleMap.SetPadding((int)padding.Left, (int)padding.Top, (int)padding.Right, (int)padding.Bottom);
         }
     }
 }
