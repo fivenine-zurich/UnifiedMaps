@@ -104,5 +104,16 @@ namespace fivenine.UnifiedMaps
         /// Gets the bottom right coordinate of the bounding box
         /// </summary>
         public Position BottomRight => new Position(MinY, MaxX);
+
+        /// <summary>
+        /// Inflates the current region with the given dimensions.
+        /// </summary>
+        /// <param name="height">The height.</param>
+        /// <param name="width">The width.</param>
+        /// <returns>The new <see cref="MapRegion"/> instance.</returns>
+        public MapRegion Inflate(float height, float width)
+        {
+            return new MapRegion(_center, _width + width, _height + height);
+        }
     }
 }

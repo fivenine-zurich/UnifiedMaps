@@ -4,7 +4,6 @@ using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Droid;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using System.Collections.Specialized;
 using System;
 using Android.Gms.Maps.Model;
 using System.Collections.Generic;
@@ -17,9 +16,10 @@ using Java.Lang;
 namespace fivenine.UnifiedMaps.Droid
 {
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapView>, GoogleMap.IOnCameraChangeListener, 
-        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener
+        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, IUnifiedMapRenderer
     {
         private static Bundle _bundle;
+        private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
 
         private GoogleMap _googleMap;
@@ -28,8 +28,11 @@ namespace fivenine.UnifiedMaps.Droid
         {
             AutoPackage = false;
             _markers = new LinkedList<Tuple<Marker, MapPin>>();
+            _behavior = new RendererBehavior(this);
         }
 
+        public UnifiedMap Map => Element;
+        
         internal static Bundle Bundle
         {
             set { _bundle = value; }
@@ -45,8 +48,6 @@ namespace fivenine.UnifiedMaps.Droid
             // Initialize the new map control
             UpdateMapType();
             LoadPins();
-
-
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -125,30 +126,15 @@ namespace fivenine.UnifiedMaps.Droid
 
         private void RegisterEvents(UnifiedMap map)
         {
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged += PinsOnCollectionChanged;
-            }
-
-            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
-                (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
-
-            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations,
-                (unifiedMap, b) => ShowAllAnnotations(b));
+            _behavior.RegisterEvents(map);
         }
 
         private void RemoveEvents(UnifiedMap map)
         {
-            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
-            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations);
-
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged -= PinsOnCollectionChanged;
-            }
+            _behavior.RemoveEvents(map);
         }
-
-        private void MoveToRegion(MapRegion region, bool animated)
+        
+        public void MoveToRegion(MapRegion region, bool animated)
         {
             if (_googleMap == null)
             {
@@ -171,11 +157,6 @@ namespace fivenine.UnifiedMaps.Droid
             catch (IllegalStateException)
             {
             }
-        }
-
-        private void ShowAllAnnotations(bool animated)
-        {
-            // Todo: Implement this
         }
 
         private void UpdateMapType()
@@ -203,7 +184,7 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        private void CreatePin(MapPin pin)
+        public void AddPin(MapPin pin)
         {
             if (_googleMap == null)
                 return;
@@ -219,7 +200,7 @@ namespace fivenine.UnifiedMaps.Droid
             _markers.AddLast(new Tuple<Marker, MapPin>(marker, pin));
         }
 
-        private void RemovePin(MapPin pin)
+        public void RemovePin(MapPin pin)
         {
             if (_googleMap == null || pin == null)
                 return;
@@ -235,42 +216,17 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
+        public void FitAllAnnotations(bool animated)
+        {
+            var region = _behavior.GetRegionForAllAnnotations();
+            MoveToRegion(region, animated);
+        }
+
         private void LoadPins()
         {
             foreach (var pin in Element.Pins)
             {
-                CreatePin(pin);
-            }
-        }
-
-        private void PinsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                {
-                    foreach (var item in e.NewItems)
-                    {
-                        CreatePin((MapPin) item);
-                    }
-
-                    break;
-                }
-                case NotifyCollectionChangedAction.Remove:
-                {
-                    foreach (var item in e.OldItems)
-                    {
-                        RemovePin((MapPin) item);
-                    }
-                    break;
-                }
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
-
-                default:
-                    throw new ArgumentOutOfRangeException();
+                AddPin(pin);
             }
         }
     }

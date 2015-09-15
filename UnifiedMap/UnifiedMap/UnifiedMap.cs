@@ -21,8 +21,6 @@ namespace fivenine.UnifiedMaps
 
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";
 
-        internal const string MessageShowAllAnnotations = "ShowAllAnnotations";
-
         /// <summary>
         /// Identifies the <see cref="MapType"/> bindable property.
         /// </summary>
@@ -46,6 +44,12 @@ namespace fivenine.UnifiedMaps
         /// </summary>
         public static readonly BindableProperty PolylinesProperty = BindableProperty.Create("Polylines",
             typeof(ObservableCollection<MapPolyline>), typeof(UnifiedMap), new ObservableCollection<MapPolyline>());
+
+        /// <summary>
+        /// The autofitallannotations property
+        /// </summary>
+        public static readonly BindableProperty AutoFitAllAnnotationsProperty = BindableProperty.Create("AutoFitAllAnnotations",
+                typeof (bool), typeof (UnifiedMap), true);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnifiedMap"/> class.
@@ -108,6 +112,18 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
+        /// Gets or sets whether to automatically fit the view to display all annotations.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if auto fitting should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool AutoFitAllAnnotations
+        {
+            get { return (bool)GetValue(AutoFitAllAnnotationsProperty); }
+            set { SetValue(AutoFitAllAnnotationsProperty, value); }
+        }
+
+        /// <summary>
         /// Gets the visible region.
         /// </summary>
         /// <value>
@@ -138,32 +154,18 @@ namespace fivenine.UnifiedMaps
         internal MapRegion LastMoveToRegion { get; private set; }
 
         /// <summary>
-        /// Makes the map move to the new region.
+        /// Makes the map move to the new region. If no region is specified the map will be moved
+        /// to fit all annotations that are currently displayed.
         /// </summary>
         /// <param name="region">The region to display.</param>
-        /// <param name="animated">Animate the move.</param>
+        /// <param name="animated">Wether to animate the move.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public void MoveToRegion(MapRegion region = null, bool animated = false)
         {
-            if (region == null)
-            {
-                region = MapRegion.FromPositions(
-                    Pins.Select(p => p.Location).ToArray());
-            }
-
             LastMoveToRegion = region;
 
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
-        }
-
-        /// <summary>
-        /// Makes the map move to the region that ensures all annotations are visible.
-        /// </summary>
-        /// <param name="animated">if set to <c>true</c> [animated].</param>
-        public void ShowAllAnnotations(bool animated = false)
-        {
-            MessagingCenter.Send(this, MessageShowAllAnnotations, animated);
         }
 
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

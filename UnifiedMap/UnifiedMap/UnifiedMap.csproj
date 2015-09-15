@@ -42,6 +42,7 @@
     <Compile Include="MapRegion.cs" />
     <Compile Include="MapType.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="RendererBehavior.cs" />
     <Compile Include="UnifiedMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -9,7 +8,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
-using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
 using Binding = Windows.UI.Xaml.Data.Binding;
 using Thickness = Windows.UI.Xaml.Thickness;
@@ -18,9 +16,17 @@ using Thickness = Windows.UI.Xaml.Thickness;
 
 namespace fivenine.UnifiedMaps.Windows
 {
-    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>, IUnifiedMapRenderer
     {
+        private readonly RendererBehavior _behavior;
         private InfoWindow _infoWindow;
+
+        public UnifiedMapRenderer()
+        {
+            _behavior = new RendererBehavior(this);
+        }
+
+        public UnifiedMap Map => Element;
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
@@ -55,41 +61,7 @@ namespace fivenine.UnifiedMaps.Windows
 
             base.Dispose(disposing);
         }
-
-        private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                {
-                    foreach (var item in e.NewItems)
-                    {
-                        LoadPin((MapPin) item);
-                    }
-
-                    break;
-                }
-
-                case NotifyCollectionChangedAction.Remove:
-                {
-                    foreach (var item in e.OldItems)
-                    {
-                        RemovePin((MapPin) item);
-                    }
-
-                    break;
-                }
-
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
+        
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             var serviceToken = fivenine.UnifiedMap.AuthenticationToken;
@@ -107,16 +79,7 @@ namespace fivenine.UnifiedMaps.Windows
 
         private void RegisterEvents(UnifiedMap map)
         {
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged += OnPinsCollectionChanged;
-            }
-
-            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
-                (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
-
-            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations,
-                (unifiedMap, b) => ShowAllAnnotations(b));
+            _behavior.RegisterEvents(map);
 
             if (Control != null)
             {
@@ -143,13 +106,7 @@ namespace fivenine.UnifiedMaps.Windows
         
         private void RemoveEvents(UnifiedMap map)
         {
-            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
-            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageShowAllAnnotations);
-
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged -= OnPinsCollectionChanged;
-            }
+            _behavior.RemoveEvents(map);
 
             if (Control != null)
             {
@@ -159,18 +116,16 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void MoveToRegion(MapRegion region, bool animated)
+        public void MoveToRegion(MapRegion region, bool animated)
         {
-            Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
-                null, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
-        }
-
-        private void ShowAllAnnotations(bool animated)
-        {
-            var region = MapRegion.FromPositions(Element.Pins.Select(p => p.Location).ToArray());
-
             Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
                 new Thickness(100), animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
+        }
+
+        public void FitAllAnnotations(bool animated)
+        {
+            var region = _behavior.GetRegionForAllAnnotations();
+            MoveToRegion(region, animated);
         }
 
         private void OnMapTapped(MapControl sender, MapInputEventArgs args)
@@ -197,7 +152,7 @@ namespace fivenine.UnifiedMaps.Windows
             }
         }
 
-        private void LoadPin(MapPin pin)
+        public void AddPin(MapPin pin)
         {
             var mapPin = new MapIcon
             {
@@ -218,11 +173,11 @@ namespace fivenine.UnifiedMaps.Windows
         {
             foreach (var pin in Element.Pins)
             {
-                LoadPin(pin);
+                AddPin(pin);
             }
         }
 
-        private void RemovePin(MapPin pin)
+        public void RemovePin(MapPin pin)
         {
             var pins = Control.MapElements
                 .OfType<MapIcon>()
