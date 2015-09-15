@@ -128,6 +128,11 @@ namespace fivenine.UnifiedMaps.Windows
                 MapPadding, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
         }
 
+        public void RemovePolyline(MapPolyline line)
+        {
+            throw new NotImplementedException();
+        }
+
         public void FitAllAnnotations(bool animated)
         {
             var region = _behavior.GetRegionForAllAnnotations();
@@ -292,6 +297,11 @@ namespace fivenine.UnifiedMaps.Windows
             {
                 Control.MapElements.Remove(icon);
             }
+        }
+
+        public void AddPolyline(MapPolyline line)
+        {
+            throw new NotImplementedException();
         }
     }
 }

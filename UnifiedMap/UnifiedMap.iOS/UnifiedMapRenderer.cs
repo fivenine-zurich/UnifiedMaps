@@ -135,6 +135,18 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
+        public void ApplyIsShowingUser()
+        {
+            if (Element.IsShowingUser && _locationManager == null)
+            {
+                // Request location access permission once
+                _locationManager = new CLLocationManager();
+                _locationManager.RequestWhenInUseAuthorization();
+            }
+
+            Control.ShowsUserLocation = Element.IsShowingUser;
+        }
+
         public void AddPin(MapPin pin)
         {
             var mapPin = new UnifiedPointAnnotation
@@ -154,21 +166,35 @@ namespace fivenine.UnifiedMaps.iOS
             var pins = Control.Annotations
                 .OfType<UnifiedPointAnnotation>()
                 .Where( point => point.Data == pin)
+                .Cast<IMKAnnotation>()
                 .ToArray();
 
             Control.RemoveAnnotations(pins);
         }
 
-        public void ApplyIsShowingUser()
+        public void AddPolyline(MapPolyline line)
         {
-            if (Element.IsShowingUser && _locationManager == null )
-            {
-                // Request location access permission once
-                _locationManager = new CLLocationManager();
-                _locationManager.RequestWhenInUseAuthorization();
-            }
+            var coordinates = line
+                .Select(p => new CLLocationCoordinate2D(p.Latitude, p.Longitude))
+                .ToArray();
 
-            Control.ShowsUserLocation = Element.IsShowingUser;
+            var polyline = new UnifiedPolylineAnnotation(MKPolyline.FromCoordinates(coordinates))
+            {
+                Data = line
+            };
+
+            Control.AddOverlay(polyline);
+        }
+
+        public void RemovePolyline(MapPolyline line)
+        {
+            var polylines = Control.Annotations
+                .OfType<UnifiedPolylineAnnotation>()
+                .Where(point => point.Data == line)
+                .Cast<IMKOverlay>()
+                .ToArray();
+
+            Control.RemoveOverlays(polylines);
         }
     }
 }

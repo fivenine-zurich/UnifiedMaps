@@ -189,6 +189,16 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
+        public void AddPolyline(MapPolyline line)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemovePolyline(MapPolyline line)
+        {
+            throw new NotImplementedException();
+        }
+
         public void FitAllAnnotations(bool animated)
         {
             var region = _behavior.GetRegionForAllAnnotations();

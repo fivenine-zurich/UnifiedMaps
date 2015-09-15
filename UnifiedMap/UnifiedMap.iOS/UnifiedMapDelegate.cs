@@ -39,14 +39,26 @@ namespace fivenine.UnifiedMaps.iOS
                 mapPin.Annotation = annotation;
                 return mapPin;
             }
-
+            
             return null;
         }
 
-        public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        public override MKOverlayRenderer OverlayRenderer(MKMapView mapView, IMKOverlay overlay)
         {
-            //var pinAnnotation = view.Annotation as UnifiedPointAnnotation;
-            //pinAnnotation?.Select();
+            var polylineOverlay = overlay as UnifiedPolylineAnnotation;
+            if (polylineOverlay != null)
+            {
+                var renderer = new MKPolylineRenderer(polylineOverlay)
+                {
+                    StrokeColor = polylineOverlay.StrokeColor,
+                    LineWidth = polylineOverlay.LineWidth,
+                    Alpha = polylineOverlay.Alpha,
+                };
+
+                return renderer;
+            }
+
+            return null;
         }
 
         public override void CalloutAccessoryControlTapped(MKMapView mapView, MKAnnotationView view, UIControl control)
