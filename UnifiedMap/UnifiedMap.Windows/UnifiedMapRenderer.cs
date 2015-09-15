@@ -19,14 +19,18 @@ namespace fivenine.UnifiedMaps.Windows
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapControl>, IUnifiedMapRenderer
     {
         private readonly RendererBehavior _behavior;
-        private InfoWindow _infoWindow;
+        private readonly Thickness _mapPadding = new Thickness(20);
 
+        private InfoWindow _infoWindow;
+        
         public UnifiedMapRenderer()
         {
             _behavior = new RendererBehavior(this);
         }
 
         public UnifiedMap Map => Element;
+
+        protected virtual Thickness MapPadding => _mapPadding;
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
@@ -119,7 +123,7 @@ namespace fivenine.UnifiedMaps.Windows
         public void MoveToRegion(MapRegion region, bool animated)
         {
             Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
-                new Thickness(100), animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
+                MapPadding, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
         }
 
         public void FitAllAnnotations(bool animated)

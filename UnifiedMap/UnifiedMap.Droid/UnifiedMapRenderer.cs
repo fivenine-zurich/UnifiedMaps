@@ -21,6 +21,7 @@ namespace fivenine.UnifiedMaps.Droid
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
+        private readonly Thickness _mapPadding = new Thickness(20);
 
         private GoogleMap _googleMap;
 
@@ -38,6 +39,8 @@ namespace fivenine.UnifiedMaps.Droid
             set { _bundle = value; }
         }
 
+        protected virtual Thickness MapPadding => _mapPadding;
+
         public void OnMapReady(GoogleMap googleMap)
         {
             _googleMap = googleMap;
@@ -48,6 +51,8 @@ namespace fivenine.UnifiedMaps.Droid
             // Initialize the new map control
             UpdateMapType();
             LoadPins();
+
+            ApplyPadding();
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -228,6 +233,12 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 AddPin(pin);
             }
+        }
+
+        private void ApplyPadding()
+        {
+            var padding = MapPadding;
+            _googleMap.SetPadding((int)padding.Left, (int)padding.Top, (int)padding.Right, (int)padding.Bottom);
         }
     }
 }
