@@ -6,8 +6,8 @@ UnifiedMaps uses the native map APIs on each platform. This provides a fast, fam
 ## Maps Initialization
 After installing the NuGet package, the following initialization code is required in each application project:
 
-```
-Xamarin.FormsMaps.Init();
+```c#
+fivenine.UnifiedMap.Init();
 ```
 T
 his call should be made after the Xamarin.Forms.Forms.Init() method call. The Xamarin.Forms templates have this call in the following files for each platform:
@@ -28,7 +28,7 @@ Add the following keys to the  _Info.plist_ file:
 
 The XML representation is shown below - you should update the string values to reflect how your application is using the location information:
 
-```
+```xml
 <key>NSLocationAlwaysUsageDescription</key>
     <string>Can we use your location</string>
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -38,7 +38,7 @@ The XML representation is shown below - you should update the string values to r
 ### Android
 To use the Google Maps API v2 on Android you must generate an API key and add it to your Android project. Follow the instructions in the Xamarin doc on [obtaining a Google Maps API v2 key](http://developer.xamarin.com/guides/android/platform_features/maps_and_location/maps/obtaining_a_google_maps_api_key/) . After following those instructions, paste the API key in the **Properties/AndroidManifest.xml** file.
 
-```
+```xml
 <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AbCdEfGhIjKlMnOpQrStUvWValueGoesHere" />
 ```
 
@@ -46,7 +46,7 @@ Without a valid API key the maps control will display as a grey box on Android.
 
 In addition to the API key the following permissions are required:
 
-```
+```xml
 <!-- Google Maps for Android v2 requires OpenGL ES v2 -->
 <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 <!-- Google Maps for Android v2 requires OpenGL ES v2 -->
@@ -67,8 +67,22 @@ In addition to the API key the following permissions are required:
 <permission android:name="ch.fivenine.unifiedmaps.sample.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
 ```
 
-### Windows Store
-**TODO**
+### Windows Universal Application
+To use the Bing Maps API for Universal Windows Applications you must generate an API key and add it to your Windows Universal project. Follow the instructions on the Windows Dev Center  [Request a maps authentication key](https://msdn.microsoft.com/en-us/library/windows/apps/mt219694.aspx). After generating the *service token*, make sure to call the `fivenine.UnifiedMaps.Init()` method and pass it the generated token.
+
+```c#
+fivenine.UnifiedMap.Init("your-map-service-token");
+```
+
+In addition you need to declare the location capability in your apps *package.appxmanifest*.
+Double click on *package.appxmanifest* in *Solution Explorer* and select the Capabilities tab. Then check *Location* in the *Capabilities list*. This adds the Location device capability to the package manifest file.
+
+```xml
+<Capabilities>
+  <!-- DeviceCapability elements must follow Capability elements (if present) -->
+  <DeviceCapability Name="location"/>
+</Capabilities>
+```
 
 ## Using Maps
 
