@@ -42,5 +42,7 @@
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 	<key>XSLaunchImageAssets</key>
 	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Unified maps sample would like to use your location.</string>
 </dict>
 </plist>

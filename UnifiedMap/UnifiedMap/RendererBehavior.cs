@@ -16,6 +16,14 @@ namespace fivenine.UnifiedMaps
         void RemovePin(MapPin item);
 
         void FitAllAnnotations(bool animated);
+
+        void ApplyHasZoomEnabled();
+
+        void ApplyHasScrollEnabled();
+
+        void ApplyIsShowingUser();
+
+        void ApplyMapType();
     }
 
     internal class RendererBehavior
@@ -102,6 +110,43 @@ namespace fivenine.UnifiedMaps
             if (_renderer.Map.AutoFitAllAnnotations)
             {
                 _renderer.FitAllAnnotations(true);
+            }
+        }
+
+        internal void ElementProperyChanged(string propertyName)
+        {
+            if (propertyName == UnifiedMap.MapTypeProperty.PropertyName)
+            {
+                _renderer.ApplyMapType();
+            }
+
+            if (propertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
+            {
+                _renderer.ApplyIsShowingUser();
+            }
+
+            if (propertyName == UnifiedMap.HasZoomEnabledProperty.PropertyName)
+            {
+                _renderer.ApplyHasZoomEnabled();
+            }
+
+            if (propertyName == UnifiedMap.HasScrollEnabledProperty.PropertyName)
+            {
+                _renderer.ApplyHasScrollEnabled();
+            }
+        }
+
+        internal void Initialize()
+        {
+            _renderer.ApplyMapType();
+            _renderer.ApplyHasScrollEnabled();
+            _renderer.ApplyHasZoomEnabled();
+            _renderer.ApplyIsShowingUser();
+
+            // Load all pin annotations
+            foreach (var pin in _renderer.Map.Pins)
+            {
+                _renderer.AddPin(pin);
             }
         }
     }

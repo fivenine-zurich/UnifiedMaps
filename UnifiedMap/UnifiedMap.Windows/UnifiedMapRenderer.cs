@@ -4,8 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using Windows.Devices.Geolocation;
 using Windows.Storage.Streams;
+using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
@@ -22,7 +26,10 @@ namespace fivenine.UnifiedMaps.Windows
         private readonly Thickness _mapPadding = new Thickness(20);
 
         private InfoWindow _infoWindow;
-        
+        private Ellipse _userLocationIndicator;
+
+        private Geolocator _locator;
+
         public UnifiedMapRenderer()
         {
             _behavior = new RendererBehavior(this);
@@ -48,30 +55,7 @@ namespace fivenine.UnifiedMaps.Windows
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
-
-            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
-            {
-                UpdateMapType();
-            }
-
-            if (e.PropertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
-            {
-                // TODO See https://msdn.microsoft.com/en-us/library/windows/apps/mt219698.aspx
-            }
-
-            if (e.PropertyName == UnifiedMap.HasZoomEnabledProperty.PropertyName)
-            {
-                Control.ZoomInteractionMode = Element.HasZoomEnabled 
-                    ? MapInteractionMode.Auto 
-                    : MapInteractionMode.Disabled;
-            }
-
-            if (e.PropertyName == UnifiedMap.HasScrollEnabledProperty.PropertyName)
-            {
-                Control.PanInteractionMode = Element.HasScrollEnabled
-                    ? MapPanInteractionMode.Auto
-                    : MapPanInteractionMode.Disabled;
-            }
+            _behavior.ElementProperyChanged(e.PropertyName);
         }
 
         protected override void Dispose(bool disposing)
@@ -84,7 +68,7 @@ namespace fivenine.UnifiedMaps.Windows
 
             base.Dispose(disposing);
         }
-        
+
         private void OnControlLoaded(object sender, RoutedEventArgs e)
         {
             var serviceToken = fivenine.UnifiedMap.AuthenticationToken;
@@ -96,8 +80,7 @@ namespace fivenine.UnifiedMaps.Windows
 
             RegisterEvents(Element);
 
-            UpdateMapType();
-            LoadPins();
+            _behavior.Initialize();
         }
 
         private void RegisterEvents(UnifiedMap map)
@@ -151,6 +134,112 @@ namespace fivenine.UnifiedMaps.Windows
             MoveToRegion(region, animated);
         }
 
+        public void ApplyHasZoomEnabled()
+        {
+            Control.ZoomInteractionMode = Element.HasZoomEnabled
+                ? MapInteractionMode.Auto
+                : MapInteractionMode.Disabled;
+        }
+
+        public void ApplyHasScrollEnabled()
+        {
+            Control.PanInteractionMode = Element.HasScrollEnabled
+                ? MapPanInteractionMode.Auto
+                : MapPanInteractionMode.Disabled;
+        }
+
+        public async void ApplyIsShowingUser()
+        {
+            // TODO See https://msdn.microsoft.com/en-us/library/windows/apps/mt219698.aspx
+
+            if (Element.IsShowingUser)
+            {
+                var accessStatus = await Geolocator.RequestAccessAsync();
+                switch (accessStatus)
+                {
+                    case GeolocationAccessStatus.Allowed:
+                    {
+                        _locator = new Geolocator();
+                        _locator.PositionChanged += OnUserPositionChanged;
+                        _locator.StatusChanged += OnLocatorStatusChanged;
+
+                        var userPosition = await _locator.GetGeopositionAsync();
+                        if (userPosition?.Coordinate != null)
+                        {
+                            DisplayUserPosition(userPosition.Coordinate);
+                        }
+
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                DisplayUserPosition(null);
+            }
+        }
+
+        private void DisplayUserPosition(Geocoordinate coordinate)
+        {
+            if (coordinate == null && _userLocationIndicator != null)
+            {
+                Control.Children.Remove(_userLocationIndicator);
+                _userLocationIndicator = null;
+            }
+
+            if (coordinate != null)
+            {
+                if (_userLocationIndicator == null)
+                {
+                    _userLocationIndicator = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Colors.Blue),
+                        Height = 20,
+                        Width = 20,
+                        Opacity = 50
+                    };
+
+                    Control.Children.Add(_userLocationIndicator);
+                }
+
+                MapControl.SetLocation(_userLocationIndicator, coordinate.Point);
+            }
+        }
+
+        private void OnLocatorStatusChanged(Geolocator sender, StatusChangedEventArgs args)
+        {
+        }
+
+        private async void OnUserPositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                DisplayUserPosition(args.Position?.Coordinate);
+            });
+        }
+
+        public void ApplyMapType()
+        {
+            switch (Element.MapType)
+            {
+                case MapType.Street:
+                    Control.Style = MapStyle.Road;
+                    break;
+                case MapType.Satellite:
+                    Control.Style = MapStyle.Aerial;
+                    break;
+                case MapType.Hybrid:
+                    Control.Style = MapStyle.AerialWithRoads;
+                    break;
+                default:
+                {
+                    Control.Style = MapStyle.Road;
+                    Debug.Fail($"The map type {Element.MapType} is not supported on Windows, falling back to Road");
+                    break;
+                }
+            }
+        }
+
         private void OnMapTapped(MapControl sender, MapInputEventArgs args)
         {
             var items = Control.FindMapElementsAtOffset(args.Position);
@@ -191,15 +280,7 @@ namespace fivenine.UnifiedMaps.Windows
             pin.Id = mapPin;
             Control.MapElements.Add(mapPin);
         }
-
-        private void LoadPins()
-        {
-            foreach (var pin in Element.Pins)
-            {
-                AddPin(pin);
-            }
-        }
-
+        
         public void RemovePin(MapPin pin)
         {
             var pins = Control.MapElements
@@ -210,28 +291,6 @@ namespace fivenine.UnifiedMaps.Windows
             foreach (var icon in pins)
             {
                 Control.MapElements.Remove(icon);
-            }
-        }
-
-        private void UpdateMapType()
-        {
-            switch (Element.MapType)
-            {
-                case MapType.Street:
-                    Control.Style = MapStyle.Road;
-                    break;
-                case MapType.Satellite:
-                    Control.Style = MapStyle.Aerial;
-                    break;
-                case MapType.Hybrid:
-                    Control.Style = MapStyle.AerialWithRoads;
-                    break;
-                default:
-                {
-                    Control.Style = MapStyle.Road;
-                    Debug.Fail($"The map type {Element.MapType} is not supported on Windows, falling back to Road");
-                    break;
-                }
             }
         }
     }
