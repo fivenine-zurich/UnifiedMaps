@@ -51,7 +51,7 @@ namespace fivenine.UnifiedMaps
         internal MapRegion GetRegionForAllAnnotations()
         {
             var allPinPositions = _renderer.Map.Pins
-                .Select(p => p.Location).ToArray();
+                .Select(p => p.Location);
 
             return MapRegion.FromPositions(allPinPositions);
         }

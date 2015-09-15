@@ -7,8 +7,31 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public struct Position
     {
+        private const int LatitudeMax = 90;
+        private const int LongitudeMax = 180;
+
         private readonly double _latitude;
         private readonly double _longitude;
+
+        /// <summary>
+        /// Clamps the latitude to the valid range.
+        /// </summary>
+        /// <param name="latitude">The latitude.</param>
+        /// <returns>A valid latitude value.</returns>
+        public static double ClampLatitude(double latitude)
+        {
+            return latitude.Clamp(-LatitudeMax, LatitudeMax);
+        }
+
+        /// <summary>
+        /// Clamps the longitude to the valid range.
+        /// </summary>
+        /// <param name="longitude">The longitude.</param>
+        /// <returns>A valid longitude value.</returns>
+        public static double ClampLongitude(double longitude)
+        {
+            return longitude.Clamp(-LongitudeMax, LongitudeMax);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> struct.
@@ -17,8 +40,8 @@ namespace fivenine.UnifiedMaps
         /// <param name="longitude">The longitude degrees.</param>
         public Position(double latitude, double longitude)
         {
-            _latitude = Math.Min(Math.Max(latitude, -90.0), 90.0);
-            _longitude = Math.Min(Math.Max(longitude, -180.0), 180.0);
+            _latitude = ClampLatitude(latitude);
+            _longitude = ClampLongitude(longitude);
         }
 
         /// <summary>
