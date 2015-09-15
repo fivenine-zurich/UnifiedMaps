@@ -19,6 +19,7 @@ namespace fivenine.UnifiedMaps.iOS
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MKMapView>, IUnifiedMapRenderer
     {
         private readonly RendererBehavior _behavior;
+        private CLLocationManager _locationManager;
 
         public UnifiedMapRenderer()
         {
@@ -49,21 +50,14 @@ namespace fivenine.UnifiedMaps.iOS
                 };
 
                 SetNativeControl(map);
-
-                UpdateMapType();
-
-                LoadPins();
+                _behavior.Initialize();
             }
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
-
-            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
-            {
-                UpdateMapType();
-            }
+            _behavior.ElementProperyChanged(e.PropertyName);
         }
 
         protected override void Dispose(bool disposing)
@@ -75,6 +69,12 @@ namespace fivenine.UnifiedMaps.iOS
                 if (Control != null)
                 {
                     Control.Delegate = null;
+                }
+
+                if (_locationManager != null)
+                {
+                    _locationManager.Dispose();
+                    _locationManager = null;
                 }
             }
 
@@ -103,7 +103,17 @@ namespace fivenine.UnifiedMaps.iOS
             Control.ShowAnnotations(Control.Annotations, animated);
         }
 
-        private void UpdateMapType()
+        public void ApplyHasZoomEnabled()
+        {
+            Control.ZoomEnabled = Element.HasZoomEnabled;
+        }
+
+        public void ApplyHasScrollEnabled()
+        {
+            Control.ScrollEnabled = Element.HasScrollEnabled;
+        }
+
+        public void ApplyMapType()
         {
             switch (Element.MapType)
             {
@@ -149,12 +159,16 @@ namespace fivenine.UnifiedMaps.iOS
             Control.RemoveAnnotations(pins);
         }
 
-        private void LoadPins()
+        public void ApplyIsShowingUser()
         {
-            foreach (var pin in Element.Pins)
+            if (Element.IsShowingUser && _locationManager == null )
             {
-                AddPin(pin);
+                // Request location access permission once
+                _locationManager = new CLLocationManager();
+                _locationManager.RequestWhenInUseAuthorization();
             }
+
+            Control.ShowsUserLocation = Element.IsShowingUser;
         }
     }
 }

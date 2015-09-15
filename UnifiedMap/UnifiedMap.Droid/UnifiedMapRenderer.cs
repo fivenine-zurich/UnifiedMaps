@@ -48,11 +48,8 @@ namespace fivenine.UnifiedMaps.Droid
             // Register listeners
             _googleMap.SetOnInfoWindowClickListener(this);
 
-            // Initialize the new map control
-            UpdateMapType();
-            LoadPins();
-
             ApplyPadding();
+            _behavior.Initialize();
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -106,11 +103,7 @@ namespace fivenine.UnifiedMaps.Droid
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
-
-            if (e.PropertyName == UnifiedMap.MapTypeProperty.PropertyName)
-            {
-                UpdateMapType();
-            }
+            _behavior.ElementProperyChanged(e.PropertyName);
         }
 
         protected override void Dispose(bool disposing)
@@ -164,31 +157,6 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        private void UpdateMapType()
-        {
-            if (_googleMap == null)
-                return;
-
-            switch (Element.MapType)
-            {
-                case MapType.Street:
-                    _googleMap.MapType = GoogleMap.MapTypeNormal;
-                    break;
-                case MapType.Satellite:
-                    _googleMap.MapType = GoogleMap.MapTypeSatellite;
-                    break;
-                case MapType.Hybrid:
-                    _googleMap.MapType = GoogleMap.MapTypeHybrid;
-                    break;
-                default:
-                {
-                    _googleMap.MapType = GoogleMap.MapTypeNormal;
-                    Log.Error("error", $"The map type {Element.MapType} is not supported on Android, falling back to Street");
-                    break;
-                }
-            }
-        }
-
         public void AddPin(MapPin pin)
         {
             if (_googleMap == null)
@@ -227,11 +195,54 @@ namespace fivenine.UnifiedMaps.Droid
             MoveToRegion(region, animated);
         }
 
-        private void LoadPins()
+        public void ApplyHasZoomEnabled()
         {
-            foreach (var pin in Element.Pins)
+            if (_googleMap != null)
             {
-                AddPin(pin);
+                _googleMap.UiSettings.ZoomGesturesEnabled = Element.HasZoomEnabled;
+                _googleMap.UiSettings.ZoomControlsEnabled = Element.HasZoomEnabled;
+            }
+        }
+
+        public void ApplyHasScrollEnabled()
+        {
+            if (_googleMap != null)
+            {
+                _googleMap.UiSettings.ScrollGesturesEnabled = Element.HasScrollEnabled;
+            }
+        }
+
+        public void ApplyIsShowingUser()
+        {
+            if (_googleMap != null)
+            {
+                _googleMap.UiSettings.MyLocationButtonEnabled = Element.IsShowingUser;
+            }
+        }
+
+        public void ApplyMapType()
+        {
+            if (_googleMap != null)
+            {
+                switch (Element.MapType)
+                {
+                    case MapType.Street:
+                        _googleMap.MapType = GoogleMap.MapTypeNormal;
+                        break;
+                    case MapType.Satellite:
+                        _googleMap.MapType = GoogleMap.MapTypeSatellite;
+                        break;
+                    case MapType.Hybrid:
+                        _googleMap.MapType = GoogleMap.MapTypeHybrid;
+                        break;
+                    default:
+                    {
+                        _googleMap.MapType = GoogleMap.MapTypeNormal;
+                        Log.Error("error",
+                            $"The map type {Element.MapType} is not supported on Android, falling back to Street");
+                        break;
+                    }
+                }
             }
         }
 
