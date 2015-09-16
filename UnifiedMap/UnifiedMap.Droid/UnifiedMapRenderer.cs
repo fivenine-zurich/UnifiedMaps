@@ -1,28 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Android.Gms.Maps;
+using Android.Gms.Maps.Model;
 using Android.OS;
+using Android.Util;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Droid;
+using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using System;
-using Android.Gms.Maps.Model;
-using System.Collections.Generic;
-using System.Linq;
-using Android.Util;
-using Java.Lang;
 
-[assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
+[assembly: ExportRenderer(typeof (UnifiedMap), typeof (UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.Droid
 {
-    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap,MapView>, GoogleMap.IOnCameraChangeListener, 
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, GoogleMap.IOnCameraChangeListener,
         IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, IUnifiedMapRenderer
     {
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
-        private readonly Thickness _mapPadding = new Thickness(20);
-
         private GoogleMap _googleMap;
 
         public UnifiedMapRenderer()
@@ -32,25 +31,12 @@ namespace fivenine.UnifiedMaps.Droid
             _behavior = new RendererBehavior(this);
         }
 
-        public UnifiedMap Map => Element;
-        
         internal static Bundle Bundle
         {
             set { _bundle = value; }
         }
 
-        protected virtual Thickness MapPadding => _mapPadding;
-
-        public void OnMapReady(GoogleMap googleMap)
-        {
-            _googleMap = googleMap;
-
-            // Register listeners
-            _googleMap.SetOnInfoWindowClickListener(this);
-
-            ApplyPadding();
-            _behavior.Initialize();
-        }
+        protected virtual Thickness MapPadding { get; } = new Thickness(20);
 
         public void OnCameraChange(CameraPosition position)
         {
@@ -70,68 +56,19 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
+        public void OnMapReady(GoogleMap googleMap)
         {
-            base.OnElementChanged(e);
+            _googleMap = googleMap;
 
-            if (e.OldElement != null)
-            {
-                var element = e.OldElement;
+            // Register listeners
+            _googleMap.SetOnInfoWindowClickListener(this);
 
-                _googleMap?.Dispose();
-                RemoveEvents(element);
-            }
-
-            if( e.NewElement != null )
-            {
-                RegisterEvents(e.NewElement);
-
-                if( Control == null )
-                {
-                    var mapView = new MapView(Context);
-
-                    mapView.OnCreate(_bundle);
-                    mapView.OnResume();
-
-                    SetNativeControl(mapView);
-
-                    mapView.GetMapAsync(this);
-                }
-            }
+            ApplyPadding();
+            _behavior.Initialize();
         }
 
-        protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged(sender, e);
-            _behavior.ElementProperyChanged(e.PropertyName);
-        }
+        public UnifiedMap Map => Element;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                RemoveEvents(Element);
-
-                if( _googleMap != null)
-                {
-                    _googleMap.Dispose();
-                    _googleMap = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-
-        private void RegisterEvents(UnifiedMap map)
-        {
-            _behavior.RegisterEvents(map);
-        }
-
-        private void RemoveEvents(UnifiedMap map)
-        {
-            _behavior.RemoveEvents(map);
-        }
-        
         public void MoveToRegion(MapRegion region, bool animated)
         {
             if (_googleMap == null)
@@ -256,10 +193,72 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
+        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
+        {
+            base.OnElementChanged(e);
+
+            if (e.OldElement != null)
+            {
+                var element = e.OldElement;
+
+                _googleMap?.Dispose();
+                RemoveEvents(element);
+            }
+
+            if (e.NewElement != null)
+            {
+                RegisterEvents(e.NewElement);
+
+                if (Control == null)
+                {
+                    var mapView = new MapView(Context);
+
+                    mapView.OnCreate(_bundle);
+                    mapView.OnResume();
+
+                    SetNativeControl(mapView);
+
+                    mapView.GetMapAsync(this);
+                }
+            }
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+            _behavior.ElementProperyChanged(e.PropertyName);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RemoveEvents(Element);
+
+                if (_googleMap != null)
+                {
+                    _googleMap.Dispose();
+                    _googleMap = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private void RegisterEvents(UnifiedMap map)
+        {
+            _behavior.RegisterEvents(map);
+        }
+
+        private void RemoveEvents(UnifiedMap map)
+        {
+            _behavior.RemoveEvents(map);
+        }
+
         private void ApplyPadding()
         {
             var padding = MapPadding;
-            _googleMap.SetPadding((int)padding.Left, (int)padding.Top, (int)padding.Right, (int)padding.Bottom);
+            _googleMap.SetPadding((int) padding.Left, (int) padding.Top, (int) padding.Right, (int) padding.Bottom);
         }
     }
 }
