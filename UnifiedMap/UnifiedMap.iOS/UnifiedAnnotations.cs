@@ -18,11 +18,8 @@ namespace fivenine.UnifiedMaps.iOS
         }
 
         public MapPolyline Data { get; set; }
-
         public UIColor StrokeColor => Data.StrokeColor.ToUIColor();
-
         public nfloat LineWidth => Data.LineWidth;
-
         public nfloat Alpha => Data.Alpha;
     }
 }

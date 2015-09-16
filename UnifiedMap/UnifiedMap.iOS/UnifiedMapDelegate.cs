@@ -31,7 +31,7 @@ namespace fivenine.UnifiedMaps.iOS
                                  PinColor = pinAnnotation.Data.Color.ToMKPinAnnotationColor()
                              };
 
-                if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null )
+                if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null)
                 {
                     mapPin.RightCalloutAccessoryView = UIButton.FromType(UIButtonType.DetailDisclosure);
                 }
@@ -39,7 +39,7 @@ namespace fivenine.UnifiedMaps.iOS
                 mapPin.Annotation = annotation;
                 return mapPin;
             }
-            
+
             return null;
         }
 
@@ -52,7 +52,7 @@ namespace fivenine.UnifiedMaps.iOS
                 {
                     StrokeColor = polylineOverlay.StrokeColor,
                     LineWidth = polylineOverlay.LineWidth,
-                    Alpha = polylineOverlay.Alpha,
+                    Alpha = polylineOverlay.Alpha
                 };
 
                 return renderer;

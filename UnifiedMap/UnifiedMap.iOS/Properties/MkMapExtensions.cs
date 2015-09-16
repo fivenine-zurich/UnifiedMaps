@@ -6,7 +6,7 @@ namespace fivenine.UnifiedMaps.iOS
     {
         public static MKPinAnnotationColor ToMKPinAnnotationColor(this PinColor color)
         {
-            switch(color)
+            switch (color)
             {
                 case PinColor.Purple:
                     return MKPinAnnotationColor.Purple;
@@ -18,4 +18,3 @@ namespace fivenine.UnifiedMaps.iOS
         }
     }
 }
-

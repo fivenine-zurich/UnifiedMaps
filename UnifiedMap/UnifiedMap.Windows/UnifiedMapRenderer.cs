@@ -296,8 +296,7 @@ namespace fivenine.UnifiedMaps.Windows
 
         private async void OnUserPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            await
-                Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     () => { DisplayUserPosition(args.Position?.Coordinate); });
         }
 
@@ -328,8 +327,7 @@ namespace fivenine.UnifiedMaps.Windows
     public class PolylineData : DependencyObject
     {
         public static readonly DependencyProperty DataProperty =
-            DependencyProperty.RegisterAttached("Data", typeof (MapPolyline), typeof (WinMap.MapPolyline),
-                new PropertyMetadata(null));
+            DependencyProperty.RegisterAttached("Data", typeof (MapPolyline), typeof (WinMap.MapPolyline), new PropertyMetadata(null));
 
         public static MapPolyline GetData(DependencyObject d)
         {

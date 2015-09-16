@@ -8,16 +8,12 @@ namespace fivenine.UnifiedMaps
     internal interface IUnifiedMapRenderer
     {
         UnifiedMap Map { get; }
-
         void AddPin(MapPin item);
         void RemovePin(MapPin item);
-
         void AddPolyline(MapPolyline line);
         void RemovePolyline(MapPolyline line);
-
         void FitAllAnnotations(bool animated);
         void MoveToRegion(MapRegion region, bool animated);
-
         void ApplyHasZoomEnabled();
         void ApplyHasScrollEnabled();
         void ApplyIsShowingUser();
@@ -48,7 +44,7 @@ namespace fivenine.UnifiedMaps
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
         }
-        
+
         internal void RemoveEvents(UnifiedMap map)
         {
             MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);

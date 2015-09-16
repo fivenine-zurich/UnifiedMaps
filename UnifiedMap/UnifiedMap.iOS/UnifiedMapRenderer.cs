@@ -1,18 +1,15 @@
-﻿using System;
-using System.Drawing;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using CoreLocation;
+using fivenine.UnifiedMaps;
+using fivenine.UnifiedMaps.iOS;
 using MapKit;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-using fivenine.UnifiedMaps;
-using fivenine.UnifiedMaps.iOS;
-
-[assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
+[assembly: ExportRenderer(typeof (UnifiedMap), typeof (UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.iOS
 {
@@ -27,69 +24,6 @@ namespace fivenine.UnifiedMaps.iOS
         }
 
         public UnifiedMap Map => Element;
-
-        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
-        {
-            base.OnElementChanged(e);
-
-            if (e.OldElement != null)
-            {
-                RemoveEvents(e.OldElement);
-            }
-
-            if (e.NewElement != null)
-            {
-                RegisterEvents(e.NewElement);
-            }
-
-            if (Control == null)
-            {
-                var map = new MKMapView(RectangleF.Empty)
-                {
-                    Delegate = new UnifiedMapDelegate(this)
-                };
-
-                SetNativeControl(map);
-                _behavior.Initialize();
-            }
-        }
-
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged(sender, e);
-            _behavior.ElementProperyChanged(e.PropertyName);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                RemoveEvents(Element);
-
-                if (Control != null)
-                {
-                    Control.Delegate = null;
-                }
-
-                if (_locationManager != null)
-                {
-                    _locationManager.Dispose();
-                    _locationManager = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-
-        private void RegisterEvents(UnifiedMap map)
-        {
-            _behavior.RegisterEvents(map);
-        }
-
-        private void RemoveEvents(UnifiedMap map)
-        {
-            _behavior.RemoveEvents(map);
-        }
 
         void IUnifiedMapRenderer.MoveToRegion(MapRegion mapRegion, bool animated)
         {
@@ -154,7 +88,7 @@ namespace fivenine.UnifiedMaps.iOS
                 Data = pin,
                 Title = pin.Title,
                 Subtitle = pin.Snippet,
-                Coordinate = new CLLocationCoordinate2D(pin.Location.Latitude, pin.Location.Longitude),
+                Coordinate = new CLLocationCoordinate2D(pin.Location.Latitude, pin.Location.Longitude)
             };
 
             pin.Id = mapPin;
@@ -165,7 +99,7 @@ namespace fivenine.UnifiedMaps.iOS
         {
             var pins = Control.Annotations
                 .OfType<UnifiedPointAnnotation>()
-                .Where( point => point.Data == pin)
+                .Where(point => point.Data == pin)
                 .Cast<IMKAnnotation>()
                 .ToArray();
 
@@ -195,6 +129,69 @@ namespace fivenine.UnifiedMaps.iOS
                 .ToArray();
 
             Control.RemoveOverlays(polylines);
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
+        {
+            base.OnElementChanged(e);
+
+            if (e.OldElement != null)
+            {
+                RemoveEvents(e.OldElement);
+            }
+
+            if (e.NewElement != null)
+            {
+                RegisterEvents(e.NewElement);
+            }
+
+            if (Control == null)
+            {
+                var map = new MKMapView(RectangleF.Empty)
+                {
+                    Delegate = new UnifiedMapDelegate(this)
+                };
+
+                SetNativeControl(map);
+                _behavior.Initialize();
+            }
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+            _behavior.ElementProperyChanged(e.PropertyName);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RemoveEvents(Element);
+
+                if (Control != null)
+                {
+                    Control.Delegate = null;
+                }
+
+                if (_locationManager != null)
+                {
+                    _locationManager.Dispose();
+                    _locationManager = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private void RegisterEvents(UnifiedMap map)
+        {
+            _behavior.RegisterEvents(map);
+        }
+
+        private void RemoveEvents(UnifiedMap map)
+        {
+            _behavior.RemoveEvents(map);
         }
     }
 }
