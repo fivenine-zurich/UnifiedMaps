@@ -22,6 +22,8 @@ namespace fivenine.UnifiedMaps.Droid
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
+        private readonly Dictionary<MapPolyline, Polyline> _polylines;
+        
         private GoogleMap _googleMap;
 
         public UnifiedMapRenderer()
@@ -128,12 +130,26 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void AddPolyline(MapPolyline line)
         {
-            throw new NotImplementedException();
+            if (_googleMap != null)
+            {
+                var options = new PolylineOptions();
+                options.Add(line.Select(p => p.ToLatLng()).ToArray());
+                options.InvokeColor(line.StrokeColor.ToAndroid().ToArgb());
+                options.InvokeWidth(line.LineWidth);
+
+                var polyline = _googleMap.AddPolyline(options);
+                _polylines.Add(line, polyline);
+            }
         }
 
         public void RemovePolyline(MapPolyline line)
         {
-            throw new NotImplementedException();
+            Polyline polyline;
+            if (_polylines.TryGetValue(line, out polyline))
+            {
+                polyline.Remove();
+                _polylines.Remove(line);
+            }
         }
 
         public void FitAllAnnotations(bool animated)
