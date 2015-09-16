@@ -31,7 +31,7 @@ namespace fivenine.UnifiedMaps.iOS
                                  PinColor = pinAnnotation.Data.Color.ToMKPinAnnotationColor()
                              };
 
-                if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null )
+                if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null)
                 {
                     mapPin.RightCalloutAccessoryView = UIButton.FromType(UIButtonType.DetailDisclosure);
                 }
@@ -43,10 +43,22 @@ namespace fivenine.UnifiedMaps.iOS
             return null;
         }
 
-        public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        public override MKOverlayRenderer OverlayRenderer(MKMapView mapView, IMKOverlay overlay)
         {
-            //var pinAnnotation = view.Annotation as UnifiedPointAnnotation;
-            //pinAnnotation?.Select();
+            var polylineOverlay = overlay as UnifiedPolylineAnnotation;
+            if (polylineOverlay != null)
+            {
+                var renderer = new MKPolylineRenderer(polylineOverlay)
+                {
+                    StrokeColor = polylineOverlay.StrokeColor,
+                    LineWidth = polylineOverlay.LineWidth,
+                    Alpha = polylineOverlay.Alpha
+                };
+
+                return renderer;
+            }
+
+            return null;
         }
 
         public override void CalloutAccessoryControlTapped(MKMapView mapView, MKAnnotationView view, UIControl control)

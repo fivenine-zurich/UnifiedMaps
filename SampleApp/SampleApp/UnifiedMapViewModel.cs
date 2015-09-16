@@ -22,6 +22,7 @@ namespace Sample
         private readonly ICommand _moveToRegionCommand;
 
         private readonly LinkedList<MapPin> _allPins;
+
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
@@ -83,6 +84,14 @@ namespace Sample
                 });
 
             Pins = new ObservableCollection<MapPin>();
+            
+            var polyline = new MapPolyline();
+            foreach (var pin in _allPins)
+            {
+                polyline.Add(pin.Location);
+            }
+
+            Polylines = new ObservableCollection<MapPolyline>(new[] {polyline});
 
             // Add some sample pins
             AddPin(null);
@@ -92,6 +101,8 @@ namespace Sample
         internal UnifiedMap Map { get; set; }
 
         public ObservableCollection<MapPin> Pins { get; set; }
+
+        public ObservableCollection<MapPolyline> Polylines { get; set; }
 
         public MapType MapDisplayType
         {

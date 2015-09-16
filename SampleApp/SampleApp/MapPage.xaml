@@ -9,6 +9,7 @@
         <unifiedMaps:UnifiedMap
             x:Name="Map"
             Pins="{Binding Pins}"
+            Polylines="{Binding Polylines}"
             MapType="{Binding MapDisplayType}" 
             PinCalloutTappedCommand="{Binding PinSelectedCommand}"
             IsShowingUser="{Binding IsShowingUserLocation}"

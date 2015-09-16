@@ -33,16 +33,16 @@ namespace fivenine.UnifiedMaps
             typeof (ObservableCollection<MapPin>), typeof (UnifiedMap), new ObservableCollection<MapPin>());
 
         /// <summary>
-        /// The bindable pin callout tapped command property.
-        /// </summary>
-        public static readonly BindableProperty PinCalloutTappedCommandProperty =
-            BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<MapPin>), typeof (UnifiedMap), null);
-
-        /// <summary>
         /// The bindable polylines property.
         /// </summary>
         public static readonly BindableProperty PolylinesProperty = BindableProperty.Create("Polylines",
             typeof(ObservableCollection<MapPolyline>), typeof(UnifiedMap), new ObservableCollection<MapPolyline>());
+
+        /// <summary>
+        /// The bindable pin callout tapped command property.
+        /// </summary>
+        public static readonly BindableProperty PinCalloutTappedCommandProperty =
+            BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<MapPin>), typeof (UnifiedMap), null);
 
         /// <summary>
         /// The autofitallannotations property.

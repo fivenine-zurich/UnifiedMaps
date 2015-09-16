@@ -143,5 +143,9 @@ namespace fivenine.UnifiedMaps
         {
             return height.Clamp(-180, 180);
         }
+
+        public void Include(Position item)
+        {
+        }
     }
 }
