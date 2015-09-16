@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Devices.Geolocation;
+using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Core;
@@ -15,6 +16,7 @@ using fivenine.UnifiedMaps.Windows;
 using Xamarin.Forms.Platform.WinRT;
 using Binding = Windows.UI.Xaml.Data.Binding;
 using Thickness = Windows.UI.Xaml.Thickness;
+using WinMap = Windows.UI.Xaml.Controls.Maps;
 
 [assembly: ExportRenderer(typeof(UnifiedMap), typeof(UnifiedMapRenderer))]
 
@@ -127,12 +129,7 @@ namespace fivenine.UnifiedMaps.Windows
             Control.TrySetViewBoundsAsync(new GeoboundingBox(region.TopLeft.Convert(), region.BottomRight.Convert()),
                 MapPadding, animated ? MapAnimationKind.Linear : MapAnimationKind.None).AsTask();
         }
-
-        public void RemovePolyline(MapPolyline line)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void FitAllAnnotations(bool animated)
         {
             var region = _behavior.GetRegionForAllAnnotations();
@@ -278,8 +275,11 @@ namespace fivenine.UnifiedMaps.Windows
                     Latitude = pin.Location.Latitude,
                     Longitude = pin.Location.Longitude
                 }),
+
                 Image = RandomAccessStreamReference.CreateFromUri(
-                    new Uri("ms-appx:///UnifiedMap.Windows/Assets/pin_black.png"))
+                    new Uri("ms-appx:///UnifiedMap.Windows/Assets/pin_black.png")),
+
+                NormalizedAnchorPoint = new Point(0.5, 1)
             };
 
             pin.Id = mapPin;
@@ -301,7 +301,49 @@ namespace fivenine.UnifiedMaps.Windows
 
         public void AddPolyline(MapPolyline line)
         {
-            throw new NotImplementedException();
+            var positions = line.Select(p => new BasicGeoposition {Latitude = p.Latitude, Longitude = p.Longitude});
+
+            var polyline = new WinMap.MapPolyline
+            {
+                Path = new Geopath(positions),
+                StrokeColor = line.StrokeColor.ToWinRT(),
+                StrokeThickness = line.LineWidth
+            };
+
+            // Store the map-polyline object in an attached property
+            PolylineData.SetData(polyline, line);
+            
+            Control.MapElements.Add(polyline);
+        }
+
+        public void RemovePolyline(MapPolyline line)
+        {
+            var polylines = Control.MapElements
+                .OfType<WinMap.MapPolyline>()
+                .Where(polyline => PolylineData.GetData(polyline) == line)
+                .ToArray();
+
+            foreach (var polyline in polylines)
+            {
+                Control.MapElements.Remove(polyline);
+            }
+        }
+    }
+
+    public class PolylineData : DependencyObject
+    {
+        public static readonly DependencyProperty DataProperty =
+            DependencyProperty.RegisterAttached("Data", typeof (MapPolyline), typeof (WinMap.MapPolyline),
+                new PropertyMetadata(null));
+
+        public static MapPolyline GetData(DependencyObject d)
+        {
+            return (MapPolyline) d.GetValue(DataProperty);
+        }
+
+        public static void SetData(DependencyObject d, MapPolyline data)
+        {
+            d.SetValue(DataProperty, data);
         }
     }
 }
