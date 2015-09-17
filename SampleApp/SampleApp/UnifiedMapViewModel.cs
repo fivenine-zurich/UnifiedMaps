@@ -26,7 +26,7 @@ namespace Sample
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
-        private bool _isShowingUserLocation = false;
+        private bool _isShowingUserLocation;
 
         public UnifiedMapViewModel()
         {

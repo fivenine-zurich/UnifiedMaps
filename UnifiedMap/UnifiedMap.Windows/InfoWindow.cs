@@ -38,7 +38,7 @@ namespace fivenine.UnifiedMaps.Windows
 
         public InfoWindow()
         {
-            this.DefaultStyleKey = typeof (InfoWindow);
+            DefaultStyleKey = typeof (InfoWindow);
         }
     }
 }
