@@ -46,8 +46,12 @@
     <file src="bin\monoandroid\UnifiedMap*.xml" target="lib\monoandroid\" />
 
     <!--Windows Storage (Windows Phone 8.1, Windows Store 8.1)-->
-    <file src="bin\Portable-Win81+Wpa81\UnifiedMap*.dll" target="lib\Portable-Win81+Wpa81\" />
-    <file src="bin\Portable-Win81+Wpa81\UnifiedMap*.xml" target="lib\Portable-Win81+Wpa81\" />
+    <file src="bin\uap10.0\UnifiedMap*.dll" target="lib\Portable-Win81+Wpa81\" />
+    <file src="bin\uap10.0\UnifiedMap*.xml" target="lib\Portable-Win81+Wpa81\" />
+
+    <!--Windows Storage (Windows Phone 8.1, Windows Store 8.1)-->
+    <file src="bin\uap10.0\UnifiedMap*.dll" target="lib\uap10.0\" />
+    <file src="bin\uap10.0\UnifiedMap*.xml" target="lib\uap10.0\" />
 
   </files>
 </package>
