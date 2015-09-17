@@ -30,6 +30,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             AutoPackage = false;
             _markers = new LinkedList<Tuple<Marker, MapPin>>();
+            _polylines = new Dictionary<MapPolyline, Polyline>();
             _behavior = new RendererBehavior(this);
         }
 
