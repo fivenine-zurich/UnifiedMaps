@@ -3,32 +3,6 @@
 namespace fivenine.UnifiedMaps
 {
     /// <summary>
-    /// Defines the available pin colors.
-    /// </summary>
-    public enum PinColor
-    {
-        /// <summary>
-        /// The default pin color.
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// A red pin.
-        /// </summary>
-        Red,
-
-        /// <summary>
-        /// A green pin.
-        /// </summary>
-        Green,
-
-        /// <summary>
-        /// A purple pin.
-        /// </summary>
-        Purple
-    }
-
-    /// <summary>
     /// A map pin annotation.
     /// </summary>
     public class MapPin : MapItem
@@ -49,7 +23,7 @@ namespace fivenine.UnifiedMaps
         /// The color property.
         /// </summary>
         public static readonly BindableProperty ColorProperty = BindableProperty.Create("Color",
-            typeof(PinColor), typeof(MapPin), PinColor.Default);
+            typeof(Color), typeof(MapPin), Xamarin.Forms.Color.Blue);
 
         /// <summary>
         /// The snippet property.
@@ -100,9 +74,9 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The color.
         /// </value>
-        public PinColor Color
+        public Color Color
         {
-            get { return (PinColor) GetValue(ColorProperty); }
+            get { return (Color) GetValue(ColorProperty); }
             set { SetValue(ColorProperty, value); }
         }
     }

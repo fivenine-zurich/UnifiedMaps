@@ -258,3 +258,4 @@ com_crashlytics_export_strings.xml
 # ReSharper .Settings
 *.DotSettings
 SampleApp/SampleApp.Droid/Properties/AndroidManifest.xml
+SampleApp/SampleApp.Droid/Properties/AndroidManifest.xml

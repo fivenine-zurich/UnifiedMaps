@@ -54,32 +54,32 @@ namespace Sample
                         Title = "Zürich",
                         Snippet = "It's awesome",
                         Location = new Position(47.3667, 8.5500),
-                        Color = PinColor.Purple
+                        Color = Color.Black
                     },
                     new MapPin
                     {
                         Title = "Brändlen",
                         Location = new Position(46.904829, 8.409724),
-                        Color = PinColor.Red
+                        Color = Color.Red
                     },
                     new MapPin
                     {
                         Title = "Wolfenschiessen",
                         Snippet = "... nothing to see here",
                         Location = new Position(46.905180, 8.398110),
-                        Color = PinColor.Green
+                        Color = Color.Blue
                     },
                     new MapPin
                     {
                         Title = "Klewenalp",
                         Location = new Position(46.939898, 8.475217),
-                        Color = PinColor.Green
+                        Color = Color.Fuchsia
                     },
                     new MapPin
                     {
                         Title = "Beckenried NW",
                         Location = new Position(46.963876, 8.482078),
-                        Color = PinColor.Red
+                        Color = Color.Green
                     }
                 });
 

@@ -40,7 +40,6 @@
     <Compile Include="UnifiedMapRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnifiedAnnotations.cs" />
-    <Compile Include="Properties\MkMapExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
