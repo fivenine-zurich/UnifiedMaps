@@ -11,8 +11,8 @@ namespace fivenine.UnifiedMaps.Droid
 
         public static LatLngBounds ToBounds(this MapRegion region)
         {
-            var southwest = new LatLng(region.MinX, region.MinY);
-            var northeast = new LatLng(region.MaxX, region.MaxY);
+            var southwest = new LatLng(region.MinY, region.MinX);
+            var northeast = new LatLng(region.MaxY, region.MaxX);
 
             return new LatLngBounds(southwest, northeast);
         }

@@ -39,7 +39,7 @@ namespace fivenine.UnifiedMaps.Droid
             set { _bundle = value; }
         }
 
-        protected virtual Thickness MapPadding { get; } = new Thickness(20);
+        protected virtual Thickness MapPadding { get; } = new Thickness(48);
 
         public void OnCameraChange(CameraPosition position)
         {
