@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		UnifiedMaps.nuspec = UnifiedMaps.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifiedMap.Tests", "UnifiedMap\UnifiedMap.Tests\UnifiedMap.Tests.csproj", "{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Simulator|Any CPU = Debug Simulator|Any CPU
@@ -96,6 +98,12 @@ Global
 		{5F3456A5-154C-4C5B-92DA-9556B45CB5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F3456A5-154C-4C5B-92DA-9556B45CB5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F3456A5-154C-4C5B-92DA-9556B45CB5EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Debug Simulator|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Debug Simulator|Any CPU.Build.0 = Debug|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,5 +118,6 @@ Global
 		{026B7F8A-C176-4A19-AF0F-5976A79B6432} = {D2481B32-D7EA-4D79-9ECF-C48DD18E5080}
 		{F187911E-B09C-4924-AF24-ADF9F80AF60D} = {D2481B32-D7EA-4D79-9ECF-C48DD18E5080}
 		{5F3456A5-154C-4C5B-92DA-9556B45CB5EA} = {F16D64C8-F833-4265-821B-C5AA93113E13}
+		{CDFD0B15-3DBC-4387-A16D-F81A3B3611B1} = {F16D64C8-F833-4265-821B-C5AA93113E13}
 	EndGlobalSection
 EndGlobal

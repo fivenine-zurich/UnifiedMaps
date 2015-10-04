@@ -36,8 +36,8 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Initializes a new instance of the <see cref="Position"/> struct.
         /// </summary>
-        /// <param name="latitude">The latitude degrees.</param>
-        /// <param name="longitude">The longitude degrees.</param>
+        /// <param name="latitude">The latitude degrees (y).</param>
+        /// <param name="longitude">The longitude degrees (x).</param>
         public Position(double latitude, double longitude)
         {
             _latitude = ClampLatitude(latitude);
@@ -45,12 +45,12 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
-        /// Gets the latitude of this position in decimal degrees.
+        /// Gets the latitude of this position in decimal degrees (y).
         /// </summary>
         public double Latitude => _latitude;
 
         /// <summary>
-        /// Gets the longitude of this position in decimal degrees.
+        /// Gets the longitude of this position in decimal degrees (x).
         /// </summary>
         public double Longitude => _longitude;
 
@@ -106,5 +106,14 @@ namespace fivenine.UnifiedMaps
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public override int GetHashCode() => _latitude.GetHashCode()*37 ^ _longitude.GetHashCode();
+
+        /// <summary>
+        /// Returns the fully qualified type name of this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> containing a fully qualified type name.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString() => $"Position [Latitude {Latitude}, Longitude {Longitude}]";
     }
 }
