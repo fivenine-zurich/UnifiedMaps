@@ -122,7 +122,7 @@ namespace fivenine.UnifiedMaps.iOS
 
         public void RemovePolyline(MapPolyline line)
         {
-            var polylines = Control.Annotations
+            var polylines = Control.Overlays
                 .OfType<UnifiedPolylineAnnotation>()
                 .Where(point => point.Data == line)
                 .Cast<IMKOverlay>()
