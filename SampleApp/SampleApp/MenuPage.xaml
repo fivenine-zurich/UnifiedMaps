@@ -13,8 +13,10 @@
           FontSize="Medium"/>
     </ContentView>
 
-    <Button Text="Add Pin" Command="{Binding AddPinCommand}" />
-    <Button Text="Remove Pin" Command="{Binding RemovePinCommand}" />
+    <Button Text="Add pin" Command="{Binding AddPinCommand}" />
+    <Button Text="Remove pin" Command="{Binding RemovePinCommand}" />
+    <Button Text="Add polyline" Command="{Binding AddPolylineCommand}" />
+    <Button Text="Remove polyline" Command="{Binding RemovePolylineCommand}" />
     <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
     <StackLayout>
       <Label>Zoom enabled</Label>

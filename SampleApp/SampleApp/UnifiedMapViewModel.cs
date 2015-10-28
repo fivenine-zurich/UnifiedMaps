@@ -21,7 +21,11 @@ namespace Sample
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
 
+        private readonly Command _addPolylineCommand;
+        private readonly Command _removePolylineCommand;
+
         private readonly LinkedList<MapPin> _allPins;
+        private readonly LinkedList<MapPolyline> _allPolylines;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
@@ -44,6 +48,12 @@ namespace Sample
 
             _moveToRegionCommand =
                 new Command(() => Map.MoveToRegion(animated: true));
+
+            _addPolylineCommand =
+                new Command(AddPolyline, o => _allPolylines.Any());
+
+            _removePolylineCommand =
+                new Command(RemovePolyline, o => Polylines.Any());
 
             _allPins = new LinkedList<MapPin>(
                 new []
@@ -84,18 +94,25 @@ namespace Sample
                 });
 
             Pins = new ObservableCollection<MapPin>();
-            
+
+            _allPolylines = new LinkedList<MapPolyline>();
+
             var polyline = new MapPolyline();
             foreach (var pin in _allPins)
             {
                 polyline.Add(pin.Location);
             }
 
-            Polylines = new ObservableCollection<MapPolyline>(new[] {polyline});
+            _allPolylines.AddLast(polyline);
 
+            Polylines = new ObservableCollection<MapPolyline>();
+            
             // Add some sample pins
             AddPin(null);
             AddPin(null);
+
+            // Add some polylines
+            AddPolyline(null);
         }
 
         internal UnifiedMap Map { get; set; }
@@ -154,6 +171,10 @@ namespace Sample
 
         public ICommand MoveToRegionCommand => _moveToRegionCommand;
 
+        public ICommand AddPolylineCommand => _addPolylineCommand;
+
+        public ICommand RemovePolylineCommand => _removePolylineCommand;
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -190,6 +211,38 @@ namespace Sample
 
             _removePinCommand.ChangeCanExecute();
             _addPinCommand.ChangeCanExecute();
+        }
+
+        private void AddPolyline(object o)
+        {
+            if (_allPolylines.Last == null)
+            {
+                return;
+            }
+
+            var polyline = _allPolylines.Last.Value;
+            _allPolylines.RemoveLast();
+
+            Polylines.Add(polyline);
+
+            _removePolylineCommand.ChangeCanExecute();
+            _addPolylineCommand.ChangeCanExecute();
+        }
+
+        private void RemovePolyline(object o)
+        {
+            if (Polylines.Count == 0)
+            {
+                return;
+            }
+
+            var polyline = Polylines.LastOrDefault();
+            _allPolylines.AddLast(polyline);
+
+            Polylines.Remove(polyline);
+
+            _removePolylineCommand.ChangeCanExecute();
+            _addPolylineCommand.ChangeCanExecute();
         }
     }
 }
