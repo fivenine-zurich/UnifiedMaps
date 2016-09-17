@@ -25,11 +25,11 @@ namespace fivenine.UnifiedMaps.iOS
             if (pinAnnotation != null)
             {
                 var mapPin = (MKPinAnnotationView) mapView.DequeueReusableAnnotation(PinIdentifier) ??
-                             new MKPinAnnotationView(annotation, PinIdentifier)
-                             {
-                                 CanShowCallout = string.IsNullOrWhiteSpace(pinAnnotation.Data.Title) == false,
-                                 PinColor = pinAnnotation.Data.Color.ToMKPinAnnotationColor()
-                             };
+                     new MKPinAnnotationView(annotation, PinIdentifier)
+                     {
+                         CanShowCallout = string.IsNullOrWhiteSpace(pinAnnotation.Data.Title) == false,
+                         PinColor = pinAnnotation.Data.Color.ToMKPinAnnotationColor(),
+                     };
 
                 if (_renderer.Element.PinCalloutTappedCommand != null && pinAnnotation.Data != null)
                 {
