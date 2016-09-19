@@ -1,7 +1,7 @@
 stages:
   - build
 
-build debug:
+build ci:
   stage: build
   script:
   - ./build.sh --target Build --configuration Debug
