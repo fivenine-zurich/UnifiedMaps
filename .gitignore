@@ -135,6 +135,7 @@ publish/
 # NuGet Packages
 *.nupkg
 **/packages/*
+[Pp]ackages/
 
 # Windows Azure Build Output
 csx/
@@ -258,5 +259,12 @@ com_crashlytics_export_strings.xml
 # ReSharper .Settings
 *.DotSettings
 
-# Android Manifest (API-Key)
-AndroidManifest.xml
+# Build related
+tools/Cake/
+tools/NUnit.Runners/
+tools/NUnit.Console/
+tools/NUnit.ConsoleRunner/
+tools/GitVersion.*
+tools/nuget.exe
+tools/packages.config.md5sum
+

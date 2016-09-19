@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="ch.fivenine.unifiedmaps.sample">
-	<uses-sdk android:minSdkVersion="19" />
+	<uses-sdk android:minSdkVersion="20" />
 	<!-- Put your Google Maps V2 API Key here. This key will not work for you.-->
 	<!-- See https://developers.google.com/maps/documentation/android/start#obtaining_an_api_key -->
 	<application android:label="UnifiedMaps" android:icon="@drawable/icon">

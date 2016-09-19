@@ -81,7 +81,7 @@ namespace fivenine.UnifiedMaps.iOS
             Control.ShowsUserLocation = Element.IsShowingUser;
         }
 
-        public void AddPin(MapPin pin)
+        public void AddPin(IMapPin pin)
         {
             var mapPin = new UnifiedPointAnnotation
             {
@@ -91,11 +91,11 @@ namespace fivenine.UnifiedMaps.iOS
                 Coordinate = new CLLocationCoordinate2D(pin.Location.Latitude, pin.Location.Longitude)
             };
 
-            pin.Id = mapPin;
+            // pin.Id = mapPin;
             Control.AddAnnotation(mapPin);
         }
 
-        public void RemovePin(MapPin pin)
+        public void RemovePin(IMapPin pin)
         {
             var pins = Control.Annotations
                 .OfType<UnifiedPointAnnotation>()

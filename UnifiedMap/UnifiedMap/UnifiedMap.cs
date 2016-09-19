@@ -11,7 +11,7 @@ namespace fivenine.UnifiedMaps
     public class UnifiedMap : View
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly ObservableCollection<MapPin> _pins;
+        private readonly ObservableCollection<IMapPin> _pins;
         
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly ObservableCollection<MapPolyline> _polylines;
@@ -30,7 +30,7 @@ namespace fivenine.UnifiedMaps
         /// The bindable pins property.
         /// </summary>
         public static readonly BindableProperty PinsProperty = BindableProperty.Create("Pins",
-            typeof (ObservableCollection<MapPin>), typeof (UnifiedMap), new ObservableCollection<MapPin>());
+            typeof (ObservableCollection<IMapPin>), typeof (UnifiedMap), new ObservableCollection<IMapPin>());
 
         /// <summary>
         /// The bindable polylines property.
@@ -76,7 +76,7 @@ namespace fivenine.UnifiedMaps
             HorizontalOptions = LayoutOptions.FillAndExpand;
             VerticalOptions = LayoutOptions.FillAndExpand;
 
-            _pins = new ObservableCollection<MapPin>();
+            _pins = new ObservableCollection<IMapPin>();
             _polylines = new ObservableCollection<MapPolyline>();
 
             _pins.CollectionChanged += OnPinsCollectionChanged;
@@ -98,9 +98,9 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pins.
         /// </value>
-        public ObservableCollection<MapPin> Pins
+        public ObservableCollection<IMapPin> Pins
         {
-            get { return (ObservableCollection<MapPin>)GetValue(PinsProperty); }
+            get { return (ObservableCollection<IMapPin>)GetValue(PinsProperty); }
             set { SetValue(PinsProperty, value); }
         }
 

@@ -21,7 +21,7 @@ namespace fivenine.UnifiedMaps.Droid
     {
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
-        private readonly LinkedList<Tuple<Marker, MapPin>> _markers;
+        private readonly LinkedList<Tuple<Marker, IMapPin>> _markers;
         private readonly Dictionary<MapPolyline, Polyline> _polylines;
         
         private GoogleMap _googleMap;
@@ -29,7 +29,7 @@ namespace fivenine.UnifiedMaps.Droid
         public UnifiedMapRenderer()
         {
             AutoPackage = false;
-            _markers = new LinkedList<Tuple<Marker, MapPin>>();
+            _markers = new LinkedList<Tuple<Marker, IMapPin>>();
             _polylines = new Dictionary<MapPolyline, Polyline>();
             _behavior = new RendererBehavior(this);
         }
@@ -97,7 +97,7 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        public void AddPin(MapPin pin)
+        public void AddPin(IMapPin pin)
         {
             if (_googleMap == null)
                 return;
@@ -110,10 +110,10 @@ namespace fivenine.UnifiedMaps.Droid
             mapPin.SetSnippet(pin.Snippet);
 
             var marker = _googleMap.AddMarker(mapPin);
-            _markers.AddLast(new Tuple<Marker, MapPin>(marker, pin));
+            _markers.AddLast(new Tuple<Marker, IMapPin>(marker, pin));
         }
 
-        public void RemovePin(MapPin pin)
+        public void RemovePin(IMapPin pin)
         {
             if (_googleMap == null || pin == null)
                 return;

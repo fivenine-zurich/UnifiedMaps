@@ -7,7 +7,7 @@ namespace fivenine.UnifiedMaps
     /// <summary>
     /// A map polyline annotation.
     /// </summary>
-    public class MapPolyline : MapItem, IEnumerable<Position>
+    public class MapPolyline : IMapAnnotation, IEnumerable<Position>
     {
         private readonly LinkedList<Position> _items;
         private readonly MapRegion _boundingBox;

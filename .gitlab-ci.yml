@@ -1,0 +1,32 @@
+stages:
+  - build
+
+build debug:
+  stage: build
+  script:
+  - ./build.sh --target Build --configuration Debug
+  cache:
+    paths:
+    - packages
+    - tools
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+build release:
+  stage: build
+  script:
+  - ./build.sh --target Build --configuration Release
+  cache:
+    paths:
+    - packages
+    - tools
+  artifacts:
+    paths:
+      - bin/
+    expire_in: 30 minutes
+  tags:
+    - osx
+    - xamarin
+    - xcode

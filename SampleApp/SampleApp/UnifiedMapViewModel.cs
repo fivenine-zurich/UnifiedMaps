@@ -21,16 +21,12 @@ namespace Sample
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
 
-        private readonly Command _addPolylineCommand;
-        private readonly Command _removePolylineCommand;
-
-        private readonly LinkedList<MapPin> _allPins;
-        private readonly LinkedList<MapPolyline> _allPolylines;
+        private readonly LinkedList<IMapPin> _allPins;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
-        private bool _isShowingUserLocation;
+        private bool _isShowingUserLocation = false;
 
         public UnifiedMapViewModel()
         {
@@ -49,13 +45,7 @@ namespace Sample
             _moveToRegionCommand =
                 new Command(() => Map.MoveToRegion(animated: true));
 
-            _addPolylineCommand =
-                new Command(AddPolyline, o => _allPolylines.Any());
-
-            _removePolylineCommand =
-                new Command(RemovePolyline, o => Polylines.Any());
-
-            _allPins = new LinkedList<MapPin>(
+            _allPins = new LinkedList<IMapPin>(
                 new []
                 {
 
@@ -64,60 +54,53 @@ namespace Sample
                         Title = "Zürich",
                         Snippet = "It's awesome",
                         Location = new Position(47.3667, 8.5500),
-                        Color = Color.Black
+                        Color = PinColor.Purple
                     },
                     new MapPin
                     {
                         Title = "Brändlen",
                         Location = new Position(46.904829, 8.409724),
-                        Color = Color.Red
+                        Color = PinColor.Red
                     },
                     new MapPin
                     {
                         Title = "Wolfenschiessen",
                         Snippet = "... nothing to see here",
                         Location = new Position(46.905180, 8.398110),
-                        Color = Color.Blue
+                        Color = PinColor.Green
                     },
                     new MapPin
                     {
                         Title = "Klewenalp",
                         Location = new Position(46.939898, 8.475217),
-                        Color = Color.Fuchsia
+                        Color = PinColor.Green
                     },
                     new MapPin
                     {
                         Title = "Beckenried NW",
                         Location = new Position(46.963876, 8.482078),
-                        Color = Color.Green
+                        Color = PinColor.Red
                     }
                 });
 
-            Pins = new ObservableCollection<MapPin>();
-
-            _allPolylines = new LinkedList<MapPolyline>();
-
+            Pins = new ObservableCollection<IMapPin>();
+            
             var polyline = new MapPolyline();
             foreach (var pin in _allPins)
             {
                 polyline.Add(pin.Location);
             }
 
-            _allPolylines.AddLast(polyline);
+            Polylines = new ObservableCollection<MapPolyline>(new[] {polyline});
 
-            Polylines = new ObservableCollection<MapPolyline>();
-            
             // Add some sample pins
             AddPin(null);
             AddPin(null);
-
-            // Add some polylines
-            AddPolyline(null);
         }
 
         internal UnifiedMap Map { get; set; }
 
-        public ObservableCollection<MapPin> Pins { get; set; }
+        public ObservableCollection<IMapPin> Pins { get; set; }
 
         public ObservableCollection<MapPolyline> Polylines { get; set; }
 
@@ -171,10 +154,6 @@ namespace Sample
 
         public ICommand MoveToRegionCommand => _moveToRegionCommand;
 
-        public ICommand AddPolylineCommand => _addPolylineCommand;
-
-        public ICommand RemovePolylineCommand => _removePolylineCommand;
-
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -211,38 +190,6 @@ namespace Sample
 
             _removePinCommand.ChangeCanExecute();
             _addPinCommand.ChangeCanExecute();
-        }
-
-        private void AddPolyline(object o)
-        {
-            if (_allPolylines.Last == null)
-            {
-                return;
-            }
-
-            var polyline = _allPolylines.Last.Value;
-            _allPolylines.RemoveLast();
-
-            Polylines.Add(polyline);
-
-            _removePolylineCommand.ChangeCanExecute();
-            _addPolylineCommand.ChangeCanExecute();
-        }
-
-        private void RemovePolyline(object o)
-        {
-            if (Polylines.Count == 0)
-            {
-                return;
-            }
-
-            var polyline = Polylines.LastOrDefault();
-            _allPolylines.AddLast(polyline);
-
-            Polylines.Remove(polyline);
-
-            _removePolylineCommand.ChangeCanExecute();
-            _addPolylineCommand.ChangeCanExecute();
         }
     }
 }
