@@ -120,6 +120,7 @@ nuget publish pre:
     - /^release/.*$/
   dependencies:
   - nuget pack
+  when: manual
   tags:
     - osx
     - xamarin

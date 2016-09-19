@@ -65,7 +65,7 @@ Task("Build")
 Task("Run-Unit-Tests")
     .Does(() =>
 {
-    NUnit3("./bin/*.Tests.dll", new NUnit3Settings {
+    NUnit3("./bin/Tests/*.Tests.dll", new NUnit3Settings {
         NoResults = true
     });
 });
@@ -104,7 +104,7 @@ Task("NuGet-Pack")
 Task("NuGet-Publish")
     .Does( () => 
 {
-    NuGetPush(File("UnifiedMaps*.nupkg"), new NuGetPushSettings {
+    NuGetPush(GetFiles("UnifiedMaps*.nupkg").First(), new NuGetPushSettings {
         ApiKey = EnvironmentVariable("NUGET_API_KEY")
     }); 
 });
