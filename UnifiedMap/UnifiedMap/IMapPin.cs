@@ -1,32 +1,8 @@
 using System;
+using Xamarin.Forms;
+
 namespace fivenine.UnifiedMaps
 {
-    /// <summary>
-    /// Defines the available pin colors.
-    /// </summary>
-    public enum PinColor
-    {
-        /// <summary>
-        /// The default pin color.
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// A red pin.
-        /// </summary>
-        Red,
-
-        /// <summary>
-        /// A green pin.
-        /// </summary>
-        Green,
-
-        /// <summary>
-        /// A purple pin.
-        /// </summary>
-        Purple
-    }
-
     /// <summary>
     /// A definition of a map pin annotation.
     /// </summary>
@@ -39,7 +15,6 @@ namespace fivenine.UnifiedMaps
         /// The title of the pin.
         /// </value>
         string Title { get; }
-
 
         /// <summary>
         /// Gets the snippet (sub-title) of the map pin callout window.
@@ -63,6 +38,6 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The color.
         /// </value>
-        PinColor Color { get; }
+        Color Color { get; }
     }
 }

@@ -42,7 +42,7 @@ namespace fivenine.UnifiedMaps
         /// The bindable pin callout tapped command property.
         /// </summary>
         public static readonly BindableProperty PinCalloutTappedCommandProperty =
-            BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<MapPin>), typeof (UnifiedMap), null);
+            BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
         /// <summary>
         /// The autofitallannotations property.
@@ -110,9 +110,9 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pin callout tapped command.
         /// </value>
-        public Command<MapPin> PinCalloutTappedCommand
+        public Command<IMapPin> PinCalloutTappedCommand
         {
-            get { return (Command<MapPin>)GetValue(PinCalloutTappedCommandProperty); }
+            get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
             set { SetValue(PinCalloutTappedCommandProperty, value); }
         }
 

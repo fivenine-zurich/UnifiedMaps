@@ -12,7 +12,7 @@ using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
-[assembly: ExportRenderer(typeof (UnifiedMap), typeof (UnifiedMapRenderer))]
+[assembly: ExportRenderer (typeof (UnifiedMap), typeof (UnifiedMapRenderer))]
 
 namespace fivenine.UnifiedMaps.Droid
 {
@@ -23,186 +23,168 @@ namespace fivenine.UnifiedMaps.Droid
         private readonly RendererBehavior _behavior;
         private readonly LinkedList<Tuple<Marker, IMapPin>> _markers;
         private readonly Dictionary<MapPolyline, Polyline> _polylines;
-        
+
         private GoogleMap _googleMap;
 
-        public UnifiedMapRenderer()
+        public UnifiedMapRenderer ()
         {
             AutoPackage = false;
-            _markers = new LinkedList<Tuple<Marker, IMapPin>>();
-            _polylines = new Dictionary<MapPolyline, Polyline>();
-            _behavior = new RendererBehavior(this);
+            _markers = new LinkedList<Tuple<Marker, IMapPin>> ();
+            _polylines = new Dictionary<MapPolyline, Polyline> ();
+            _behavior = new RendererBehavior (this);
         }
 
-        internal static Bundle Bundle
-        {
+        internal static Bundle Bundle {
             set { _bundle = value; }
         }
 
-        protected virtual Thickness MapPadding { get; } = new Thickness(48);
+        protected virtual Thickness MapPadding { get; } = new Thickness (48);
 
-        public void OnCameraChange(CameraPosition position)
+        public void OnCameraChange (CameraPosition position)
         {
         }
 
-        public void OnInfoWindowClick(Marker marker)
+        public void OnInfoWindowClick (Marker marker)
         {
             var mapPin = _markers
-                .Where(tuple => tuple.Item1.Id == marker.Id)
-                .Select(tuple => tuple.Item2)
-                .FirstOrDefault();
+                .Where (tuple => tuple.Item1.Id == marker.Id)
+                .Select (tuple => tuple.Item2)
+                .FirstOrDefault ();
 
             var command = Element.PinCalloutTappedCommand;
-            if (command != null && command.CanExecute(mapPin))
-            {
-                command.Execute(mapPin);
+            if (command != null && command.CanExecute (mapPin)) {
+                command.Execute (mapPin);
             }
         }
 
-        public void OnMapReady(GoogleMap googleMap)
+        public void OnMapReady (GoogleMap googleMap)
         {
             _googleMap = googleMap;
 
             // Register listeners
-            _googleMap.SetOnInfoWindowClickListener(this);
+            _googleMap.SetOnInfoWindowClickListener (this);
 
-            ApplyPadding();
-            _behavior.Initialize();
+            ApplyPadding ();
+            _behavior.Initialize ();
         }
 
         public UnifiedMap Map => Element;
 
-        public void MoveToRegion(MapRegion region, bool animated)
+        public void MoveToRegion (MapRegion region, bool animated)
         {
-            if (_googleMap == null)
-            {
+            if (_googleMap == null) {
                 return;
             }
 
-            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds (region.ToBounds (), 0);
 
-            try
-            {
-                if (animated)
-                {
-                    _googleMap.AnimateCamera(cameraUpdate);
+            try {
+                if (animated) {
+                    _googleMap.AnimateCamera (cameraUpdate);
+                } else {
+                    _googleMap.MoveCamera (cameraUpdate);
                 }
-                else
-                {
-                    _googleMap.MoveCamera(cameraUpdate);
-                }
-            }
-            catch (IllegalStateException)
-            {
+            } catch (IllegalStateException) {
             }
         }
 
-        public void AddPin(IMapPin pin)
+        public void AddPin (IMapPin pin)
         {
             if (_googleMap == null)
                 return;
 
-            var mapPin = new MarkerOptions();
+            var mapPin = new MarkerOptions ();
 
-            mapPin.SetTitle(pin.Title);
-            mapPin.SetPosition(new LatLng(pin.Location.Latitude, pin.Location.Longitude));
-            mapPin.SetIcon(pin.Color.ToStandardMarkerIcon());
-            mapPin.SetSnippet(pin.Snippet);
+            mapPin.SetTitle (pin.Title);
+            mapPin.SetPosition (new LatLng (pin.Location.Latitude, pin.Location.Longitude));
+            mapPin.SetIcon (pin.Color.ToStandardMarkerIcon ());
+            mapPin.SetSnippet (pin.Snippet);
 
-            var marker = _googleMap.AddMarker(mapPin);
-            _markers.AddLast(new Tuple<Marker, IMapPin>(marker, pin));
+            var marker = _googleMap.AddMarker (mapPin);
+            _markers.AddLast (new Tuple<Marker, IMapPin> (marker, pin));
         }
 
-        public void RemovePin(IMapPin pin)
+        public void RemovePin (IMapPin pin)
         {
             if (_googleMap == null || pin == null)
                 return;
 
             var markers = _markers
-                .Where(kv => kv.Item2 == pin)
-                .ToList();
+                .Where (kv => kv.Item2 == pin)
+                .ToList ();
 
-            foreach (var marker in markers)
-            {
-                marker.Item1.Remove();
-                _markers.Remove(marker);
+            foreach (var marker in markers) {
+                marker.Item1.Remove ();
+                _markers.Remove (marker);
             }
         }
 
-        public void AddPolyline(MapPolyline line)
+        public void AddPolyline (MapPolyline line)
         {
-            if (_googleMap != null)
-            {
-                var options = new PolylineOptions();
-                options.Add(line.Select(p => p.ToLatLng()).ToArray());
-                options.InvokeColor(line.StrokeColor.ToAndroid().ToArgb());
-                options.InvokeWidth(line.LineWidth);
+            if (_googleMap != null) {
+                var options = new PolylineOptions ();
+                options.Add (line.Select (p => p.ToLatLng ()).ToArray ());
+                options.InvokeColor (line.StrokeColor.ToAndroid ().ToArgb ());
+                options.InvokeWidth (line.LineWidth);
 
-                var polyline = _googleMap.AddPolyline(options);
-                _polylines.Add(line, polyline);
+                var polyline = _googleMap.AddPolyline (options);
+                _polylines.Add (line, polyline);
             }
         }
 
-        public void RemovePolyline(MapPolyline line)
+        public void RemovePolyline (MapPolyline line)
         {
             Polyline polyline;
-            if (_polylines.TryGetValue(line, out polyline))
-            {
-                polyline.Remove();
-                _polylines.Remove(line);
+            if (_polylines.TryGetValue (line, out polyline)) {
+                polyline.Remove ();
+                _polylines.Remove (line);
             }
         }
 
-        public void FitAllAnnotations(bool animated)
+        public void FitAllAnnotations (bool animated)
         {
-            var region = _behavior.GetRegionForAllAnnotations();
-            MoveToRegion(region, animated);
+            var region = _behavior.GetRegionForAllAnnotations ();
+            MoveToRegion (region, animated);
         }
 
-        public void ApplyHasZoomEnabled()
+        public void ApplyHasZoomEnabled ()
         {
-            if (_googleMap != null)
-            {
+            if (_googleMap != null) {
                 _googleMap.UiSettings.ZoomGesturesEnabled = Element.HasZoomEnabled;
                 _googleMap.UiSettings.ZoomControlsEnabled = Element.HasZoomEnabled;
             }
         }
 
-        public void ApplyHasScrollEnabled()
+        public void ApplyHasScrollEnabled ()
         {
-            if (_googleMap != null)
-            {
+            if (_googleMap != null) {
                 _googleMap.UiSettings.ScrollGesturesEnabled = Element.HasScrollEnabled;
             }
         }
 
-        public void ApplyIsShowingUser()
+        public void ApplyIsShowingUser ()
         {
-            if (_googleMap != null)
-            {
+            if (_googleMap != null) {
                 _googleMap.UiSettings.MyLocationButtonEnabled = Element.IsShowingUser;
             }
         }
 
-        public void ApplyMapType()
+        public void ApplyMapType ()
         {
-            if (_googleMap != null)
-            {
-                switch (Element.MapType)
-                {
-                    case MapType.Street:
+            if (_googleMap != null) {
+                switch (Element.MapType) {
+                case MapType.Street:
+                    _googleMap.MapType = GoogleMap.MapTypeNormal;
+                    break;
+                case MapType.Satellite:
+                    _googleMap.MapType = GoogleMap.MapTypeSatellite;
+                    break;
+                case MapType.Hybrid:
+                    _googleMap.MapType = GoogleMap.MapTypeHybrid;
+                    break;
+                default: {
                         _googleMap.MapType = GoogleMap.MapTypeNormal;
-                        break;
-                    case MapType.Satellite:
-                        _googleMap.MapType = GoogleMap.MapTypeSatellite;
-                        break;
-                    case MapType.Hybrid:
-                        _googleMap.MapType = GoogleMap.MapTypeHybrid;
-                        break;
-                    default:
-                    {
-                        _googleMap.MapType = GoogleMap.MapTypeNormal;
-                        Log.Error("error",
+                        Log.Error ("error",
                             $"The map type {Element.MapType} is not supported on Android, falling back to Street");
                         break;
                     }
@@ -210,72 +192,67 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
+        protected override void OnElementChanged (ElementChangedEventArgs<UnifiedMap> e)
         {
-            base.OnElementChanged(e);
+            base.OnElementChanged (e);
 
-            if (e.OldElement != null)
-            {
+            if (e.OldElement != null) {
                 var element = e.OldElement;
 
-                _googleMap?.Dispose();
-                RemoveEvents(element);
+                _googleMap?.Dispose ();
+                RemoveEvents (element);
             }
 
-            if (e.NewElement != null)
-            {
-                RegisterEvents(e.NewElement);
+            if (e.NewElement != null) {
+                RegisterEvents (e.NewElement);
 
-                if (Control == null)
-                {
-                    var mapView = new MapView(Context);
+                if (Control == null) {
+                    var mapView = new MapView (Context);
 
-                    mapView.OnCreate(_bundle);
-                    mapView.OnResume();
+                    mapView.OnCreate (_bundle);
+                    mapView.OnResume ();
 
-                    SetNativeControl(mapView);
+                    SetNativeControl (mapView);
 
-                    mapView.GetMapAsync(this);
+                    mapView.GetMapAsync (this);
                 }
             }
         }
 
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnElementPropertyChanged (object sender, PropertyChangedEventArgs e)
         {
-            base.OnElementPropertyChanged(sender, e);
-            _behavior.ElementProperyChanged(e.PropertyName);
+            base.OnElementPropertyChanged (sender, e);
+            _behavior.ElementProperyChanged (e.PropertyName);
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void Dispose (bool disposing)
         {
-            if (disposing)
-            {
-                RemoveEvents(Element);
+            if (disposing) {
+                RemoveEvents (Element);
 
-                if (_googleMap != null)
-                {
-                    _googleMap.Dispose();
+                if (_googleMap != null) {
+                    _googleMap.Dispose ();
                     _googleMap = null;
                 }
             }
 
-            base.Dispose(disposing);
+            base.Dispose (disposing);
         }
 
-        private void RegisterEvents(UnifiedMap map)
+        private void RegisterEvents (UnifiedMap map)
         {
-            _behavior.RegisterEvents(map);
+            _behavior.RegisterEvents (map);
         }
 
-        private void RemoveEvents(UnifiedMap map)
+        private void RemoveEvents (UnifiedMap map)
         {
-            _behavior.RemoveEvents(map);
+            _behavior.RemoveEvents (map);
         }
 
-        private void ApplyPadding()
+        private void ApplyPadding ()
         {
             var padding = MapPadding;
-            _googleMap.SetPadding((int) padding.Left, (int) padding.Top, (int) padding.Right, (int) padding.Bottom);
+            _googleMap.SetPadding ((int)padding.Left, (int)padding.Top, (int)padding.Right, (int)padding.Bottom);
         }
     }
 }

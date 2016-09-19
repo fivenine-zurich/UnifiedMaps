@@ -21,31 +21,41 @@ namespace Sample
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
 
+        private readonly Command _addPolylineCommand;
+        private readonly Command _removePolylineCommand;
+
         private readonly LinkedList<IMapPin> _allPins;
+        private readonly LinkedList<MapPolyline> _allPolylines;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
-        private bool _isShowingUserLocation = false;
+        private bool _isShowingUserLocation;
 
-        public UnifiedMapViewModel()
+        public UnifiedMapViewModel ()
         {
             _pinSelectedCommand =
-                new Command<MapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
+                new Command<MapPin> (pin => Debug.WriteLine ($"Pin {pin.Title} was selected"));
 
             _changeMapTypeCommand =
-                new Command<MapType>(m => MapDisplayType = m);
+                new Command<MapType> (m => MapDisplayType = m);
 
             _addPinCommand =
-                new Command(AddPin, o => _allPins.Any());
+                new Command (AddPin, o => _allPins.Any ());
 
             _removePinCommand =
-                new Command(RemovePin, o => Pins.Any());
+                new Command (RemovePin, o => Pins.Any ());
 
             _moveToRegionCommand =
-                new Command(() => Map.MoveToRegion(animated: true));
+                new Command (() => Map.MoveToRegion (animated: true));
 
-            _allPins = new LinkedList<IMapPin>(
+            _addPolylineCommand =
+                new Command (AddPolyline, o => _allPolylines.Any ());
+
+            _removePolylineCommand =
+                new Command (RemovePolyline, o => Polylines.Any ());
+
+            _allPins = new LinkedList<IMapPin> (
                 new []
                 {
 
@@ -54,48 +64,54 @@ namespace Sample
                         Title = "Zürich",
                         Snippet = "It's awesome",
                         Location = new Position(47.3667, 8.5500),
-                        Color = PinColor.Purple
+                        Color = Color.Black
                     },
                     new MapPin
                     {
                         Title = "Brändlen",
                         Location = new Position(46.904829, 8.409724),
-                        Color = PinColor.Red
+                        Color = Color.Red
                     },
                     new MapPin
                     {
                         Title = "Wolfenschiessen",
                         Snippet = "... nothing to see here",
                         Location = new Position(46.905180, 8.398110),
-                        Color = PinColor.Green
+                        Color = Color.Blue
                     },
                     new MapPin
                     {
                         Title = "Klewenalp",
                         Location = new Position(46.939898, 8.475217),
-                        Color = PinColor.Green
+                        Color = Color.Fuchsia
                     },
                     new MapPin
                     {
                         Title = "Beckenried NW",
                         Location = new Position(46.963876, 8.482078),
-                        Color = PinColor.Red
+                        Color = Color.Green
                     }
                 });
 
-            Pins = new ObservableCollection<IMapPin>();
-            
-            var polyline = new MapPolyline();
-            foreach (var pin in _allPins)
-            {
-                polyline.Add(pin.Location);
+            Pins = new ObservableCollection<IMapPin> ();
+
+            _allPolylines = new LinkedList<MapPolyline> ();
+
+            var polyline = new MapPolyline ();
+            foreach (var pin in _allPins) {
+                polyline.Add (pin.Location);
             }
 
-            Polylines = new ObservableCollection<MapPolyline>(new[] {polyline});
+            _allPolylines.AddLast (polyline);
+
+            Polylines = new ObservableCollection<MapPolyline> ();
 
             // Add some sample pins
-            AddPin(null);
-            AddPin(null);
+            AddPin (null);
+            AddPin (null);
+
+            // Add some polylines
+            AddPolyline (null);
         }
 
         internal UnifiedMap Map { get; set; }
@@ -104,43 +120,35 @@ namespace Sample
 
         public ObservableCollection<MapPolyline> Polylines { get; set; }
 
-        public MapType MapDisplayType
-        {
-            get{ return _mapType;}
-            set 
-            {
+        public MapType MapDisplayType {
+            get { return _mapType; }
+            set {
                 _mapType = value;
-                OnPropertyChanged();
+                OnPropertyChanged ();
             }
         }
 
-        public bool HasScrollEnabled
-        {
+        public bool HasScrollEnabled {
             get { return _hasScrollEnabled; }
-            set
-            {
+            set {
                 _hasScrollEnabled = value;
-                OnPropertyChanged();
+                OnPropertyChanged ();
             }
         }
 
-        public bool HasZoomEnabled
-        {
+        public bool HasZoomEnabled {
             get { return _hasZoomEnabled; }
-            set
-            {
+            set {
                 _hasZoomEnabled = value;
-                OnPropertyChanged();
+                OnPropertyChanged ();
             }
         }
 
-        public bool IsShowingUserLocation
-        {
+        public bool IsShowingUserLocation {
             get { return _isShowingUserLocation; }
-            set
-            {
+            set {
                 _isShowingUserLocation = value;
-                OnPropertyChanged();
+                OnPropertyChanged ();
             }
         }
 
@@ -154,42 +162,74 @@ namespace Sample
 
         public ICommand MoveToRegionCommand => _moveToRegionCommand;
 
+        public ICommand AddPolylineCommand => _addPolylineCommand;
+
+        public ICommand RemovePolylineCommand => _removePolylineCommand;
+
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged ([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke (this, new PropertyChangedEventArgs (propertyName));
         }
 
-        private void AddPin(object o)
+        private void AddPin (object o)
         {
-            if( _allPins.Last == null )
-            {
+            if (_allPins.Last == null) {
                 return;
             }
 
             var pin = _allPins.Last.Value;
-            _allPins.RemoveLast();
+            _allPins.RemoveLast ();
 
-            Pins.Add(pin);
+            Pins.Add (pin);
 
-            _removePinCommand.ChangeCanExecute();
-            _addPinCommand.ChangeCanExecute();
+            _removePinCommand.ChangeCanExecute ();
+            _addPinCommand.ChangeCanExecute ();
         }
 
-        private void RemovePin(object o)
+        private void RemovePin (object o)
         {
-            if( Pins.Count == 0 )
-            {
+            if (Pins.Count == 0) {
                 return;
             }
 
-            var pin = Pins.LastOrDefault();
-            _allPins.AddLast(pin);
+            var pin = Pins.LastOrDefault ();
+            _allPins.AddLast (pin);
 
-            Pins.Remove(pin);
+            Pins.Remove (pin);
 
-            _removePinCommand.ChangeCanExecute();
-            _addPinCommand.ChangeCanExecute();
+            _removePinCommand.ChangeCanExecute ();
+            _addPinCommand.ChangeCanExecute ();
+        }
+
+        private void AddPolyline (object o)
+        {
+            if (_allPolylines.Last == null) {
+                return;
+            }
+
+            var polyline = _allPolylines.Last.Value;
+            _allPolylines.RemoveLast ();
+
+            Polylines.Add (polyline);
+
+            _removePolylineCommand.ChangeCanExecute ();
+            _addPolylineCommand.ChangeCanExecute ();
+        }
+
+        private void RemovePolyline (object o)
+        {
+            if (Polylines.Count == 0) {
+                return;
+            }
+
+            var polyline = Polylines.LastOrDefault ();
+            _allPolylines.AddLast (polyline);
+
+            Polylines.Remove (polyline);
+
+            _removePolylineCommand.ChangeCanExecute ();
+            _addPolylineCommand.ChangeCanExecute ();
         }
     }
 }

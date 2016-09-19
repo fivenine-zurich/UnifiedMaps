@@ -1,4 +1,6 @@
-﻿namespace fivenine.UnifiedMaps
+﻿using Xamarin.Forms;
+
+namespace fivenine.UnifiedMaps
 {
     /// <summary>
     /// A map pin annotation.
@@ -35,6 +37,6 @@
         /// <value>
         /// The color.
         /// </value>
-        public PinColor Color { get; set; }
+        public Color Color { get; set; }
     }
 }
