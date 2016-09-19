@@ -9,8 +9,6 @@ build debug:
     paths:
     - packages
     - tools
-  artifacts:
-    expire_in: 30 minutes
   tags:
     - osx
     - xamarin
@@ -26,6 +24,8 @@ build release:
     - tools
   artifacts:
     expire_in: 30 minutes
+  paths:
+    - bin/
   tags:
     - osx
     - xamarin

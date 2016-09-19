@@ -12,9 +12,6 @@ var configuration = Argument("configuration", "Release");
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
 
-// Define directories.
-var buildDir = Directory("./src/Example/bin") + Directory(configuration);
-
 //////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
@@ -22,7 +19,7 @@ var buildDir = Directory("./src/Example/bin") + Directory(configuration);
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectory(buildDir);
+    CleanDirectory(Directory("./bin"), Directory("./obj"));
 });
 
 Task("Restore-NuGet-Packages")
