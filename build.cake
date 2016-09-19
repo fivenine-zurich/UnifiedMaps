@@ -42,7 +42,7 @@ Task("UpdateAssemblyInfo")
     nugetVersion = versionInfo.NuGetVersionV2;
 
     Information("Version: {0}", versionInfo.FullSemVer);
-    Information("NuGet Version: {0}", versionInfo.NuGetVersionV2);
+    Information("NuGet Version: {0}", versionInfo.NuGetVersion);
 });
 
 Task("Build")
