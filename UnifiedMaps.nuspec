@@ -5,7 +5,7 @@
     <version>0.0.0.1</version>
     <title>UnifiedMaps</title>
     <authors>Tobias Herrmann, Jan Humbel, Michael Höhn</authors>
-    <owners>fivenine digital</owners>
+    <owners>fivenine GmbH</owners>
     <licenseUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/fiveninedigital/UnifiedMaps/master/Icon.png</iconUrl>
@@ -20,17 +20,17 @@
     </releaseNotes>
     <dependencies>
       <group>
-        <dependency id="Xamarin.Forms" version="1.5.1.6471" />
+        <dependency id="Xamarin.Forms" version="[23.3]" />
       </group>
       <group targetFramework="MonoAndroid1.0">
-        <dependency id="Xamarin.GooglePlayServices.Maps" version="27.0.0.0" />
+        <dependency id="Xamarin.GooglePlayServices.Maps" version="[29.0]" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <!--PCL Profile259-->
-    <file src="bin\PCL\UnifiedMap.dll" target="lib\portable-net45+win+wpa81+wp80\" />
-    <file src="bin\PCL\UnifiedMap.xml" target="lib\portable-net45+win+wpa81+wp80\" />
+    <file src="bin\pcl\UnifiedMap.dll" target="lib\portable-net45+win+wpa81+wp80\" />
+    <file src="bin\pcl\UnifiedMap.xml" target="lib\portable-net45+win+wpa81+wp80\" />
 
     <!--Xamarin.iOS Unified API-->
     <file src="bin\Xamarin.iOS10\UnifiedMap*.dll" target="lib\Xamarin.iOS10\" />
@@ -43,14 +43,5 @@
     <!--Xamarin Android-->
     <file src="bin\monoandroid\UnifiedMap*.dll" target="lib\monoandroid\" />
     <file src="bin\monoandroid\UnifiedMap*.xml" target="lib\monoandroid\" />
-
-    <!--Windows Storage (Windows Phone 8.1, Windows Store 8.1)-->
-    <file src="bin\uap10.0\UnifiedMap*.dll" target="lib\Portable-Win81+Wpa81\" />
-    <file src="bin\uap10.0\UnifiedMap*.xml" target="lib\Portable-Win81+Wpa81\" />
-
-    <!--Windows Storage (Windows Phone 8.1, Windows Store 8.1)-->
-    <file src="bin\uap10.0\UnifiedMap*.dll" target="lib\uap10.0\" />
-    <file src="bin\uap10.0\UnifiedMap*.xml" target="lib\uap10.0\" />
-
   </files>
 </package>

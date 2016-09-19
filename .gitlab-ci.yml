@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - nuget
 
 build debug:
   stage: build
@@ -63,6 +64,25 @@ test release:
   stage: test
   script:
   - ./build.sh --target Run-Unit-Tests --configuration Debug
+  cache:
+    paths:
+    - packages
+    - tools
+  only:
+    - master
+    - tags
+    - /^release/.*$/
+  dependencies:
+  - build release
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+nuget pack:
+  stage: nuget
+  script:
+  - ./build.sh --target NuGet-Pack
   cache:
     paths:
     - packages

@@ -11,6 +11,8 @@ var configuration = Argument("configuration", "Release");
 // PREPARATION
 //////////////////////////////////////////////////////////////////////
 
+string nugetVersion = null;
+
 //////////////////////////////////////////////////////////////////////
 // TASKS
 //////////////////////////////////////////////////////////////////////
@@ -35,6 +37,8 @@ Task("UpdateAssemblyInfo")
     var versionInfo = GitVersion(new GitVersionSettings {
         UpdateAssemblyInfo = true
     });
+
+    nugetVersion = versionInfo.NuGetVersionV2;
 
     Information("Version: {0}", versionInfo.FullSemVer);
     Information("NuGet Version: {0}", versionInfo.NuGetVersionV2);
@@ -64,6 +68,19 @@ Task("Run-Unit-Tests")
     NUnit3("./bin/*.Tests.dll", new NUnit3Settings {
         NoResults = true
     });
+});
+
+Task("NuGet-Pack")
+    .IsDependentOn("UpdateAssemblyInfo")
+    .Does( () => 
+{
+    var nuGetPackSettings = new NuGetPackSettings {
+        Version                 = nugetVersion,
+        Copyright               = "fivenine GmbH " + DateTime.Now.Year,
+        OutputDirectory         = "./nuget"
+    };
+
+    NuGetPack("./UnifiedMaps.nuspec", nuGetPackSettings);
 });
 
 //////////////////////////////////////////////////////////////////////
