@@ -7,7 +7,7 @@ namespace fivenine.UnifiedMaps.iOS
 {
     internal class UnifiedPointAnnotation : MKPointAnnotation
     {
-        public MapPin Data { get; set; }
+        public IMapPin Data { get; set; }
     }
 
     internal class UnifiedPolylineAnnotation : MKPolyline

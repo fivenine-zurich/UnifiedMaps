@@ -8,8 +8,8 @@ namespace fivenine.UnifiedMaps
     internal interface IUnifiedMapRenderer
     {
         UnifiedMap Map { get; }
-        void AddPin(MapPin item);
-        void RemovePin(MapPin item);
+        void AddPin(IMapPin item);
+        void RemovePin(IMapPin item);
         void AddPolyline(MapPolyline line);
         void RemovePolyline(MapPolyline line);
         void FitAllAnnotations(bool animated);
@@ -89,7 +89,7 @@ namespace fivenine.UnifiedMaps
                 {
                     foreach (var item in e.NewItems)
                     {
-                        _renderer.AddPin((MapPin) item);
+                        _renderer.AddPin((IMapPin) item);
                     }
 
                     break;
@@ -98,7 +98,7 @@ namespace fivenine.UnifiedMaps
                 {
                     foreach (var item in e.OldItems)
                     {
-                        _renderer.RemovePin((MapPin) item);
+                        _renderer.RemovePin((IMapPin) item);
                     }
 
                     break;

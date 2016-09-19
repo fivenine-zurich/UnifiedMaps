@@ -21,7 +21,7 @@ namespace Sample
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
 
-        private readonly LinkedList<MapPin> _allPins;
+        private readonly LinkedList<IMapPin> _allPins;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
@@ -45,7 +45,7 @@ namespace Sample
             _moveToRegionCommand =
                 new Command(() => Map.MoveToRegion(animated: true));
 
-            _allPins = new LinkedList<MapPin>(
+            _allPins = new LinkedList<IMapPin>(
                 new []
                 {
 
@@ -83,7 +83,7 @@ namespace Sample
                     }
                 });
 
-            Pins = new ObservableCollection<MapPin>();
+            Pins = new ObservableCollection<IMapPin>();
             
             var polyline = new MapPolyline();
             foreach (var pin in _allPins)
@@ -100,7 +100,7 @@ namespace Sample
 
         internal UnifiedMap Map { get; set; }
 
-        public ObservableCollection<MapPin> Pins { get; set; }
+        public ObservableCollection<IMapPin> Pins { get; set; }
 
         public ObservableCollection<MapPolyline> Polylines { get; set; }
 

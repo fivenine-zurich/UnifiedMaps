@@ -37,7 +37,6 @@
     <DocumentationFile>..\..\bin\pcl\UnifiedMap.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MapItem.cs" />
     <Compile Include="MapPin.cs" />
     <Compile Include="MapPolyline.cs" />
     <Compile Include="MapRegion.cs" />
@@ -47,6 +46,8 @@
     <Compile Include="UnifiedMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="IMapAnnotation.cs" />
+    <Compile Include="IMapPin.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
