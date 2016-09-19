@@ -26,6 +26,10 @@ test debug:
     paths:
     - packages
     - tools
+   only:
+    - master
+    - tags
+    - release*
   dependencies:
   - build debug
   tags:
@@ -62,6 +66,10 @@ test release:
     paths:
     - packages
     - tools
+    only:
+    - master
+    - tags
+    - release*
   dependencies:
   - build release
   tags:
