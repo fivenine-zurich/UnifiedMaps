@@ -87,6 +87,9 @@ nuget pack:
     paths:
     - packages
     - tools
+  artifacts:
+    paths:
+    - UnifiedMaps.*.nupkg
   only:
     - master
     - tags

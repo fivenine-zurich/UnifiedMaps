@@ -10,7 +10,7 @@ using Android.App;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("fivenine GmbH")]
 [assembly: AssemblyProduct ("")]
-[assembly: AssemblyCopyright ("fivenine GmbH")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
