@@ -106,6 +106,7 @@ Task("NuGet-Publish")
     .Does( () => 
 {
     NuGetPush(GetFiles("UnifiedMaps*.nupkg").First(), new NuGetPushSettings {
+        Source = "https://www.nuget.org/api/v2/package",
         ApiKey = EnvironmentVariable("NUGET_API_KEY")
     }); 
 });
