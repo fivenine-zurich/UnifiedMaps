@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - nuget
+  - publish
 
 build debug:
   stage: build
@@ -90,12 +91,57 @@ nuget pack:
   artifacts:
     paths:
     - UnifiedMaps.*.nupkg
+    expire_in: 30 minutes
   only:
     - master
     - tags
     - /^release/.*$/
   dependencies:
   - build release
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+nuget publish pre:
+  environment: prerelease
+  stage: publish
+  script:
+  - ./build.sh --target NuGet-Publish
+  cache:
+    paths:
+    - packages
+    - tools
+  artifacts:
+    paths:
+    - UnifiedMaps.*.nupkg
+  only:
+    - master
+    - /^release/.*$/
+  dependencies:
+  - nuget pack
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+nuget publish:
+  environment: production
+  stage: publish
+  script:
+  - ./build.sh --target NuGet-Publish
+  cache:
+    paths:
+    - packages
+    - tools
+  artifacts:
+    paths:
+    - UnifiedMaps.*.nupkg
+  only:
+    - tags
+  dependencies:
+  - nuget pack
+  when: manual
   tags:
     - osx
     - xamarin

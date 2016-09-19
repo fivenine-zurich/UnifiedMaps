@@ -101,6 +101,14 @@ Task("NuGet-Pack")
     NuGetPack("./UnifiedMaps.nuspec", nuGetPackSettings);
 });
 
+Task("NuGet-Publish")
+    .Does( () => 
+{
+    NuGetPush(File("UnifiedMaps*.nupkg"), new NuGetPushSettings {
+        ApiKey = EnvironmentVariable("NUGET_API_KEY")
+    }); 
+});
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
