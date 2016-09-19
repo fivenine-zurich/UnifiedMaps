@@ -10,9 +10,10 @@ build debug:
     paths:
     - packages
     - tools
-  only:
-  - develop
-  - feature*
+  except:
+    - master
+    - tags
+    - /^release/.*$/
   tags:
     - osx
     - xamarin
@@ -26,10 +27,10 @@ test debug:
     paths:
     - packages
     - tools
-  only:
-  - master
-  - tags
-  - release*
+  except:
+    - master
+    - tags
+    - /^release/.*$/
   dependencies:
   - build debug
   tags:
@@ -46,9 +47,9 @@ build release:
     - packages
     - tools
   only:
-  - master
-  - tags
-  - release*
+    - master
+    - tags
+    - /^release/.*$/
   artifacts:
     paths:
       - bin/
@@ -67,9 +68,9 @@ test release:
     - packages
     - tools
   only:
-  - master
-  - tags
-  - release*
+    - master
+    - tags
+    - /^release/.*$/
   dependencies:
   - build release
   tags:
