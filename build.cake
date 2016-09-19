@@ -58,6 +58,14 @@ Task("Build")
     }
 });
 
+Task("Run-Unit-Tests")
+    .Does(() =>
+{
+    NUnit3("./bin/*.Tests.dll", new NUnit3Settings {
+        NoResults = true
+    });
+});
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -65,7 +73,7 @@ Task("Build")
 Task("Default")
     .IsDependentOn("Build");
 
-Task("Build-Dist")
+Task("Build-CI")
     .IsDependentOn("UpdateAssemblyInfo")
     .IsDependentOn("Build");
 

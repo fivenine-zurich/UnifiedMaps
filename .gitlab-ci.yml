@@ -1,14 +1,33 @@
 stages:
   - build
+  - test
 
-build ci:
+build debug:
   stage: build
   script:
-  - ./build.sh --target Build --configuration Debug
+  - ./build.sh --target Build-CI --configuration Debug
   cache:
     paths:
     - packages
     - tools
+  only:
+    - develop
+    - feature*
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+test debug:
+  stage: test
+  script:
+  - ./build.sh --target Run-Unit-Tests --configuration Debug
+  cache:
+    paths:
+    - packages
+    - tools
+  dependencies:
+  - build debug
   tags:
     - osx
     - xamarin
@@ -17,15 +36,34 @@ build ci:
 build release:
   stage: build
   script:
-  - ./build.sh --target Build --configuration Release
+  - ./build.sh --target Build-CI --configuration Release
   cache:
     paths:
     - packages
     - tools
+  only:
+    - master
+    - tags
+    - release*
   artifacts:
     paths:
       - bin/
     expire_in: 30 minutes
+  tags:
+    - osx
+    - xamarin
+    - xcode
+
+test release:
+  stage: test
+  script:
+  - ./build.sh --target Run-Unit-Tests --configuration Debug
+  cache:
+    paths:
+    - packages
+    - tools
+  dependencies:
+  - build release
   tags:
     - osx
     - xamarin
