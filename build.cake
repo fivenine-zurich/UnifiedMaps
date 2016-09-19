@@ -19,7 +19,8 @@ var configuration = Argument("configuration", "Release");
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectory(Directory("./bin"), Directory("./obj"));
+    CleanDirectory(Directory("./bin"));
+    CleanDirectory(Directory("./obj"));
 });
 
 Task("Restore-NuGet-Packages")
