@@ -23,9 +23,9 @@ build release:
     - packages
     - tools
   artifacts:
+    paths:
+      - bin/
     expire_in: 30 minutes
-  paths:
-    - bin/
   tags:
     - osx
     - xamarin
