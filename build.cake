@@ -1,4 +1,3 @@
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0
 #tool nuget:?package=GitVersion.CommandLine
 
 //////////////////////////////////////////////////////////////////////
@@ -33,9 +32,12 @@ Task("Restore-NuGet-Packages")
 Task("UpdateAssemblyInfo")
     .Does(() =>
 {
-    GitVersion(new GitVersionSettings {
+    var versionInfo = GitVersion(new GitVersionSettings {
         UpdateAssemblyInfo = true
     });
+
+    Information("Version: {0}", versionInfo.FullSemVer);
+    Information("NuGet Version: {0}", versionInfo.NuGetVersionV2);
 });
 
 Task("Build")
@@ -56,21 +58,16 @@ Task("Build")
     }
 });
 
-Task("Run-Unit-Tests")
-    .IsDependentOn("Build")
-    .Does(() =>
-{
-    NUnit3("./src/**/bin/" + configuration + "/*.Tests.dll", new NUnit3Settings {
-        NoResults = true
-        });
-});
-
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests");
+    .IsDependentOn("Build");
+
+Task("Build-Dist")
+    .IsDependentOn("UpdateAssemblyInfo")
+    .IsDependentOn("Build");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
