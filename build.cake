@@ -94,8 +94,8 @@ Task("NuGet-Pack")
             new NuSpecContent {Source = "Xamarin.iOS10/UnifiedMap*.xml", Target = "lib/Xamarin.Mac20/"},
 
             // Xamarin Android
-            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/monoandroid/"},
-            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/monoandroid/"},
+            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/MonoAndroid10/"},
+            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/MonoAndroid10/"},
         }
     };
 

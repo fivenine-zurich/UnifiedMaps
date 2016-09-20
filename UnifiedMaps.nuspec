@@ -17,7 +17,7 @@
       <group>
         <dependency id="Xamarin.Forms" version="2.3.2.127" />
       </group>
-      <group targetFramework="MonoAndroid1.0">
+      <group targetFramework="MonoAndroid10">
         <dependency id="Xamarin.GooglePlayServices.Maps" version="29.0.0.2" />
       </group>
     </dependencies>
