@@ -210,10 +210,5 @@ namespace fivenine.UnifiedMaps
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
         }
-
-        private void OnPolylinesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // Check the newly added items
-        }
     }
 }

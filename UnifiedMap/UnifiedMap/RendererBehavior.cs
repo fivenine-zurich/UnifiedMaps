@@ -110,6 +110,11 @@ namespace fivenine.UnifiedMaps
                     _renderer.AddPin(pin);
                 }
             }
+
+            if (_renderer.Map.AutoFitAllAnnotations)
+            {
+                _renderer.FitAllAnnotations(false);
+            }
         }
 
         private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -210,6 +215,15 @@ namespace fivenine.UnifiedMaps
             {
                 RegisterPinEvents(_renderer.Map);
                 AddAllPins();
+            }
+
+            if (propertyName == VisualElement.WidthProperty.PropertyName 
+                || propertyName == VisualElement.HeightProperty.PropertyName) 
+            {
+                if (_renderer.Map.AutoFitAllAnnotations)
+                {
+                    _renderer.FitAllAnnotations(false);
+                }
             }
         }
 

@@ -168,6 +168,7 @@ namespace fivenine.UnifiedMaps.iOS
             if (disposing)
             {
                 RemoveEvents(Element);
+                _behavior.Destroy();
 
                 if (Control != null)
                 {
