@@ -31,9 +31,9 @@ namespace fivenine.UnifiedMaps
 
         internal void RegisterEvents(UnifiedMap map)
         {
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged += OnPinsCollectionChanged;
+            var pinsObservable = map.Pins as INotifyCollectionChanged;
+            if (pinsObservable != null) {
+                pinsObservable.CollectionChanged += OnPinsCollectionChanged;
             }
 
             if (map.Polylines != null)
@@ -49,11 +49,6 @@ namespace fivenine.UnifiedMaps
         {
             MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
 
-            if (map.Pins != null)
-            {
-                map.Pins.CollectionChanged -= OnPinsCollectionChanged;
-            }
-
             if (map.Polylines != null)
             {
                 map.Polylines.CollectionChanged -= OnPolylinesCollectionChanged;
@@ -62,8 +57,7 @@ namespace fivenine.UnifiedMaps
 
         internal MapRegion GetRegionForAllAnnotations()
         {
-            var allPinPositions = _renderer.Map.Pins
-                .Select(p => p.Location);
+            var allPinPositions = _renderer.Map.Pins.OfType<IMapPin>().Select(p => p.Location);
 
             return MapRegion.FromPositions(allPinPositions);
         }
@@ -187,7 +181,7 @@ namespace fivenine.UnifiedMaps
             var pins = _renderer.Map.Pins;
             if (pins != null)
             {
-                foreach (var pin in pins)
+                foreach (var pin in pins.OfType<IMapPin>())
                 {
                     _renderer.AddPin(pin);
                 }

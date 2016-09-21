@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Xamarin.Forms;
@@ -30,7 +31,7 @@ namespace fivenine.UnifiedMaps
         /// The bindable pins property.
         /// </summary>
         public static readonly BindableProperty PinsProperty = BindableProperty.Create("Pins",
-            typeof (ObservableCollection<IMapPin>), typeof (UnifiedMap), new ObservableCollection<IMapPin>());
+            typeof (IEnumerable), typeof (UnifiedMap), null);
 
         /// <summary>
         /// The bindable polylines property.
@@ -79,7 +80,6 @@ namespace fivenine.UnifiedMaps
             _pins = new ObservableCollection<IMapPin>();
             _polylines = new ObservableCollection<MapPolyline>();
 
-            _pins.CollectionChanged += OnPinsCollectionChanged;
             _polylines.CollectionChanged += OnPolylinesCollectionChanged;
         }
 
@@ -98,9 +98,9 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pins.
         /// </value>
-        public ObservableCollection<IMapPin> Pins
+        public IEnumerable Pins
         {
-            get { return (ObservableCollection<IMapPin>)GetValue(PinsProperty); }
+            get { return (IEnumerable)GetValue(PinsProperty); }
             set { SetValue(PinsProperty, value); }
         }
 
@@ -220,11 +220,6 @@ namespace fivenine.UnifiedMaps
 
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
-        }
-
-        private void OnPinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // Check the newly added items
         }
 
         private void OnPolylinesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
