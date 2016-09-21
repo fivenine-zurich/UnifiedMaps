@@ -15,7 +15,6 @@ This call should be made after the `Xamarin.Forms.Forms.Init()` method call. It 
 
  * iOS - AppDelegate.cs file, in the FinishedLaunching method.
  * Android - MainActivity.cs file, in the OnCreate method.
- * Windows Store - MainPage.xaml.cs file, in the MainPage constructor.
 Once the NuGet package has been added and the initialization method called inside each application, the UnifiedMaps APIs can be used in the common PCL or Shared Project code.
 
 ## Platform Configuration
@@ -67,28 +66,3 @@ In addition to the API key the following permissions are required:
 <uses-permission android:name="ch.fivenine.unifiedmaps.sample.permission.MAPS_RECEIVE" />
 <permission android:name="ch.fivenine.unifiedmaps.sample.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
 ```
-
-### Windows Universal Application
-To use the Bing Maps API for Universal Windows Applications you must generate an API key and add it to your Windows Universal project. Follow the instructions on the Windows Dev Center  [Request a maps authentication key](https://msdn.microsoft.com/en-us/library/windows/apps/mt219694.aspx). After generating the *service token*, make sure to call the `fivenine.UnifiedMaps.Init()` method and pass it the generated token.
-
-```c#
-fivenine.UnifiedMap.Init("your-map-service-token");
-```
-
-In addition you need to declare the location capability in your apps *package.appxmanifest*.
-Double click on *package.appxmanifest* in *Solution Explorer* and select the Capabilities tab. Then check *Location* in the *Capabilities list*. This adds the Location device capability to the package manifest file.
-
-```xml
-<Capabilities>
-  <!-- DeviceCapability elements must follow Capability elements (if present) -->
-  <DeviceCapability Name="location"/>
-</Capabilities>
-```
-
-## Using Maps
-
-### Map Type
-
-### Map Pins
-
-## Using Xaml
