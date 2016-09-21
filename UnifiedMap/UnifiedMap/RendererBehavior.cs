@@ -24,6 +24,8 @@ namespace fivenine.UnifiedMaps
     {
         private readonly IUnifiedMapRenderer _renderer;
 
+        private INotifyCollectionChanged _observablePins;
+
         public RendererBehavior(IUnifiedMapRenderer renderer)
         {
             _renderer = renderer;
@@ -31,10 +33,7 @@ namespace fivenine.UnifiedMaps
 
         internal void RegisterEvents(UnifiedMap map)
         {
-            var pinsObservable = map.Pins as INotifyCollectionChanged;
-            if (pinsObservable != null) {
-                pinsObservable.CollectionChanged += OnPinsCollectionChanged;
-            }
+            RegisterPinEvents(map);
 
             if (map.Polylines != null)
             {
@@ -49,9 +48,34 @@ namespace fivenine.UnifiedMaps
         {
             MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
 
+            RemovePinEvents();
+
             if (map.Polylines != null)
             {
                 map.Polylines.CollectionChanged -= OnPolylinesCollectionChanged;
+            }
+        }
+
+        internal void RegisterPinEvents(UnifiedMap map)
+        {
+            var pinsObservable = map.Pins as INotifyCollectionChanged;
+            if (pinsObservable != null && pinsObservable != _observablePins)
+            {
+                if (_observablePins != null)
+                {
+                    _observablePins.CollectionChanged -= OnPinsCollectionChanged;
+                }
+
+                pinsObservable.CollectionChanged += OnPinsCollectionChanged;
+                _observablePins = pinsObservable;
+            }
+        }
+
+        internal void RemovePinEvents()
+        {
+            if (_observablePins != null)
+            {
+                _observablePins.CollectionChanged -= OnPinsCollectionChanged;
             }
         }
 
@@ -72,6 +96,19 @@ namespace fivenine.UnifiedMaps
             else
             {
                 _renderer.MoveToRegion(mapRegion, animated);
+            }
+        }
+
+        private void AddAllPins()
+        {
+            // Todo Clear Pins
+            var pins = _renderer.Map.Pins;
+            if (pins != null)
+            {
+                foreach (var pin in pins.OfType<IMapPin>())
+                {
+                    _renderer.AddPin(pin);
+                }
             }
         }
 
@@ -168,6 +205,12 @@ namespace fivenine.UnifiedMaps
             {
                 _renderer.ApplyHasScrollEnabled();
             }
+
+            if (propertyName == UnifiedMap.PinsProperty.PropertyName)
+            {
+                RegisterPinEvents(_renderer.Map);
+                AddAllPins();
+            }
         }
 
         internal void Initialize()
@@ -177,15 +220,7 @@ namespace fivenine.UnifiedMaps
             _renderer.ApplyHasZoomEnabled();
             _renderer.ApplyIsShowingUser();
 
-            // Load all pin annotations
-            var pins = _renderer.Map.Pins;
-            if (pins != null)
-            {
-                foreach (var pin in pins.OfType<IMapPin>())
-                {
-                    _renderer.AddPin(pin);
-                }
-            }
+            AddAllPins();
 
             var polylines = _renderer.Map.Polylines;
             if (polylines != null)
@@ -194,6 +229,15 @@ namespace fivenine.UnifiedMaps
                 {
                     _renderer.AddPolyline(polyline);
                 }
+            }
+        }
+
+        internal void Destroy()
+        {
+            var observablePins = _renderer.Map.Pins as INotifyCollectionChanged;
+            if (observablePins != null)
+            {
+                observablePins.CollectionChanged -= OnPinsCollectionChanged;
             }
         }
     }

@@ -11,12 +11,6 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public class UnifiedMap : View
     {
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly ObservableCollection<IMapPin> _pins;
-        
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly ObservableCollection<MapPolyline> _polylines;
-
         private MapRegion _visibleRegion;
 
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";
@@ -76,11 +70,6 @@ namespace fivenine.UnifiedMaps
         {
             HorizontalOptions = LayoutOptions.FillAndExpand;
             VerticalOptions = LayoutOptions.FillAndExpand;
-
-            _pins = new ObservableCollection<IMapPin>();
-            _polylines = new ObservableCollection<MapPolyline>();
-
-            _polylines.CollectionChanged += OnPolylinesCollectionChanged;
         }
 
         /// <summary>
