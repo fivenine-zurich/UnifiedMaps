@@ -91,5 +91,16 @@ namespace fivenine.UnifiedMaps
         {
             return GetEnumerator();
         }
+
+        public bool Equals(IMapAnnotation other)
+        {
+            var that = other as IMapPolyline;
+            if (that == null)
+            {
+                return false;
+            }
+
+            return false;
+        }
     }
 }

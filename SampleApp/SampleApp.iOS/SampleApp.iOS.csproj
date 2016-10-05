@@ -24,8 +24,9 @@
     <MtouchArch>i386</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchProfiling>true</MtouchProfiling>
+    <MtouchProfiling>false</MtouchProfiling>
     <StartupObject>Sample.iOS.Application</StartupObject>
+    <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -62,9 +63,10 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchProfiling>true</MtouchProfiling>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: fivenine GmbH (K2798HHX6P)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <StartupObject>Sample.iOS.Application</StartupObject>
+    <CodesignProvision></CodesignProvision>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Sample.iOS.Application</StartupObject>
