@@ -39,9 +39,9 @@
     <Compile Include="UnifiedMapExtensions.cs" />
     <Compile Include="UnifiedMapRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnifiedAnnotations.cs" />
     <Compile Include="Annotations\IUnifiedAnnotation.cs" />
     <Compile Include="Annotations\UnifiedPointAnnotation.cs" />
+    <Compile Include="Annotations\UnifiedPolylineAnnotation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

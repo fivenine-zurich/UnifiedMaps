@@ -69,6 +69,12 @@ namespace fivenine.UnifiedMaps
                 typeof(IMapAnnotation), typeof(UnifiedMap), null, propertyChanged: OnSelectedItemPropertyChanged);
 
         /// <summary>
+        /// The selection changed command property.
+        /// </summary>
+        public static readonly BindableProperty SelectionChangedCommandProperty = BindableProperty.Create("SelectionChangedCommand",
+                typeof(Command<IMapAnnotation>), typeof(UnifiedMap), null);
+
+        /// <summary>
         /// Occurs when the selected annotation changes.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
@@ -88,6 +94,7 @@ namespace fivenine.UnifiedMaps
             if (map != null && !newValue.EqualsSafe(oldValue))
             {
                 map.SelectionChanged?.Invoke(map, new MapEventArgs<IMapAnnotation>(newValue as IMapAnnotation));
+                map.SelectionChangedCommand?.Execute(newValue);
             }
         }
 
@@ -220,6 +227,16 @@ namespace fivenine.UnifiedMaps
         {
             get { return (IMapAnnotation) GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the selection changed command.
+        /// </summary>
+        /// <value>The selection changed command.</value>
+        public Command<IMapAnnotation> SelectionChangedCommand
+        {
+            get { return (Command<IMapAnnotation>)GetValue(SelectionChangedCommandProperty); }
+            set { SetValue(SelectionChangedCommandProperty, value); }
         }
 
         internal MapRegion LastMoveToRegion { get; private set; }
