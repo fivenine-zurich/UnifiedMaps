@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
 using MapKit;
@@ -34,7 +33,7 @@ namespace fivenine.UnifiedMaps.iOS
             }
 
             var unifiedAnnotation = annotation as IUnifiedAnnotation;
-            if (unifiedAnnotation == null) 
+            if (unifiedAnnotation == null)
             {
                 return null;
             }
@@ -44,25 +43,29 @@ namespace fivenine.UnifiedMaps.iOS
             {
                 var data = pinAnnotation.Data;
                 MKAnnotationView annotationView = null;
-               
-                if (data.Image == null) 
+
+                if (data.Image == null)
                 {
+                    // Handle standard pins
                     var pinAnnotationView = (MKPinAnnotationView)mapView.DequeueReusableAnnotation(MKPinAnnotationIdentifier) ??
                         new MKPinAnnotationView(annotation, MKPinAnnotationIdentifier);
 
                     pinAnnotationView.PinTintColor = data.Color.ToUIColor();
                     annotationView = pinAnnotationView;
-                } else {
+                }
+                else {
+                    // Handle pins with an image as pin icon
                     annotationView = mapView.DequeueReusableAnnotation(MKAnnotationIdentifier) ??
                         new MKAnnotationView(annotation, MKAnnotationIdentifier);
 
                     UpdateImage(annotationView, pinAnnotation.Data);
                 }
 
+                // Only show the callout if there is something to display
                 annotationView.CanShowCallout = string.IsNullOrWhiteSpace(pinAnnotation.Data.Title) == false;
 
-                if (annotationView.CanShowCallout 
-                    && _renderer.Element.PinCalloutTappedCommand != null 
+                if (annotationView.CanShowCallout
+                    && _renderer.Element.PinCalloutTappedCommand != null
                     && pinAnnotation.Data != null)
                 {
                     annotationView.RightCalloutAccessoryView = UIButton.FromType(UIButtonType.DetailDisclosure);
@@ -93,12 +96,11 @@ namespace fivenine.UnifiedMaps.iOS
             return null;
         }
 
-
         public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
         {
             if (_selectedAnnotation is UnifiedPointAnnotation)
             {
-                var prevAnnotation = (UnifiedPointAnnotation) _selectedAnnotation;
+                var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
                 UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
                 UpdatePinColor(_selectedAnnotationView, prevAnnotation.Data, false);
             }
@@ -107,7 +109,7 @@ namespace fivenine.UnifiedMaps.iOS
             _selectedAnnotation = unifiedPoint;
             _selectedAnnotationView = view;
 
-            if (unifiedPoint != null) 
+            if (unifiedPoint != null)
             {
                 _renderer.SelectedItem = unifiedPoint.Data;
                 var isSelected = unifiedPoint.Data.SelectedImage != null;
@@ -130,10 +132,16 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
+        internal void SetSelectedAnnotation(MKMapView mapView, IMKAnnotation annotation)
+        {
+            var annotationView = mapView.ViewForAnnotation(annotation);
+            DidSelectAnnotationView(mapView, annotationView);
+        }
+
         private void UpdatePinColor(MKAnnotationView annotationView, IMapPin customAnnotation, bool selected = false)
         {
             var pinAnnotationView = annotationView as MKPinAnnotationView;
-            if (pinAnnotationView != null) 
+            if (pinAnnotationView != null)
             {
                 var color = selected ? customAnnotation.SelectedColor : customAnnotation.Color;
                 pinAnnotationView.PinTintColor = color.ToUIColor();

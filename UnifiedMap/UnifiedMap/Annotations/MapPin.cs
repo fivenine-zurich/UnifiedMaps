@@ -8,6 +8,9 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public class MapPin : IMapPin
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:fivenine.UnifiedMaps.MapPin"/> class.
+        /// </summary>
         public MapPin()
         {
             Color = Color.Red;

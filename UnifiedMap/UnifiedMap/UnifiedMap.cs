@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
@@ -64,12 +63,32 @@ namespace fivenine.UnifiedMaps
                 typeof(bool), typeof(UnifiedMap), true);
 
         /// <summary>
+        /// The selected item property.
+        /// </summary>
+        public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create("SelectedItem",
+                typeof(IMapAnnotation), typeof(UnifiedMap), null, propertyChanged: OnSelectedItemPropertyChanged);
+
+        /// <summary>
+        /// Occurs when the selected annotation changes.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UnifiedMap"/> class.
         /// </summary>
         public UnifiedMap()
         {
             HorizontalOptions = LayoutOptions.FillAndExpand;
             VerticalOptions = LayoutOptions.FillAndExpand;
+        }
+
+        static void OnSelectedItemPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var map = bindable as UnifiedMap;
+            if (map != null && !newValue.EqualsSafe(oldValue))
+            {
+                map.SelectionChanged?.Invoke(map, new MapEventArgs<IMapAnnotation>(newValue as IMapAnnotation));
+            }
         }
 
         /// <summary>
@@ -128,7 +147,6 @@ namespace fivenine.UnifiedMaps
             get { return (bool)GetValue(AutoFitAllAnnotationsProperty); }
             set { SetValue(AutoFitAllAnnotationsProperty, value); }
         }
-
 
         /// <summary>
         /// Gets or sets whether to display the current location of the user on the map.
@@ -192,6 +210,16 @@ namespace fivenine.UnifiedMaps
                 _visibleRegion = value;
                 OnPropertyChanged();
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected item.
+        /// </summary>
+        /// <value>The selected item.</value>
+        public IMapAnnotation SelectedItem
+        {
+            get { return (IMapAnnotation) GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
         }
 
         internal MapRegion LastMoveToRegion { get; private set; }

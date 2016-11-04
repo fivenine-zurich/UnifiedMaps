@@ -8,16 +8,28 @@ namespace fivenine.UnifiedMaps
     internal interface IUnifiedMapRenderer
     {
         UnifiedMap Map { get; }
+
         void AddPin(IMapPin item);
+
         void RemovePin(IMapPin item);
+
         void AddPolyline(MapPolyline line);
+
         void RemovePolyline(MapPolyline line);
+
         void FitAllAnnotations(bool animated);
+
         void MoveToRegion(MapRegion region, bool animated);
+
         void ApplyHasZoomEnabled();
+
         void ApplyHasScrollEnabled();
+
         void ApplyIsShowingUser();
+
         void ApplyMapType();
+
+        void SetSelectedAnnotation();
     }
 
     internal class RendererBehavior
@@ -215,6 +227,11 @@ namespace fivenine.UnifiedMaps
             {
                 RegisterPinEvents(_renderer.Map);
                 AddAllPins();
+            }
+
+            if (propertyName == UnifiedMap.SelectedItemProperty.PropertyName)
+            {
+                _renderer.SetSelectedAnnotation();
             }
 
             if (propertyName == VisualElement.WidthProperty.PropertyName 

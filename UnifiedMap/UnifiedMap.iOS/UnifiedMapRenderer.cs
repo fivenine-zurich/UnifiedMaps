@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -27,7 +28,19 @@ namespace fivenine.UnifiedMaps.iOS
 
         public UnifiedMap Map => Element;
 
-        public IMapAnnotation SelectedItem { get; internal set; }
+        public IMapAnnotation SelectedItem
+        {
+            get { return Element.SelectedItem; }
+            set 
+            {
+                if (!Element.SelectedItem.EqualsSafe(value))
+                {
+                    Element.SelectedItem = value;
+                }
+            }
+        }
+
+        private UnifiedMapDelegate UnifiedDelegate => (UnifiedMapDelegate)Control.Delegate;
 
         void IUnifiedMapRenderer.MoveToRegion(MapRegion mapRegion, bool animated)
         {
@@ -133,6 +146,16 @@ namespace fivenine.UnifiedMaps.iOS
                 .ToArray();
 
             Control.RemoveOverlays(polylines);
+        }
+
+        public void SetSelectedAnnotation()
+        {
+            var newItem = Control.Annotations
+                .OfType<IUnifiedAnnotation>()
+                .FirstOrDefault(point => point.Data == SelectedItem) 
+                 as IMKAnnotation;
+            
+            UnifiedDelegate.SetSelectedAnnotation(Control, newItem);
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)

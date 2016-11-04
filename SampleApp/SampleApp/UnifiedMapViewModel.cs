@@ -31,6 +31,7 @@ namespace Sample
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
         private bool _isShowingUserLocation;
+        private IMapAnnotation _selectedItem;
 
         public UnifiedMapViewModel ()
         {
@@ -122,6 +123,8 @@ namespace Sample
 
             // Add some polylines
             AddPolyline (null);
+
+            SelectedItem = Pins.LastOrDefault();
         }
 
         internal UnifiedMap Map { get; set; }
@@ -130,7 +133,18 @@ namespace Sample
 
         public ObservableCollection<MapPolyline> Polylines { get; set; }
 
-        public MapType MapDisplayType {
+        public IMapAnnotation SelectedItem 
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MapType MapDisplayType 
+        {
             get { return _mapType; }
             set {
                 _mapType = value;
@@ -138,17 +152,21 @@ namespace Sample
             }
         }
 
-        public bool HasScrollEnabled {
+        public bool HasScrollEnabled 
+        {
             get { return _hasScrollEnabled; }
-            set {
+            set 
+            {
                 _hasScrollEnabled = value;
                 OnPropertyChanged ();
             }
         }
 
-        public bool HasZoomEnabled {
+        public bool HasZoomEnabled 
+        {
             get { return _hasZoomEnabled; }
-            set {
+            set 
+            {
                 _hasZoomEnabled = value;
                 OnPropertyChanged ();
             }
@@ -156,7 +174,8 @@ namespace Sample
 
         public bool IsShowingUserLocation {
             get { return _isShowingUserLocation; }
-            set {
+            set 
+            {
                 _isShowingUserLocation = value;
                 OnPropertyChanged ();
             }
