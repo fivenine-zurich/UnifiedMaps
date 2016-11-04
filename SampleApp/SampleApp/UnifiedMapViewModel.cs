@@ -58,14 +58,6 @@ namespace Sample
             _allPins = new LinkedList<IMapPin> (
                 new []
                 {
-
-                    new MapPin
-                    {
-                        Title = "Zürich",
-                        Snippet = "It's awesome",
-                        Location = new Position(47.3667, 8.5500),
-                        Color = Color.Black
-                    },
                     new MapPin
                     {
                         Title = "Brändlen",
@@ -83,14 +75,32 @@ namespace Sample
                     {
                         Title = "Klewenalp",
                         Location = new Position(46.939898, 8.475217),
-                        Color = Color.Fuchsia
+                        Color = Color.Fuchsia,
                     },
                     new MapPin
                     {
                         Title = "Beckenried NW",
                         Location = new Position(46.963876, 8.482078),
-                        Color = Color.Green
-                    }
+                        Color = Color.Green,
+                    },
+                    new MapPin
+                    {
+                        //Title = "Zürich",
+                        //Snippet = "It's awesome",
+                        Location = new Position(47.3667, 8.5500),
+                        Image = "pin_icon",
+                        SelectedImage = "pin_icon_active",
+                        Anchor = new Point(0.5, 0)
+                    },
+                    new MapPin
+                    {
+                        Title = "fivenine",
+                        Snippet = "fivenine GmbH",
+                        Location = new Position(47.389097, 8.517756),
+                        Image = "pin_icon",
+                        SelectedImage = "pin_icon_active",
+                        Anchor = new Point(0.5, 0.6)
+                    },
                 });
 
             Pins = new ObservableCollection<IMapPin> ();

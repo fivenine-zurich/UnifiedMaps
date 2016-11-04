@@ -1,4 +1,3 @@
-using System;
 using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
@@ -39,5 +38,31 @@ namespace fivenine.UnifiedMaps
         /// The color.
         /// </value>
         Color Color { get; }
+
+        /// <summary>
+        /// Gets the color for the selected state.
+        /// </summary>
+        /// <value>
+        /// The color of a selected map pin.
+        /// </value>
+        Color SelectedColor { get; }
+
+        /// <summary>
+        /// Gets the pin annotation image or <c>null</c> if not used.
+        /// </summary>
+        /// <value>The image source.</value>
+        ImageSource Image { get; }
+
+        /// <summary>
+        /// Gets the pin annotation image for the selected state; or <c>null</c> if not used.
+        /// </summary>
+        /// <value>The image source for the selected state.</value>
+        ImageSource SelectedImage { get; }
+
+        /// <summary>
+        /// Gets the anchor point of the map pin.
+        /// </summary>
+        /// <value>The anchor point.</value>
+        Point Anchor { get; }
     }
 }

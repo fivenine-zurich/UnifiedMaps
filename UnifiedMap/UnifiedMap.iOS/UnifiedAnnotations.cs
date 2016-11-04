@@ -1,15 +1,12 @@
 using System;
+using Foundation;
 using MapKit;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 
 namespace fivenine.UnifiedMaps.iOS
 {
-    internal class UnifiedPointAnnotation : MKPointAnnotation
-    {
-        public IMapPin Data { get; set; }
-    }
-
+    [Preserve(AllMembers = true)]
     internal class UnifiedPolylineAnnotation : MKPolyline
     {
         public UnifiedPolylineAnnotation(MKPolyline line)

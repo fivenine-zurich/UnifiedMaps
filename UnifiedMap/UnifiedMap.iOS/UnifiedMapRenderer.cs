@@ -5,6 +5,7 @@ using System.Linq;
 using CoreLocation;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.iOS;
+using Foundation;
 using MapKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -13,6 +14,7 @@ using Xamarin.Forms.Platform.iOS;
 
 namespace fivenine.UnifiedMaps.iOS
 {
+    [Preserve(AllMembers = true)]
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MKMapView>, IUnifiedMapRenderer
     {
         private readonly RendererBehavior _behavior;
@@ -24,6 +26,8 @@ namespace fivenine.UnifiedMaps.iOS
         }
 
         public UnifiedMap Map => Element;
+
+        public IMapAnnotation SelectedItem { get; internal set; }
 
         void IUnifiedMapRenderer.MoveToRegion(MapRegion mapRegion, bool animated)
         {
