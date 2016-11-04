@@ -113,7 +113,7 @@ namespace fivenine.UnifiedMaps.iOS
                 var isSelected = unifiedPoint.Data.SelectedImage != null;
 
                 UpdateImage(view, unifiedPoint.Data, isSelected);
-                UpdatePinColor(view, unifiedPoint.Data, isSelected);
+                UpdatePinColor(view, unifiedPoint.Data, true);
             }
         }
 
@@ -136,8 +136,6 @@ namespace fivenine.UnifiedMaps.iOS
             if (pinAnnotationView != null) 
             {
                 var color = selected ? customAnnotation.SelectedColor : customAnnotation.Color;
-
-                Console.WriteLine($"Updating Color to {color}");
                 pinAnnotationView.PinTintColor = color.ToUIColor();
             }
         }

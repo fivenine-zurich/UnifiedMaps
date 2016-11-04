@@ -11,7 +11,7 @@ namespace fivenine.UnifiedMaps
         public MapPin()
         {
             Color = Color.Red;
-            SelectedColor = Color.Blue;
+            SelectedColor = Color;
         }
 
         /// <summary>
