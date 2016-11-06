@@ -37,8 +37,6 @@
     <DocumentationFile>..\..\bin\pcl\UnifiedMap.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MapPin.cs" />
-    <Compile Include="MapPolyline.cs" />
     <Compile Include="MapRegion.cs" />
     <Compile Include="MapType.cs" />
     <Compile Include="Position.cs" />
@@ -46,8 +44,16 @@
     <Compile Include="UnifiedMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="IMapAnnotation.cs" />
-    <Compile Include="IMapPin.cs" />
+    <Compile Include="Annotations\IMapPin.cs" />
+    <Compile Include="Annotations\MapPin.cs" />
+    <Compile Include="Annotations\IMapAnnotation.cs" />
+    <Compile Include="Annotations\PolylineOverlay.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Common\MapEventArgs.cs" />
+    <Compile Include="Annotations\IMapOverlay.cs" />
+    <Compile Include="Annotations\IPolylineOverlay.cs" />
+    <Compile Include="Annotations\CircleOverlay.cs" />
+    <Compile Include="Annotations\ICircleOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
@@ -62,6 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Annotations\" />
+    <Folder Include="Common\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="packages\Xamarin.Forms.1.3.3.6323\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('packages\Xamarin.Forms.1.3.3.6323\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

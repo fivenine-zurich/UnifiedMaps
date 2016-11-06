@@ -180,10 +180,8 @@ namespace fivenine.UnifiedMaps
         /// <param name="obj">The object to compare with the current object. </param><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != this.GetType())
-                return false;
-
-            return Equals((MapRegion) obj);
+            var other = obj as MapRegion;
+            return Equals(other);
         }
 
         /// <summary>
@@ -213,7 +211,8 @@ namespace fivenine.UnifiedMaps
         /// </returns>
         /// <param name="other">The object to compare with the current object. </param><filterpriority>2</filterpriority>
         protected bool Equals(MapRegion other)
-            => _topLeft.Equals(other._topLeft) && _bottomRight.Equals(other._bottomRight);
+            => other != null && _topLeft.Equals(other._topLeft) && _bottomRight.Equals(other._bottomRight);
+
 
         private double ClampWidth(double width) => width.Clamp(-360, 360);
 

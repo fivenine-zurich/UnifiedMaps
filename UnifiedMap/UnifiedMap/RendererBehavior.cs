@@ -8,16 +8,28 @@ namespace fivenine.UnifiedMaps
     internal interface IUnifiedMapRenderer
     {
         UnifiedMap Map { get; }
+
         void AddPin(IMapPin item);
+
         void RemovePin(IMapPin item);
-        void AddPolyline(MapPolyline line);
-        void RemovePolyline(MapPolyline line);
+
+        void AddOverlay(IMapOverlay item);
+
+        void RemoveOverlay(IMapOverlay item);
+
         void FitAllAnnotations(bool animated);
+
         void MoveToRegion(MapRegion region, bool animated);
+
         void ApplyHasZoomEnabled();
+
         void ApplyHasScrollEnabled();
+
         void ApplyIsShowingUser();
+
         void ApplyMapType();
+
+        void SetSelectedAnnotation();
     }
 
     internal class RendererBehavior
@@ -25,6 +37,7 @@ namespace fivenine.UnifiedMaps
         private readonly IUnifiedMapRenderer _renderer;
 
         private INotifyCollectionChanged _observablePins;
+        private INotifyCollectionChanged _observableOverlays;
 
         public RendererBehavior(IUnifiedMapRenderer renderer)
         {
@@ -34,11 +47,7 @@ namespace fivenine.UnifiedMaps
         internal void RegisterEvents(UnifiedMap map)
         {
             RegisterPinEvents(map);
-
-            if (map.Polylines != null)
-            {
-                map.Polylines.CollectionChanged += OnPolylinesCollectionChanged;
-            }
+            RegisterOverlayEvents(map);
 
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
@@ -49,11 +58,7 @@ namespace fivenine.UnifiedMaps
             MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
 
             RemovePinEvents();
-
-            if (map.Polylines != null)
-            {
-                map.Polylines.CollectionChanged -= OnPolylinesCollectionChanged;
-            }
+            RemoveOverlayEvents();
         }
 
         internal void RegisterPinEvents(UnifiedMap map)
@@ -76,6 +81,29 @@ namespace fivenine.UnifiedMaps
             if (_observablePins != null)
             {
                 _observablePins.CollectionChanged -= OnPinsCollectionChanged;
+            }
+        }
+
+        internal void RegisterOverlayEvents(UnifiedMap map)
+        {
+            var overlaysObservable = map.Overlays as INotifyCollectionChanged;
+            if (overlaysObservable != null && overlaysObservable != _observableOverlays)
+            {
+                if (_observableOverlays != null)
+                {
+                    _observableOverlays.CollectionChanged -= OnOverlaysCollectionChanged;
+                }
+
+                overlaysObservable.CollectionChanged += OnOverlaysCollectionChanged;
+                _observableOverlays = overlaysObservable;
+            }
+        }
+
+        internal void RemoveOverlayEvents()
+        {
+            if (_observableOverlays != null)
+            {
+                _observableOverlays.CollectionChanged -= OnOverlaysCollectionChanged;
             }
         }
 
@@ -108,6 +136,23 @@ namespace fivenine.UnifiedMaps
                 foreach (var pin in pins.OfType<IMapPin>())
                 {
                     _renderer.AddPin(pin);
+                }
+            }
+
+            if (_renderer.Map.AutoFitAllAnnotations)
+            {
+                _renderer.FitAllAnnotations(false);
+            }
+        }
+
+        private void AddAllOverlays()
+        {
+            var overlays = _renderer.Map.Overlays;
+            if (overlays != null)
+            {
+                foreach (var overlay in overlays.OfType<IMapOverlay>())
+                {
+                    _renderer.AddOverlay(overlay);
                 }
             }
 
@@ -153,7 +198,7 @@ namespace fivenine.UnifiedMaps
             }
         }
 
-        private void OnPolylinesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnOverlaysCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -161,7 +206,7 @@ namespace fivenine.UnifiedMaps
                 {
                     foreach (var item in e.NewItems)
                     {
-                        _renderer.AddPolyline((MapPolyline) item);
+                        _renderer.AddOverlay((IMapOverlay) item);
                     }
 
                     break;
@@ -170,7 +215,7 @@ namespace fivenine.UnifiedMaps
                 {
                     foreach (var item in e.OldItems)
                     {
-                        _renderer.RemovePolyline((MapPolyline) item);
+                        _renderer.RemoveOverlay((IMapOverlay) item);
                     }
 
                     break;
@@ -178,7 +223,7 @@ namespace fivenine.UnifiedMaps
                 case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPolylines");
+                    throw new NotSupportedException($"The operation {e.Action} is not supported for Overlays");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -217,6 +262,11 @@ namespace fivenine.UnifiedMaps
                 AddAllPins();
             }
 
+            if (propertyName == UnifiedMap.SelectedItemProperty.PropertyName)
+            {
+                _renderer.SetSelectedAnnotation();
+            }
+
             if (propertyName == VisualElement.WidthProperty.PropertyName 
                 || propertyName == VisualElement.HeightProperty.PropertyName) 
             {
@@ -235,15 +285,7 @@ namespace fivenine.UnifiedMaps
             _renderer.ApplyIsShowingUser();
 
             AddAllPins();
-
-            var polylines = _renderer.Map.Polylines;
-            if (polylines != null)
-            {
-                foreach (var polyline in polylines)
-                {
-                    _renderer.AddPolyline(polyline);
-                }
-            }
+            AddAllOverlays();
         }
 
         internal void Destroy()

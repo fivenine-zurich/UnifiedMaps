@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Xamarin.Forms;
 
 namespace fivenine.UnifiedMaps
@@ -11,8 +10,6 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public class UnifiedMap : View
     {
-        private MapRegion _visibleRegion;
-
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";
 
         /// <summary>
@@ -30,8 +27,8 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// The bindable polylines property.
         /// </summary>
-        public static readonly BindableProperty PolylinesProperty = BindableProperty.Create("Polylines",
-            typeof(ObservableCollection<MapPolyline>), typeof(UnifiedMap), new ObservableCollection<MapPolyline>());
+        public static readonly BindableProperty OverlaysProperty = BindableProperty.Create("Overlays",
+            typeof(IEnumerable), typeof(UnifiedMap), null);
 
         /// <summary>
         /// The bindable pin callout tapped command property.
@@ -64,12 +61,57 @@ namespace fivenine.UnifiedMaps
                 typeof(bool), typeof(UnifiedMap), true);
 
         /// <summary>
+        /// The selected item property.
+        /// </summary>
+        public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create("SelectedItem",
+                typeof(IMapAnnotation), typeof(UnifiedMap), null, propertyChanged: OnSelectedItemPropertyChanged);
+
+        /// <summary>
+        /// The selection changed command property.
+        /// </summary>
+        public static readonly BindableProperty SelectionChangedCommandProperty = BindableProperty.Create("SelectionChangedCommand",
+                typeof(Command<IMapAnnotation>), typeof(UnifiedMap), null);
+
+        public static readonly BindableProperty VisibleRegionProperty = BindableProperty.Create("VisibleRegion",
+                typeof(MapRegion), typeof(UnifiedMap), null, propertyChanged: OnVisibleRegionChanged);
+
+        public static readonly BindableProperty VisibleRegionChangedCommandProperty = BindableProperty.Create("VisibleRegionChangedCommand",
+                typeof(Command<MapRegion>), typeof(UnifiedMap), null);
+
+        /// <summary>
+        /// Occurs when the selected annotation changes.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
+
+        public event EventHandler<MapEventArgs<MapRegion>> VisibleRegionChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UnifiedMap"/> class.
         /// </summary>
         public UnifiedMap()
         {
             HorizontalOptions = LayoutOptions.FillAndExpand;
             VerticalOptions = LayoutOptions.FillAndExpand;
+        }
+
+        static void OnSelectedItemPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var map = bindable as UnifiedMap;
+            if (map != null && !newValue.EqualsSafe(oldValue))
+            {
+                map.SelectionChanged?.Invoke(map, new MapEventArgs<IMapAnnotation>(newValue as IMapAnnotation));
+                map.SelectionChangedCommand?.Execute(newValue);
+            }
+        }
+
+        static void OnVisibleRegionChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var map = bindable as UnifiedMap;
+            if (map != null && !newValue.EqualsSafe(oldValue))
+            {
+                map.VisibleRegionChanged?.Invoke(map, new MapEventArgs<MapRegion>(newValue as MapRegion));
+                map.VisibleRegionChangedCommand?.Execute(newValue);
+            }
         }
 
         /// <summary>
@@ -94,6 +136,18 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
+        /// Gets or sets the overlays.
+        /// </summary>
+        /// <value>
+        /// The overlays.
+        /// </value>
+        public IEnumerable Overlays
+        {
+            get { return (IEnumerable)GetValue(OverlaysProperty); }
+            set { SetValue(OverlaysProperty, value); }
+        }
+
+        /// <summary>
         /// Gets or sets the pin callout tapped command.
         /// </summary>
         /// <value>
@@ -103,18 +157,6 @@ namespace fivenine.UnifiedMaps
         {
             get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
             set { SetValue(PinCalloutTappedCommandProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the polylines.
-        /// </summary>
-        /// <value>
-        /// The polylines.
-        /// </value>
-        public ObservableCollection<MapPolyline> Polylines
-        {
-            get { return (ObservableCollection<MapPolyline>)GetValue(PolylinesProperty); }
-            set { SetValue(PolylinesProperty, value); }
         }
 
         /// <summary>
@@ -128,7 +170,6 @@ namespace fivenine.UnifiedMaps
             get { return (bool)GetValue(AutoFitAllAnnotationsProperty); }
             set { SetValue(AutoFitAllAnnotationsProperty, value); }
         }
-
 
         /// <summary>
         /// Gets or sets whether to display the current location of the user on the map.
@@ -175,23 +216,38 @@ namespace fivenine.UnifiedMaps
         /// <exception cref="System.ArgumentNullException"></exception>
         public MapRegion VisibleRegion
         {
-            get { return _visibleRegion; }
-            internal set
-            {
-                if (_visibleRegion == value)
-                {
-                    return;
-                }
+            get { return (MapRegion)GetValue(VisibleRegionProperty); }
+            set { SetValue(VisibleRegionProperty, value); }
+        }
 
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+        /// <summary>
+        /// Gets or sets the selected item.
+        /// </summary>
+        /// <value>The selected item.</value>
+        public IMapAnnotation SelectedItem
+        {
+            get { return (IMapAnnotation) GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
+        }
 
-                OnPropertyChanging();
-                _visibleRegion = value;
-                OnPropertyChanged();
-            }
+        /// <summary>
+        /// Gets or sets the selection changed command.
+        /// </summary>
+        /// <value>The selection changed command.</value>
+        public Command<IMapAnnotation> SelectionChangedCommand
+        {
+            get { return (Command<IMapAnnotation>)GetValue(SelectionChangedCommandProperty); }
+            set { SetValue(SelectionChangedCommandProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the visible region changed command.
+        /// </summary>
+        /// <value>The visible region changed command.</value>
+        public Command<MapRegion> VisibleRegionChangedCommand
+        {
+            get { return (Command<MapRegion>)GetValue(VisibleRegionChangedCommandProperty); }
+            set { SetValue(VisibleRegionChangedCommandProperty, value); }
         }
 
         internal MapRegion LastMoveToRegion { get; private set; }

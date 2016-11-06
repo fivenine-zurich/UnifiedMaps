@@ -25,12 +25,13 @@ namespace Sample
         private readonly Command _removePolylineCommand;
 
         private readonly LinkedList<IMapPin> _allPins;
-        private readonly LinkedList<MapPolyline> _allPolylines;
+        private readonly LinkedList<IMapOverlay> _allPolylines;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
         private bool _isShowingUserLocation;
+        private IMapAnnotation _selectedItem;
 
         public UnifiedMapViewModel ()
         {
@@ -53,19 +54,11 @@ namespace Sample
                 new Command (AddPolyline, o => _allPolylines.Any ());
 
             _removePolylineCommand =
-                new Command (RemovePolyline, o => Polylines.Any ());
+                new Command (RemovePolyline, o => Overlays.Any ());
 
             _allPins = new LinkedList<IMapPin> (
                 new []
                 {
-
-                    new MapPin
-                    {
-                        Title = "Zürich",
-                        Snippet = "It's awesome",
-                        Location = new Position(47.3667, 8.5500),
-                        Color = Color.Black
-                    },
                     new MapPin
                     {
                         Title = "Brändlen",
@@ -83,28 +76,54 @@ namespace Sample
                     {
                         Title = "Klewenalp",
                         Location = new Position(46.939898, 8.475217),
-                        Color = Color.Fuchsia
+                        Color = Color.Fuchsia,
                     },
                     new MapPin
                     {
                         Title = "Beckenried NW",
                         Location = new Position(46.963876, 8.482078),
-                        Color = Color.Green
-                    }
+                        Color = Color.Green,
+                    },
+                    new MapPin
+                    {
+                        //Title = "Zürich",
+                        //Snippet = "It's awesome",
+                        Location = new Position(47.3667, 8.5500),
+                        Image = "pin_icon",
+                        SelectedImage = "pin_icon_active",
+                        Anchor = new Point(0.5, 1)
+                    },
+                    new MapPin
+                    {
+                        Title = "fivenine",
+                        Snippet = "fivenine GmbH",
+                        Location = new Position(47.389097, 8.517756),
+                        Image = "pin_icon",
+                        SelectedImage = "pin_icon_active",
+                        Anchor = new Point(0.5, 1)
+                    },
                 });
 
             Pins = new ObservableCollection<IMapPin> ();
 
-            _allPolylines = new LinkedList<MapPolyline> ();
+            _allPolylines = new LinkedList<IMapOverlay> ();
 
-            var polyline = new MapPolyline ();
+            var polyline = new PolylineOverlay ();
             foreach (var pin in _allPins) {
                 polyline.Add (pin.Location);
             }
 
             _allPolylines.AddLast (polyline);
 
-            Polylines = new ObservableCollection<MapPolyline> ();
+            Overlays = new ObservableCollection<IMapOverlay> ();
+
+            Overlays.Add(new CircleOverlay
+            {
+                Location = new Position(47.389097, 8.517756),
+                Radius = 400,
+                Color = Color.Navy.MultiplyAlpha(0.2),
+                FillColor = Color.Blue.MultiplyAlpha(0.2)
+            });
 
             // Add some sample pins
             AddPin (null);
@@ -112,15 +131,28 @@ namespace Sample
 
             // Add some polylines
             AddPolyline (null);
+
+            SelectedItem = Pins.LastOrDefault();
         }
 
         internal UnifiedMap Map { get; set; }
 
         public ObservableCollection<IMapPin> Pins { get; set; }
 
-        public ObservableCollection<MapPolyline> Polylines { get; set; }
+        public ObservableCollection<IMapOverlay> Overlays { get; set; }
 
-        public MapType MapDisplayType {
+        public IMapAnnotation SelectedItem 
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MapType MapDisplayType 
+        {
             get { return _mapType; }
             set {
                 _mapType = value;
@@ -128,17 +160,21 @@ namespace Sample
             }
         }
 
-        public bool HasScrollEnabled {
+        public bool HasScrollEnabled 
+        {
             get { return _hasScrollEnabled; }
-            set {
+            set 
+            {
                 _hasScrollEnabled = value;
                 OnPropertyChanged ();
             }
         }
 
-        public bool HasZoomEnabled {
+        public bool HasZoomEnabled 
+        {
             get { return _hasZoomEnabled; }
-            set {
+            set 
+            {
                 _hasZoomEnabled = value;
                 OnPropertyChanged ();
             }
@@ -146,7 +182,8 @@ namespace Sample
 
         public bool IsShowingUserLocation {
             get { return _isShowingUserLocation; }
-            set {
+            set 
+            {
                 _isShowingUserLocation = value;
                 OnPropertyChanged ();
             }
@@ -211,7 +248,7 @@ namespace Sample
             var polyline = _allPolylines.Last.Value;
             _allPolylines.RemoveLast ();
 
-            Polylines.Add (polyline);
+            Overlays.Add (polyline);
 
             _removePolylineCommand.ChangeCanExecute ();
             _addPolylineCommand.ChangeCanExecute ();
@@ -219,14 +256,14 @@ namespace Sample
 
         private void RemovePolyline (object o)
         {
-            if (Polylines.Count == 0) {
+            if (Overlays.Count == 0) {
                 return;
             }
 
-            var polyline = Polylines.LastOrDefault ();
+            var polyline = Overlays.LastOrDefault ();
             _allPolylines.AddLast (polyline);
 
-            Polylines.Remove (polyline);
+            Overlays.Remove (polyline);
 
             _removePolylineCommand.ChangeCanExecute ();
             _addPolylineCommand.ChangeCanExecute ();
