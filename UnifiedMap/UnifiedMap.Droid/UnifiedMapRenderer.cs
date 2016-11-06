@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -46,10 +45,6 @@ namespace fivenine.UnifiedMaps.Droid
 
         protected virtual Thickness MapPadding { get; } = new Thickness(48);
 
-        public void OnCameraChange(CameraPosition position)
-        {
-        }
-
         public void OnInfoWindowClick(Marker marker)
         {
             var mapPin = _markers.Values
@@ -89,6 +84,20 @@ namespace fivenine.UnifiedMaps.Droid
             }
 
             return true;
+        }
+
+        public void OnCameraChange(CameraPosition position)
+        {
+            if (_googleMap == null)
+            {
+                return;
+            }
+
+            var mapRegion = _googleMap.Projection.VisibleRegion.LatLngBounds;
+            var region = new MapRegion(mapRegion.Northeast.Latitude, mapRegion.Southwest.Longitude,
+                                       mapRegion.Southwest.Latitude, mapRegion.Northeast.Longitude);
+
+            Map.VisibleRegion = region;
         }
 
         public void OnMapReady(GoogleMap googleMap)
