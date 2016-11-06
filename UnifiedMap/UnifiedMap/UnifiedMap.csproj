@@ -47,10 +47,13 @@
     <Compile Include="Annotations\IMapPin.cs" />
     <Compile Include="Annotations\MapPin.cs" />
     <Compile Include="Annotations\IMapAnnotation.cs" />
-    <Compile Include="Annotations\MapPolyline.cs" />
-    <Compile Include="Annotations\IMapPolyline.cs" />
+    <Compile Include="Annotations\PolylineOverlay.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Common\MapEventArgs.cs" />
+    <Compile Include="Annotations\IMapOverlay.cs" />
+    <Compile Include="Annotations\IPolylineOverlay.cs" />
+    <Compile Include="Annotations\CircleOverlay.cs" />
+    <Compile Include="Annotations\ICircleOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

@@ -25,7 +25,7 @@ namespace Sample
         private readonly Command _removePolylineCommand;
 
         private readonly LinkedList<IMapPin> _allPins;
-        private readonly LinkedList<MapPolyline> _allPolylines;
+        private readonly LinkedList<IMapOverlay> _allPolylines;
 
         private MapType _mapType = MapType.Street;
         private bool _hasScrollEnabled = true;
@@ -54,7 +54,7 @@ namespace Sample
                 new Command (AddPolyline, o => _allPolylines.Any ());
 
             _removePolylineCommand =
-                new Command (RemovePolyline, o => Polylines.Any ());
+                new Command (RemovePolyline, o => Overlays.Any ());
 
             _allPins = new LinkedList<IMapPin> (
                 new []
@@ -106,16 +106,24 @@ namespace Sample
 
             Pins = new ObservableCollection<IMapPin> ();
 
-            _allPolylines = new LinkedList<MapPolyline> ();
+            _allPolylines = new LinkedList<IMapOverlay> ();
 
-            var polyline = new MapPolyline ();
+            var polyline = new PolylineOverlay ();
             foreach (var pin in _allPins) {
                 polyline.Add (pin.Location);
             }
 
             _allPolylines.AddLast (polyline);
 
-            Polylines = new ObservableCollection<MapPolyline> ();
+            Overlays = new ObservableCollection<IMapOverlay> ();
+
+            Overlays.Add(new CircleOverlay
+            {
+                Location = new Position(47.389097, 8.517756),
+                Radius = 400,
+                Color = Color.Navy.MultiplyAlpha(0.2),
+                FillColor = Color.Blue.MultiplyAlpha(0.2)
+            });
 
             // Add some sample pins
             AddPin (null);
@@ -131,7 +139,7 @@ namespace Sample
 
         public ObservableCollection<IMapPin> Pins { get; set; }
 
-        public ObservableCollection<MapPolyline> Polylines { get; set; }
+        public ObservableCollection<IMapOverlay> Overlays { get; set; }
 
         public IMapAnnotation SelectedItem 
         {
@@ -240,7 +248,7 @@ namespace Sample
             var polyline = _allPolylines.Last.Value;
             _allPolylines.RemoveLast ();
 
-            Polylines.Add (polyline);
+            Overlays.Add (polyline);
 
             _removePolylineCommand.ChangeCanExecute ();
             _addPolylineCommand.ChangeCanExecute ();
@@ -248,14 +256,14 @@ namespace Sample
 
         private void RemovePolyline (object o)
         {
-            if (Polylines.Count == 0) {
+            if (Overlays.Count == 0) {
                 return;
             }
 
-            var polyline = Polylines.LastOrDefault ();
+            var polyline = Overlays.LastOrDefault ();
             _allPolylines.AddLast (polyline);
 
-            Polylines.Remove (polyline);
+            Overlays.Remove (polyline);
 
             _removePolylineCommand.ChangeCanExecute ();
             _addPolylineCommand.ChangeCanExecute ();

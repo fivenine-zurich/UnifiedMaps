@@ -22,9 +22,10 @@ namespace fivenine.UnifiedMaps.Droid
     {
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
-        private readonly Dictionary<MapPolyline, Polyline> _polylines;
 
         private readonly Dictionary<IMapAnnotation, Marker> _markers;
+        private readonly Dictionary<IPolylineOverlay, Polyline> _polylines;
+        private readonly Dictionary<ICircleOverlay, Circle> _circles;
 
         private GoogleMap _googleMap;
 
@@ -32,7 +33,9 @@ namespace fivenine.UnifiedMaps.Droid
         {
             AutoPackage = false;
             _markers = new Dictionary<IMapAnnotation, Marker>();
-            _polylines = new Dictionary<MapPolyline, Polyline>();
+            _polylines = new Dictionary<IPolylineOverlay, Polyline>();
+            _circles = new Dictionary<ICircleOverlay, Circle>();
+
             _behavior = new RendererBehavior(this);
         }
 
@@ -148,27 +151,70 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        public void AddPolyline(MapPolyline line)
+        public void AddOverlay(IMapOverlay item)
         {
-            if (_googleMap != null)
+            if (_googleMap == null)
             {
-                var options = new PolylineOptions();
-                options.Add(line.Select(p => p.ToLatLng()).ToArray());
-                options.InvokeColor(line.StrokeColor.ToAndroid().ToArgb());
-                options.InvokeWidth(line.LineWidth);
+                return;
+            }
 
-                var polyline = _googleMap.AddPolyline(options);
-                _polylines.Add(line, polyline);
+            if (item is ICircleOverlay)
+            {
+                var circle = (ICircleOverlay)item;
+
+                var options = new CircleOptions();
+                options.InvokeCenter(circle.Location.ToLatLng());
+                options.InvokeRadius(circle.Radius);
+                options.InvokeStrokeWidth(circle.LineWidth);
+                options.InvokeStrokeColor(circle.StrokeColor.ToAndroid().ToArgb());
+                options.InvokeFillColor(circle.FillColor.ToAndroid().ToArgb());
+
+                var mapCircle = _googleMap.AddCircle(options);
+                _circles.Add(circle, mapCircle);
+                return;
+            }
+
+            if (item is IPolylineOverlay)
+            {
+                var polyline = (IPolylineOverlay)item;
+                
+                var options = new PolylineOptions();
+                options.Add(polyline.Select(p => p.ToLatLng()).ToArray());
+                options.InvokeColor(polyline.StrokeColor.ToAndroid());
+                options.InvokeWidth(polyline.LineWidth);
+
+                var mapPolyline = _googleMap.AddPolyline(options);
+                _polylines.Add(polyline, mapPolyline);
+                return;
             }
         }
 
-        public void RemovePolyline(MapPolyline line)
+        public void RemoveOverlay(IMapOverlay item)
         {
-            Polyline polyline;
-            if (_polylines.TryGetValue(line, out polyline))
+            if (item is ICircleOverlay)
             {
-                polyline.Remove();
-                _polylines.Remove(line);
+                var circle = (ICircleOverlay)item;
+                Circle mapCircle;
+                if (_circles.TryGetValue(circle, out mapCircle))
+                {
+                    _circles.Remove(circle);
+                    mapCircle.Remove();
+                }
+
+                return;
+            }
+
+            if (item is IPolylineOverlay)
+            {
+                var polyline = (IPolylineOverlay)item;
+                Polyline mapPolyline;
+                if (_polylines.TryGetValue(polyline, out mapPolyline))
+                {
+                    _polylines.Remove(polyline);
+                    mapPolyline.Remove();
+                }
+
+                return;
             }
         }
 

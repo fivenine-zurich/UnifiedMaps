@@ -1,7 +1,7 @@
 ﻿using System;
 namespace fivenine.UnifiedMaps
 {
-    public interface IMapPolyline : IMapAnnotation
+    public interface IMapOverlay : IMapAnnotation
     {
     }
 }

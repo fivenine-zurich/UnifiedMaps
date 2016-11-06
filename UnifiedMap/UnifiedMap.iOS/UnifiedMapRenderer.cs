@@ -123,29 +123,48 @@ namespace fivenine.UnifiedMaps.iOS
             Control.RemoveAnnotations(pins);
         }
 
-        public void AddPolyline(MapPolyline line)
+        public void AddOverlay(IMapOverlay item)
         {
-            var coordinates = line
-                .Select(p => new CLLocationCoordinate2D(p.Latitude, p.Longitude))
-                .ToArray();
+            IMKOverlay overlay = null;
 
-            var polyline = new UnifiedPolylineAnnotation(MKPolyline.FromCoordinates(coordinates))
+            if (item is ICircleOverlay)
             {
-                Data = line
-            };
+                var circle = (ICircleOverlay)item;
+                overlay = new UnifiedCircleOverlay(MKCircle.Circle(circle.Location.ToCoordinate(), circle.Radius))
+                {
+                    Data = circle
+                };
 
-            Control.AddOverlay(polyline);
+                Control.AddOverlay(overlay);
+                return;
+            }
+
+            if (item is IPolylineOverlay)
+            {
+                var polyline = (IPolylineOverlay)item;
+                var coordinates = polyline
+                    .Select(p => new CLLocationCoordinate2D(p.Latitude, p.Longitude))
+                    .ToArray();
+
+                overlay = new UnifiedPolylineOverlay(MKPolyline.FromCoordinates(coordinates))
+                {
+                    Data = polyline
+                };
+
+                Control.AddOverlay(overlay);
+                return;
+            }
         }
 
-        public void RemovePolyline(MapPolyline line)
+        public void RemoveOverlay(IMapOverlay item)
         {
-            var polylines = Control.Overlays
-                .OfType<UnifiedPolylineAnnotation>()
-                .Where(point => point.Data == line)
+            var overlays = Control.Overlays
+                .OfType<IUnifiedOverlay>()
+                .Where(x => x.Data.Equals(item))
                 .Cast<IMKOverlay>()
                 .ToArray();
 
-            Control.RemoveOverlays(polylines);
+            Control.RemoveOverlays(overlays);
         }
 
         public void SetSelectedAnnotation()

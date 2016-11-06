@@ -41,7 +41,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Annotations\IUnifiedAnnotation.cs" />
     <Compile Include="Annotations\UnifiedPointAnnotation.cs" />
-    <Compile Include="Annotations\UnifiedPolylineAnnotation.cs" />
+    <Compile Include="Annotations\UnifiedPolylineOverlay.cs" />
+    <Compile Include="Annotations\IUnifiedOverlay.cs" />
+    <Compile Include="Annotations\UnifiedCircleOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

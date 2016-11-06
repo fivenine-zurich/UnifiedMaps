@@ -7,31 +7,30 @@ namespace fivenine.UnifiedMaps
     /// <summary>
     /// A map polyline annotation.
     /// </summary>
-    public class MapPolyline : IMapAnnotation, IEnumerable<Position>
+    public class PolylineOverlay : IPolylineOverlay, IEnumerable<Position>
     {
         private readonly LinkedList<Position> _items;
         private readonly MapRegion _boundingBox;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapPolyline"/> class.
+        /// Initializes a new instance of the <see cref="PolylineOverlay"/> class.
         /// </summary>
-        public MapPolyline()
+        public PolylineOverlay()
         {
             _items = new LinkedList<Position>();
 
             _boundingBox = MapRegion.Empty();
 
             // Defaults
-            Alpha = 1.0f;
             LineWidth = 1.0f;
             StrokeColor = Color.Blue;
         }
 
         /// <summary>
-        /// Gets the bounding box of the current <see cref="MapPolyline"/>.
+        /// Gets the bounding box of the current <see cref="PolylineOverlay"/>.
         /// </summary>
         /// <value>
-        /// The bounding box of the current <see cref="MapPolyline"/>.
+        /// The bounding box of the current <see cref="PolylineOverlay"/>.
         /// </value>
         public MapRegion BoundingBox => _boundingBox;
 
@@ -50,14 +49,6 @@ namespace fivenine.UnifiedMaps
         /// The stroke thickness.
         /// </value>
         public float LineWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the alpha.
-        /// </summary>
-        /// <value>
-        /// The alpha.
-        /// </value>
-        public float Alpha { get; set; }
 
         /// <summary>
         /// Adds the specified position to the polyline.
@@ -92,9 +83,15 @@ namespace fivenine.UnifiedMaps
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="fivenine.UnifiedMaps.IMapAnnotation"/> is equal to the current <see cref="T:fivenine.UnifiedMaps.MapPolyline"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="fivenine.UnifiedMaps.IMapAnnotation"/> to compare with the current <see cref="T:fivenine.UnifiedMaps.MapPolyline"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="fivenine.UnifiedMaps.IMapAnnotation"/> is equal to the current
+        /// <see cref="T:fivenine.UnifiedMaps.MapPolyline"/>; otherwise, <c>false</c>.</returns>
         public bool Equals(IMapAnnotation other)
         {
-            var that = other as IMapPolyline;
+            var that = other as IPolylineOverlay;
             if (that == null)
             {
                 return false;

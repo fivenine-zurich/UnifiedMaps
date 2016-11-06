@@ -80,17 +80,10 @@ namespace fivenine.UnifiedMaps.iOS
 
         public override MKOverlayRenderer OverlayRenderer(MKMapView mapView, IMKOverlay overlay)
         {
-            var polylineOverlay = overlay as UnifiedPolylineAnnotation;
-            if (polylineOverlay != null)
+            var unifiedOverlay = overlay as IUnifiedOverlay;
+            if (unifiedOverlay != null)
             {
-                var renderer = new MKPolylineRenderer(polylineOverlay)
-                {
-                    StrokeColor = polylineOverlay.StrokeColor,
-                    LineWidth = polylineOverlay.LineWidth,
-                    Alpha = polylineOverlay.Alpha
-                };
-
-                return renderer;
+                return unifiedOverlay.GetRenderer();
             }
 
             return null;
@@ -130,6 +123,15 @@ namespace fivenine.UnifiedMaps.iOS
                     pinSelectedCommand.Execute(pinAnnotation.Data);
                 }
             }
+        }
+
+        public override void RegionChanged(MKMapView mapView, bool animated)
+        {
+            var mkregion = MKCoordinateRegion.FromMapRect(mapView.VisibleMapRect);
+
+            var region = new MapRegion(new Position(mkregion.Center.Latitude, mkregion.Center.Longitude), 
+                                       mkregion.Span.LatitudeDelta, mkregion.Span.LongitudeDelta);
+            _renderer.Map.VisibleRegion = region;
         }
 
         internal void SetSelectedAnnotation(MKMapView mapView, IMKAnnotation annotation)
