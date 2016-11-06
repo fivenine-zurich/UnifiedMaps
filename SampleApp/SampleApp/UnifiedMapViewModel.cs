@@ -91,7 +91,7 @@ namespace Sample
                         Location = new Position(47.3667, 8.5500),
                         Image = "pin_icon",
                         SelectedImage = "pin_icon_active",
-                        Anchor = new Point(0.5, 0)
+                        Anchor = new Point(0.5, 1)
                     },
                     new MapPin
                     {
@@ -100,7 +100,7 @@ namespace Sample
                         Location = new Position(47.389097, 8.517756),
                         Image = "pin_icon",
                         SelectedImage = "pin_icon_active",
-                        Anchor = new Point(0.5, 0.6)
+                        Anchor = new Point(0.5, 1)
                     },
                 });
 
