@@ -1,8 +1,10 @@
 ﻿using System;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Sample
 {
+	[Preserve(AllMembers = true)]
     public partial class MapPage : ContentPage
     {
         public MapPage()

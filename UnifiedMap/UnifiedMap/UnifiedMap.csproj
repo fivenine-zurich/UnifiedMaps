@@ -54,6 +54,7 @@
     <Compile Include="Annotations\IPolylineOverlay.cs" />
     <Compile Include="Annotations\CircleOverlay.cs" />
     <Compile Include="Annotations\ICircleOverlay.cs" />
+    <Compile Include="Common\LinkerSafeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

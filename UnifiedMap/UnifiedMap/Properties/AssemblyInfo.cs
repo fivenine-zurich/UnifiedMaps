@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using fivenine.UnifiedMaps;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -19,3 +20,6 @@ using System.Runtime.InteropServices;
 [assembly:InternalsVisibleTo("UnifiedMap.iOS")]
 [assembly: InternalsVisibleTo("UnifiedMap.Windows")]
 [assembly: InternalsVisibleTo("UnifiedMap.Droid")]
+
+// Mark as safe for linking
+[assembly: LinkerSafe]

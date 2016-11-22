@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace fivenine.UnifiedMaps
 {
     /// <summary>
     /// A map control for Xamarin.Froms applications that supports all major platforms.
     /// </summary>
+	[Preserve(AllMembers = true)]
     public class UnifiedMap : View
     {
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";

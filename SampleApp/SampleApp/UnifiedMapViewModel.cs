@@ -8,9 +8,11 @@ using System.Windows.Input;
 using fivenine.UnifiedMaps;
 using Sample.Annotations;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Sample
 {
+	[Preserve(AllMembers = true)]
     public class UnifiedMapViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
