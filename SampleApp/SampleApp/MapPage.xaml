@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:unifiedMaps="clr-namespace:fivenine.UnifiedMaps;assembly=UnifiedMap"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="Sample.MapPage"
              Title="UnifiedMaps Sample"
              Appearing="MapPage_OnAppearing">
@@ -22,6 +23,29 @@
             >
         </unifiedMaps:UnifiedMap>
 
+		<StackLayout
+			Orientation="Horizontal"
+            HorizontalOptions="CenterAndExpand"
+            Spacing="30">
+            <StackLayout.Resources>
+                <ResourceDictionary>
+                    <sys:Int32 x:Key="Previous">-1</sys:Int32>
+                    <sys:Int32 x:Key="Next">-1</sys:Int32>
+                </ResourceDictionary>
+			</StackLayout.Resources>
+
+			<Button 
+				Text="Previous" 
+				Command="{Binding SelectCommand}"
+				CommandParameter="{StaticResource Previous}" 
+				/>
+
+			<Button 
+				Text="Next" 
+				Command="{Binding SelectCommand}"
+				CommandParameter="{StaticResource Next}" 
+				/>
+			</StackLayout>
         <StackLayout 
             Orientation="Horizontal"
             HorizontalOptions="CenterAndExpand"

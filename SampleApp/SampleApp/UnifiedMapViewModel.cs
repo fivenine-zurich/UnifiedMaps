@@ -25,6 +25,7 @@ namespace Sample
 
         private readonly Command _addPolylineCommand;
         private readonly Command _removePolylineCommand;
+        private readonly Command _selectCommand;
 
         private readonly LinkedList<IMapPin> _allPins;
         private readonly LinkedList<IMapOverlay> _allPolylines;
@@ -38,25 +39,28 @@ namespace Sample
         public UnifiedMapViewModel ()
         {
             _pinSelectedCommand =
-                new Command<MapPin> (pin => Debug.WriteLine ($"Pin {pin.Title} was selected"));
+                new Command<MapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
 
             _changeMapTypeCommand =
-                new Command<MapType> (m => MapDisplayType = m);
+                new Command<MapType>(m => MapDisplayType = m);
 
             _addPinCommand =
-                new Command (AddPin, o => _allPins.Any ());
+                new Command(AddPin, o => _allPins.Any());
 
             _removePinCommand =
-                new Command (RemovePin, o => Pins.Any ());
+                new Command(RemovePin, o => Pins.Any());
 
             _moveToRegionCommand =
-                new Command (() => Map.MoveToRegion (animated: true));
+                new Command(() => Map.MoveToRegion(animated: true));
 
             _addPolylineCommand =
-                new Command (AddPolyline, o => _allPolylines.Any ());
+                new Command(AddPolyline, o => _allPolylines.Any());
 
             _removePolylineCommand =
-                new Command (RemovePolyline, o => Overlays.Any ());
+                new Command(RemovePolyline, o => Overlays.Any());
+
+            _selectCommand =
+                new Command<int>(SetSelectedItem, (arg) => Pins.Count > 0);
 
             _allPins = new LinkedList<IMapPin> (
                 new []
@@ -205,70 +209,95 @@ namespace Sample
 
         public ICommand RemovePolylineCommand => _removePolylineCommand;
 
+        public ICommand SelectCommand => _selectCommand;
+
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged ([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke (this, new PropertyChangedEventArgs (propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void AddPin (object o)
+        private void AddPin(object o)
         {
-            if (_allPins.Last == null) {
+            if (_allPins.Last == null)
+            {
                 return;
             }
 
             var pin = _allPins.Last.Value;
-            _allPins.RemoveLast ();
+            _allPins.RemoveLast();
 
-            Pins.Add (pin);
+            Pins.Add(pin);
 
-            _removePinCommand.ChangeCanExecute ();
-            _addPinCommand.ChangeCanExecute ();
+            _removePinCommand.ChangeCanExecute();
+            _addPinCommand.ChangeCanExecute();
+            _selectCommand.ChangeCanExecute();
         }
 
-        private void RemovePin (object o)
+        private void RemovePin(object o)
         {
-            if (Pins.Count == 0) {
+            if (Pins.Count == 0)
+            {
                 return;
             }
 
-            var pin = Pins.LastOrDefault ();
-            _allPins.AddLast (pin);
+            var pin = Pins.LastOrDefault();
+            _allPins.AddLast(pin);
 
-            Pins.Remove (pin);
+            Pins.Remove(pin);
 
-            _removePinCommand.ChangeCanExecute ();
-            _addPinCommand.ChangeCanExecute ();
+            _removePinCommand.ChangeCanExecute();
+            _addPinCommand.ChangeCanExecute();
+            _selectCommand.ChangeCanExecute();
         }
 
-        private void AddPolyline (object o)
+        private void AddPolyline(object o)
         {
-            if (_allPolylines.Last == null) {
+            if (_allPolylines.Last == null)
+            {
                 return;
             }
 
             var polyline = _allPolylines.Last.Value;
-            _allPolylines.RemoveLast ();
+            _allPolylines.RemoveLast();
 
-            Overlays.Add (polyline);
+            Overlays.Add(polyline);
 
-            _removePolylineCommand.ChangeCanExecute ();
-            _addPolylineCommand.ChangeCanExecute ();
+            _removePolylineCommand.ChangeCanExecute();
+            _addPolylineCommand.ChangeCanExecute();
         }
 
-        private void RemovePolyline (object o)
+        private void RemovePolyline(object o)
         {
-            if (Overlays.Count == 0) {
+            if (Overlays.Count == 0)
+            {
                 return;
             }
 
-            var polyline = Overlays.LastOrDefault ();
-            _allPolylines.AddLast (polyline);
+            var polyline = Overlays.LastOrDefault();
+            _allPolylines.AddLast(polyline);
 
-            Overlays.Remove (polyline);
+            Overlays.Remove(polyline);
 
-            _removePolylineCommand.ChangeCanExecute ();
-            _addPolylineCommand.ChangeCanExecute ();
+            _removePolylineCommand.ChangeCanExecute();
+            _addPolylineCommand.ChangeCanExecute();
+        }
+
+        private void SetSelectedItem(int direction)
+        {
+            if (SelectedItem == null)
+            {
+                SelectedItem = Pins.FirstOrDefault();
+            }
+
+            var index = Pins.IndexOf(SelectedItem as IMapPin);
+            var newIndex = (index + direction) % (Pins.Count);
+            if (newIndex < 0)
+            {
+                newIndex = Pins.Count - 1;
+            }
+
+            SelectedItem = Pins[newIndex];
         }
     }
 }
