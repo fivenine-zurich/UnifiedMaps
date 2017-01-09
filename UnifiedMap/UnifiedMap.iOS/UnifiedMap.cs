@@ -1,5 +1,6 @@
 ﻿// ReSharper disable once CheckNamespace
 
+using fivenine.UnifiedMaps.iOS;
 using Foundation;
 
 namespace fivenine
@@ -9,6 +10,7 @@ namespace fivenine
     {
         public static void Init()
         {
+            var renderer = new UnifiedMapRenderer();
         }
     }
 }
