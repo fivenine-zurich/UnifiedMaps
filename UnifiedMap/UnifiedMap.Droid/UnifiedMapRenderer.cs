@@ -47,11 +47,13 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void OnInfoWindowClick(Marker marker)
         {
-            var mapPin = _markers.Values
-                .FirstOrDefault(val => val.EqualsSafe(marker));
-
+            var mapPin = _markers
+                .Where(kv => kv.Value.Id.Equals(marker.Id))
+                .Select(kv => kv.Key as IMapPin)
+                .FirstOrDefault();
+            
             var command = Element.PinCalloutTappedCommand;
-            if (command != null && command.CanExecute(mapPin))
+            if (mapPin != null && command != null && command.CanExecute(mapPin))
             {
                 command.Execute(mapPin);
             }
