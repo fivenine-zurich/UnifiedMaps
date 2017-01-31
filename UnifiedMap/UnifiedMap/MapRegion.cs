@@ -223,7 +223,7 @@ namespace fivenine.UnifiedMaps
             _width = MaxX + Math.Abs(MinX);
             _height = MaxY + Math.Abs(MinY);
 
-            _center = new Position(_height/2, _width/2);
+            _center = Util.FindCenter(TopLeft, BottomRight);
         }
     }
 }
