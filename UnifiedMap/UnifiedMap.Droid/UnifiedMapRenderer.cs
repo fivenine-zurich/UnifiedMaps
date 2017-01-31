@@ -45,13 +45,18 @@ namespace fivenine.UnifiedMaps.Droid
 
         protected virtual Thickness MapPadding { get; } = new Thickness(48);
 
-        public void OnInfoWindowClick(Marker marker)
+        protected IMapPin GetMapPinFromMarker(Marker marker)
         {
-            var mapPin = _markers
+            return _markers
                 .Where(kv => kv.Value.Id.Equals(marker.Id))
                 .Select(kv => kv.Key as IMapPin)
                 .FirstOrDefault();
-            
+        }
+
+        public void OnInfoWindowClick(Marker marker)
+        {
+            var mapPin = GetMapPinFromMarker(marker);
+
             var command = Element.PinCalloutTappedCommand;
             if (mapPin != null && command != null && command.CanExecute(mapPin))
             {
@@ -61,31 +66,28 @@ namespace fivenine.UnifiedMaps.Droid
 
         public bool OnMarkerClick(Marker marker)
         {
-            var mapPin = _markers
-                .Where(kv => kv.Value.Id.Equals(marker.Id))
-                .Select(kv => kv.Key as IMapPin)
-                .FirstOrDefault();
+            var mapPin = GetMapPinFromMarker(marker);
 
             Marker selectedMarker;
             var selectedPin = Map.SelectedItem;
-
-            if (_markers.TryGetValue(selectedPin, out selectedMarker))
+            if (selectedPin != mapPin)
             {
-                UpdateMarkerImage(selectedPin as IMapPin, selectedMarker, false)
+                if (selectedPin != null && _markers.TryGetValue(selectedPin, out selectedMarker))
+                {
+                    UpdateMarkerImage(selectedPin as IMapPin, selectedMarker, false)
                     .HandleExceptions();
+                }
+
+                Map.SelectedItem = mapPin;
+
+                // Workaround for the Android limitation of showing info window on marker clicked
+                RemovePin(mapPin);
+                AddPinAsync(mapPin).HandleExceptions();
             }
-
-            UpdateMarkerImage(mapPin, marker, true)
-                .HandleExceptions();
-            
-            Map.SelectedItem = mapPin;
-
-            if (!string.IsNullOrWhiteSpace(mapPin.Title))
-            {
+            else {
                 marker.ShowInfoWindow();
             }
-
-            return true;
+            return true; // return true to bypass default android behavior
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -188,7 +190,7 @@ namespace fivenine.UnifiedMaps.Droid
             if (item is IPolylineOverlay)
             {
                 var polyline = (IPolylineOverlay)item;
-                
+
                 var options = new PolylineOptions();
                 options.Add(polyline.Select(p => p.ToLatLng()).ToArray());
                 options.InvokeColor(polyline.StrokeColor.ToAndroid());
@@ -289,7 +291,8 @@ namespace fivenine.UnifiedMaps.Droid
         public void SetSelectedAnnotation()
         {
             Marker selectedMarker;
-            if (_markers.TryGetValue(Map.SelectedItem, out selectedMarker))
+            var selectedItem = Map.SelectedItem as IMapPin;
+            if (selectedItem != null && _markers.TryGetValue(selectedItem, out selectedMarker))
             {
                 OnMarkerClick(selectedMarker);
             }
@@ -373,10 +376,19 @@ namespace fivenine.UnifiedMaps.Droid
                 mapPin.Anchor((float)pin.Anchor.X, (float)pin.Anchor.Y);
             }
 
+            var selected = pin.EqualsSafe(Map.SelectedItem);
+            mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
             var markerView = _googleMap.AddMarker(mapPin);
             _markers.Add(pin, markerView);
 
-            await UpdateMarkerImage(pin, markerView, pin.EqualsSafe(Map.SelectedItem));
+            if (selected)
+            {
+                markerView.ShowInfoWindow();
+            }
+            else
+            {
+                markerView.HideInfoWindow();
+            }
         }
 
         private void RegisterEvents(UnifiedMap map)
@@ -395,11 +407,11 @@ namespace fivenine.UnifiedMaps.Droid
             _googleMap.SetPadding((int)padding.Left, (int)padding.Top, (int)padding.Right, (int)padding.Bottom);
         }
 
-        private async Task UpdateMarkerImage(IMapPin pin, Marker mapPin, bool selected)
+        private async Task<BitmapDescriptor> DeterminMarkerImage(IMapPin pin, bool selected)
         {
             if (pin == null)
             {
-                return;
+                return null;
             }
 
             BitmapDescriptor icon;
@@ -419,8 +431,17 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 icon = BitmapDescriptorFactory.DefaultMarker();
             }
+            return icon;
+        }
 
-            mapPin.SetIcon(icon);
+        private async Task UpdateMarkerImage(IMapPin pin, Marker mapPin, bool selected)
+        {
+            if (pin == null)
+            {
+                return;
+            }
+
+            mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
         }
     }
 }
