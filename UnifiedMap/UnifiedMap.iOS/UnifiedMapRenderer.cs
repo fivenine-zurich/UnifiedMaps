@@ -174,6 +174,8 @@ namespace fivenine.UnifiedMaps.iOS
                 .FirstOrDefault(point => point.Data == SelectedItem) 
                  as IMKAnnotation;
             
+            if(newItem == null) return;
+
             UnifiedDelegate.SetSelectedAnnotation(Control, newItem);
         }
 
