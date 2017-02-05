@@ -1,0 +1,8 @@
+assembly_info:
+  patch: false
+
+build_script:
+  - ps: .\build.ps1 -target Build-CI -configuration Release
+
+cache:
+  - packages

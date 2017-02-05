@@ -36,7 +36,8 @@ Task("UpdateAssemblyInfo")
     .Does(() =>
 {
     var versionInfo = GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true
+        UpdateAssemblyInfo = true,
+        OutputType = GitVersionOutput.BuildServer
     });
 
     nugetVersion = versionInfo.NuGetVersion;
@@ -100,6 +101,12 @@ Task("NuGet-Pack")
     };
 
     NuGetPack("./UnifiedMaps.nuspec", nuGetPackSettings);
+
+    if (AppVeyor.IsRunningOnAppVeyor)
+    {
+        foreach (var file in GetFiles("UnifiedMaps*.nupkg"))
+            AppVeyor.UploadArtifact(file.FullPath);
+    }
 });
 
 Task("NuGet-Publish")
