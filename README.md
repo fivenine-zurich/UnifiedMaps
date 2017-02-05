@@ -1,4 +1,6 @@
 # UnifiedMaps
+[![Build status](https://ci.appveyor.com/api/projects/status/6he9c8towob43oyc?svg=true)](https://ci.appveyor.com/project/mightea/unifiedmaps)
+
 *A platform independent map implementation for Xamarin.Forms.*
 
 UnifiedMaps uses the native map APIs on each platform. This provides a fast, familiar maps experience for users, but means that some configuration steps are needed to adhere to each platforms specific API requirements. Once configured, the Map control works just like any other Xamarin.Forms element in common code.
