@@ -111,6 +111,7 @@ namespace fivenine.UnifiedMaps.Droid
             // Register listeners
             _googleMap.SetOnInfoWindowClickListener(this);
             _googleMap.SetOnMarkerClickListener(this);
+            _googleMap.SetOnCameraChangeListener(this);
 
             ApplyPadding();
             _behavior.Initialize();
