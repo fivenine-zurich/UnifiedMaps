@@ -3,6 +3,7 @@ assembly_info:
 
 build_script:
   - ps: .\build.ps1 -target Build-CI -configuration Release
+  - ps: .\build.ps1 -target NuGet-Pack
 
 cache:
   - packages
