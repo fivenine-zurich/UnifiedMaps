@@ -59,9 +59,10 @@ Task("Build")
     if(IsRunningOnWindows())
     {
       // Use MSBuild
-      MSBuild("./UnifiedMaps.sln", settings =>
-        settings.SetConfiguration(configuration));
+      MSBuild("./UnifiedMaps.sln", settings => {
+        settings.SetConfiguration(configuration);
         settings.NodeReuse = false;
+      });
     }
     else
     {
