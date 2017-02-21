@@ -6,10 +6,12 @@ build_script:
 
 cache:
   - packages\
-  # - C:\Users\appveyor\AppData\Local\Xamarin\
+  - C:\Users\appveyor\AppData\Local\Xamarin\
 
 build:
   verbosity: minimal
+
+test: off
 
 deploy:
 - provider: NuGet
