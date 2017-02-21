@@ -5,7 +5,7 @@ image: Visual Studio 2015
 
 build_script:
   - ps: Write-Host "Build starting"
-  - ps: .\build.ps1 -target Build -configuration Release
+  # - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
   - ps: Write-Host "Build completed"
 
 cache:
