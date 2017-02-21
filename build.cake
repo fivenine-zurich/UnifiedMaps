@@ -73,7 +73,6 @@ Task("Run-Unit-Tests")
 });
 
 Task("NuGet-Pack")
-    .IsDependentOn("UpdateAssemblyInfo")
     .Does( () =>
 {
     var nuGetPackSettings = new NuGetPackSettings {
