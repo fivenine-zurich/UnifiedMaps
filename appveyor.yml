@@ -1,8 +1,11 @@
 assembly_info:
   patch: false
 
+image: Visual Studio 2015
+
 build_script:
   - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
+  - ps: Write-Host "Build completed"
 
 cache:
   - packages\
