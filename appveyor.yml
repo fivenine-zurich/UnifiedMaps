@@ -4,10 +4,7 @@ assembly_info:
 image: Visual Studio 2015
 
 build_script:
-  - ps: .\build.ps1 -target UpdateAssemblyInfo
-  - ps: .\build.ps1 -target Restore-NuGet-Packages
-  - ps: msbuild UnifiedMaps.sln /t:Rebuild /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: .\build.ps1 -target NuGet-Pack
+  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
 cache:
   - packages\
