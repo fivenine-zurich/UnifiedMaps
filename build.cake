@@ -40,7 +40,7 @@ Task("UpdateAssemblyInfo")
         OutputType = GitVersionOutput.BuildServer
     });
 
-    nugetVersion = GetEnvironmentVariable("GitVersion_NuGetVersion");
+    nugetVersion = EnvironmentVariable("GitVersion_NuGetVersion");
 
     Information("Version: {0}",  versionInfo.FullSemVer);
     Information("NuGet Version: {0}", nugetVersion);
