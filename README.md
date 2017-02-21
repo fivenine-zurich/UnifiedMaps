@@ -1,11 +1,15 @@
 # UnifiedMaps
 [![Build status](https://ci.appveyor.com/api/projects/status/6he9c8towob43oyc?svg=true)](https://ci.appveyor.com/project/mightea/unifiedmaps)
+[![NuGet](https://img.shields.io/nuget/v/UnifiedMaps.svg)](https://www.nuget.org/packages/UnifiedMaps/)
 
 *A platform independent map implementation for Xamarin.Forms.*
 
 UnifiedMaps uses the native map APIs on each platform. This provides a fast, familiar maps experience for users, but means that some configuration steps are needed to adhere to each platforms specific API requirements. Once configured, the Map control works just like any other Xamarin.Forms element in common code.
 
-UnifiedMaps is designed from the ground up with *MVVM* in mind. In contrast to other implementations all map related tasks can be used with data-binding. It provides *bindable* properties for *map annotations* and various other elements. Interaction logic can be used by binding 'ICommand' objects or calling the methods directly on the UnifiedMap object.  
+UnifiedMaps is designed from the ground up with *MVVM* in mind. In contrast to other implementations all map related tasks can be used with data-binding. It provides *bindable* properties for *map annotations* and various other elements. Interaction logic can be used by binding 'ICommand' objects or calling the methods directly on the UnifiedMap object. 
+
+## Development
+UnifiedMaps uses [GitHub Flow](https://guides.github.com/introduction/flow/) 
 
 ## Maps Initialization
 After installing the NuGet package, the following initialization code is required in each application project:
