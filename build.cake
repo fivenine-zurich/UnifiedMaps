@@ -93,20 +93,20 @@ Task("NuGet-Pack")
         BasePath                = "./bin",
         Files                   = new [] {
             // PCL Profile259
-            new NuSpecContent {Source = replacer("PCL/UnifiedMap.dll"), Target = replacer("lib/portable-net45+win+wpa81+wp80/")},
-            new NuSpecContent {Source = replacer("PCL/UnifiedMap.xml"), Target = replacer("lib/portable-net45+win+wpa81+wp80/")},
+            new NuSpecContent {Source = "PCL/UnifiedMap.dll", Target = "lib/portable-net45+win+wpa81+wp80/"},
+            new NuSpecContent {Source = "PCL/UnifiedMap.xml", Target = "lib/portable-net45+win+wpa81+wp80/"},
 
             // Xamarin.iOS Unified API
-            new NuSpecContent {Source = replacer("Xamarin.iOS10/UnifiedMap*.dll"), Target = replacer("lib/Xamarin.iOS10/")},
-            new NuSpecContent {Source = replacer("Xamarin.iOS10/UnifiedMap*.xml"), Target = replacer("lib/Xamarin.iOS10/")},
+            new NuSpecContent {Source = "Xamarin.iOS10/UnifiedMap*.dll", Target = "lib/Xamarin.iOS10/"},
+            new NuSpecContent {Source = "Xamarin.iOS10/UnifiedMap*.xml", Target = "lib/Xamarin.iOS10/"},
 
             // Xamarin.Mac Unified API
-            new NuSpecContent {Source = replacer("Xamarin.iOS10/UnifiedMap*.dll"), Target = replacer("lib/Xamarin.Mac20/")},
-            new NuSpecContent {Source = replacer("Xamarin.iOS10/UnifiedMap*.xml"), Target = replacer("lib/Xamarin.Mac20/")},
+            new NuSpecContent {Source = "Xamarin.iOS10/UnifiedMap*.dll", Target = "lib/Xamarin.Mac20/"},
+            new NuSpecContent {Source = "Xamarin.iOS10/UnifiedMap*.xml", Target = "lib/Xamarin.Mac20/"},
 
             // Xamarin Android
-            new NuSpecContent {Source = replacer("monoandroid/UnifiedMap*.dll"), Target = replacer("lib/MonoAndroid10/")},
-            new NuSpecContent {Source = replacer("monoandroid/UnifiedMap*.xml"), Target = replacer("lib/MonoAndroid10/")},
+            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/MonoAndroid10/"},
+            new NuSpecContent {Source = "monoandroid/UnifiedMap*.dll", Target = "lib/MonoAndroid10/"},
         }
     };
 
