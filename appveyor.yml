@@ -4,6 +4,10 @@ assembly_info:
 build_script:
   - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
+test:
+  assemblies:
+    - 'bin\**\*.Tests.dll'
+
 cache:
   - packages\
   - C:\Users\appveyor\AppData\Local\Xamarin\
