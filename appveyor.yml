@@ -4,7 +4,8 @@ assembly_info:
 image: Visual Studio 2015
 
 build_script:
-  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
+  - ps: Write-Host "Build starting"
+  - ps: .\build.ps1 -target Build -configuration Release
   - ps: Write-Host "Build completed"
 
 cache:
