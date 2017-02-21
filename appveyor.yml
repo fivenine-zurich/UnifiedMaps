@@ -11,12 +11,9 @@ build_script:
 
 cache:
   - packages\
-  - '%APPDATA%\Local\Xamarin\'
 
 build:
   verbosity: minimal
-
-test: off
 
 deploy:
 - provider: NuGet
