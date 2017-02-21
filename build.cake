@@ -35,12 +35,18 @@ Task("Restore-NuGet-Packages")
 Task("UpdateAssemblyInfo")
     .Does(() =>
 {
-    var versionInfo = GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true,
+    // Update the CI version
+    GitVersion(new GitVersionSettings {
+        UpdateAssemblyInfo = false,
         OutputType = GitVersionOutput.BuildServer
     });
 
-    nugetVersion = EnvironmentVariable("GitVersion_NuGetVersion");
+    // Update the assembly versions
+    var versionInfo = GitVersion(new GitVersionSettings {
+        UpdateAssemblyInfo = true
+    });
+
+    nugetVersion = versionInfo.NuGetVersion;
 
     Information("Version: {0}",  versionInfo.FullSemVer);
     Information("NuGet Version: {0}", nugetVersion);
