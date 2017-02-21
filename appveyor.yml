@@ -29,18 +29,9 @@ deploy:
 
 notifications:
 - provider: Slack
-  on:
-    appveyor_repo_tag: false
   incoming_webhook: https://hooks.slack.com/services/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
   channel: '#notification-appveyor'
   on_build_status_changed: true
-- provider: Slack
-  on:
-    appveyor_repo_tag: true
-  incoming_webhook: https://hooks.slack.com/services/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
-  channel: '#notification-appveyor'
-  on_build_success: true
-  on_build_failure: true
 
 - provider: GitHubPullRequest
   auth_token:
