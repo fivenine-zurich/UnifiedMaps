@@ -4,11 +4,7 @@ assembly_info:
 image: Visual Studio 2015
 
 build_script:
-  - ps: Write-Host "Build starting"
-  - ps: .\build.ps1 -target UpdateAssemblyInfo -configuration Release
-  - ps: .\build.ps1 -target Build -configuration Release
-  - ps: .\build.ps1 -target NuGet-Pack -configuration Release
-  - ps: Write-Host "Build completed"
+  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
 cache:
   - packages\
