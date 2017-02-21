@@ -12,15 +12,20 @@ build:
 
 deploy:
 - provider: NuGet
+  name: production
+  on:
+    appveyor_repo_tag: true
   api_key:
     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
+
 - provider: GitHub
+  name: production
+  on:
+    appveyor_repo_tag: true
   auth_token:
     secure: JXorCJQaX0uFaA3ENKYvcqJ6JWkqccSjBHQikiqckVpmZRNAFeSCQ43TjhvKPSgu
   draft: true
   force_update: true
-  on:
-    appveyor_repo_tag: true
 
 notifications:
 - provider: Slack
