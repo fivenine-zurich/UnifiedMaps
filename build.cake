@@ -61,7 +61,7 @@ Task("Build")
       // Use MSBuild
       MSBuild("./UnifiedMaps.sln", settings =>
         settings.SetConfiguration(configuration));
-        setting.NodeReuse = false;
+        settings.NodeReuse = false;
     }
     else
     {
