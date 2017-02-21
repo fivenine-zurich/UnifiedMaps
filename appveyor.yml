@@ -6,6 +6,7 @@ build_script:
 
 cache:
   - packages\
+  - C:\Users\appveyor\AppData\Local\Xamarin\
 
 build:
   verbosity: minimal
