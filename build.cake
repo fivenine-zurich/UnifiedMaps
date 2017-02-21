@@ -74,7 +74,7 @@ Task("Run-Unit-Tests")
 
 Task("NuGet-Pack")
     .IsDependentOn("UpdateAssemblyInfo")
-    .Does( () => 
+    .Does( () =>
 {
     var nuGetPackSettings = new NuGetPackSettings {
         Id                      = "UnifiedMaps",
@@ -110,12 +110,12 @@ Task("NuGet-Pack")
 });
 
 Task("NuGet-Publish")
-    .Does( () => 
+    .Does( () =>
 {
     NuGetPush(GetFiles("UnifiedMaps*.nupkg").First(), new NuGetPushSettings {
         Source = "https://www.nuget.org/api/v2/package",
         ApiKey = EnvironmentVariable("NUGET_API_KEY")
-    }); 
+    });
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -128,6 +128,11 @@ Task("Default")
 Task("Build-CI")
     .IsDependentOn("UpdateAssemblyInfo")
     .IsDependentOn("Build");
+
+Task("Build-CI-AppVeyor")
+    .IsDependentOn("UpdateAssemblyInfo")
+    .IsDependentOn("Build")
+    .IsDependentOn("NuGet-Pack");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

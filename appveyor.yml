@@ -2,8 +2,7 @@ assembly_info:
   patch: false
 
 build_script:
-  - ps: .\build.ps1 -target Build-CI -configuration Release
-  - ps: .\build.ps1 -target NuGet-Pack
+  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
 cache:
   - packages
