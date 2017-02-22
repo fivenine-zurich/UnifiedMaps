@@ -1,5 +1,5 @@
 # UnifiedMaps
-[![Build status](https://ci.appveyor.com/api/projects/status/6he9c8towob43oyc?svg=true)](https://ci.appveyor.com/project/mightea/unifiedmaps)
+[![Build status](https://ci.appveyor.com/api/projects/status/vydv9kmdpya8jfac/branch/master?svg=true)](https://ci.appveyor.com/project/mightea/unifiedmaps/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/UnifiedMaps.svg)](https://www.nuget.org/packages/UnifiedMaps/)
 
 *A platform independent map implementation for Xamarin.Forms.*
