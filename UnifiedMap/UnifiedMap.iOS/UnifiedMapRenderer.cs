@@ -176,7 +176,7 @@ namespace fivenine.UnifiedMaps.iOS
             
             if(newItem == null) return;
 
-            UnifiedDelegate.SetSelectedAnnotation(Control, newItem);
+            Control.SelectAnnotation(newItem, true);
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
