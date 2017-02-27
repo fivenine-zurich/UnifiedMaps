@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.6] - 2017-02-27
+### Fixes
+- #21 Android MapRegion incorrectly constructed in OnCameraChange
+
+## [1.3.5] - 2017-02-22
+### Fixes
+- #18 Android does not update VisibleRegion when map position changed
+- #20 Update CI to automatically build nuget package with correct version
+
 ## [1.3.3] - 2017-02-05
 ### Fixes
 - #16 - Fix for the android ShowInfoWindow glitch when marker clicked
