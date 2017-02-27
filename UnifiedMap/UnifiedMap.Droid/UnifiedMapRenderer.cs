@@ -98,8 +98,8 @@ namespace fivenine.UnifiedMaps.Droid
             }
 
             var mapRegion = _googleMap.Projection.VisibleRegion.LatLngBounds;
-            var region = new MapRegion(mapRegion.Northeast.Latitude, mapRegion.Southwest.Longitude,
-                                       mapRegion.Southwest.Latitude, mapRegion.Northeast.Longitude);
+            var region = new MapRegion(mapRegion.Southwest.Longitude, mapRegion.Northeast.Latitude,
+                                       mapRegion.Northeast.Longitude, mapRegion.Southwest.Latitude);
 
             Map.VisibleRegion = region;
         }
