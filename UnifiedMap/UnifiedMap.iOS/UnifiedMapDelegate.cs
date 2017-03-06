@@ -98,14 +98,14 @@ namespace fivenine.UnifiedMaps.iOS
                 UpdatePinColor(_selectedAnnotationView, prevAnnotation.Data, false);
             }
 
-            var unifiedPoint = view.Annotation as UnifiedPointAnnotation;
+            var unifiedPoint = view?.Annotation as UnifiedPointAnnotation;
             _selectedAnnotation = unifiedPoint;
             _selectedAnnotationView = view;
 
             if (unifiedPoint != null)
             {
                 _renderer.SelectedItem = unifiedPoint.Data;
-                var isSelected = unifiedPoint.Data.SelectedImage != null;
+                var isSelected = unifiedPoint.Data?.SelectedImage != null;
 
                 UpdateImage(view, unifiedPoint.Data, isSelected);
                 UpdatePinColor(view, unifiedPoint.Data, true);

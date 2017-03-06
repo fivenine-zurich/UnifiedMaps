@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.7] - 2017-03-06
+### Fixes
+- Fixes NullReferenceException when the selected item is null
+
 ## [1.3.6] - 2017-02-27
 ### Fixes
 - #21 Android MapRegion incorrectly constructed in OnCameraChange
