@@ -259,6 +259,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             if (_googleMap != null)
             {
+                _googleMap.MyLocationEnabled = Element.IsShowingUser;
                 _googleMap.UiSettings.MyLocationButtonEnabled = Element.IsShowingUser;
             }
         }
