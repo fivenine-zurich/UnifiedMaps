@@ -173,8 +173,15 @@ namespace fivenine.UnifiedMaps.iOS
                 .OfType<IUnifiedAnnotation>()
                 .FirstOrDefault(point => point.Data == SelectedItem) 
                  as IMKAnnotation;
-            
-            if(newItem == null) return;
+
+            if (newItem == null)
+            {
+				// fix an issue where pins are not reset to default state when SelectedItem = null
+				foreach (var annotation in Control.Annotations)
+					Control.DeselectAnnotation(annotation, false);
+
+                return;
+            }
 
             Control.SelectAnnotation(newItem, true);
         }

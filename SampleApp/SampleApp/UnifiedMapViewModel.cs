@@ -26,6 +26,7 @@ namespace Sample
         private readonly Command _addPolylineCommand;
         private readonly Command _removePolylineCommand;
         private readonly Command _selectCommand;
+        private readonly Command _clearSelectionCommand;
 
         private readonly LinkedList<IMapPin> _allPins;
         private readonly LinkedList<IMapOverlay> _allPolylines;
@@ -61,6 +62,9 @@ namespace Sample
 
             _selectCommand =
                 new Command<int>(SetSelectedItem, (arg) => Pins.Count > 0);
+
+            _clearSelectionCommand =
+                new Command(() => SelectedItem = null);
 
             _allPins = new LinkedList<IMapPin> (
                 new []
@@ -210,6 +214,8 @@ namespace Sample
         public ICommand RemovePolylineCommand => _removePolylineCommand;
 
         public ICommand SelectCommand => _selectCommand;
+
+        public ICommand ClearSelectionCommand => _clearSelectionCommand;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
