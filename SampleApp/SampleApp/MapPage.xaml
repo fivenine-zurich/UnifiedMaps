@@ -45,6 +45,11 @@
 				Command="{Binding SelectCommand}"
 				CommandParameter="{StaticResource Next}" 
 				/>
+
+			<Button 
+				Text="Clear Selection" 
+				Command="{Binding ClearSelectionCommand}"
+				/>
 			</StackLayout>
         <StackLayout 
             Orientation="Horizontal"

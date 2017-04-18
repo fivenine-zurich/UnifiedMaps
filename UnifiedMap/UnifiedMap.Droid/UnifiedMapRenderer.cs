@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,7 +18,8 @@ using Xamarin.Forms.Platform.Android;
 namespace fivenine.UnifiedMaps.Droid
 {
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, GoogleMap.IOnCameraChangeListener,
-        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, GoogleMap.IOnMarkerClickListener, IUnifiedMapRenderer
+        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, GoogleMap.IOnMarkerClickListener,
+        GoogleMap.IOnMapClickListener, IUnifiedMapRenderer
     {
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
@@ -63,6 +65,12 @@ namespace fivenine.UnifiedMaps.Droid
                 command.Execute(mapPin);
             }
         }
+
+		public void OnMapClick(LatLng point)
+		{
+			// Fix a discrepancy with iOS version. iOS deselects pin when map is tapped, but not on Android.
+			Map.SelectedItem = null;
+		}
 
         public bool OnMarkerClick(Marker marker)
         {
@@ -112,6 +120,7 @@ namespace fivenine.UnifiedMaps.Droid
             _googleMap.SetOnInfoWindowClickListener(this);
             _googleMap.SetOnMarkerClickListener(this);
             _googleMap.SetOnCameraChangeListener(this);
+            _googleMap.SetOnMapClickListener(this);
 
             ApplyPadding();
             _behavior.Initialize();
@@ -298,6 +307,11 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 OnMarkerClick(selectedMarker);
             }
+            else
+            {
+				// fix an issue where pins are not reset to default state when SelectedItem = null
+				DeselectPins(); 
+            }
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
@@ -445,5 +459,15 @@ namespace fivenine.UnifiedMaps.Droid
 
             mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
         }
+
+		private async void DeselectPins()
+		{
+			foreach (var marker in _markers)
+			{
+				marker.Value.HideInfoWindow();
+				var pin = GetMapPinFromMarker(marker.Value);
+				await UpdateMarkerImage(pin, marker.Value, false); // force false
+			}
+		}
     }
 }

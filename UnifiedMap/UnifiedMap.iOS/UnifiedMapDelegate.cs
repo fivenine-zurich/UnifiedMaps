@@ -91,12 +91,7 @@ namespace fivenine.UnifiedMaps.iOS
 
         public override void DidSelectAnnotationView(MKMapView mapView, MKAnnotationView view)
         {
-            if (_selectedAnnotation is UnifiedPointAnnotation)
-            {
-                var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
-                UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
-                UpdatePinColor(_selectedAnnotationView, prevAnnotation.Data, false);
-            }
+            DeselectPin();
 
             var unifiedPoint = view?.Annotation as UnifiedPointAnnotation;
             _selectedAnnotation = unifiedPoint;
@@ -111,6 +106,12 @@ namespace fivenine.UnifiedMaps.iOS
                 UpdatePinColor(view, unifiedPoint.Data, true);
             }
         }
+
+		public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
+		{
+			// Fix issue where Pins already deselected internally but it's still highlighted on UI
+			DeselectPin();
+		}
 
         public override void CalloutAccessoryControlTapped(MKMapView mapView, MKAnnotationView view, UIControl control)
         {
@@ -167,5 +168,15 @@ namespace fivenine.UnifiedMaps.iOS
                 });
             }
         }
+
+		private void DeselectPin()
+		{
+			if (_selectedAnnotation is UnifiedPointAnnotation)
+			{
+				var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
+				UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
+				UpdatePinColor(_selectedAnnotationView, prevAnnotation.Data, false);
+			}
+		}
     }
 }
