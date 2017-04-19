@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -19,6 +20,7 @@ namespace fivenine.UnifiedMaps.iOS
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MKMapView>, IUnifiedMapRenderer
     {
         private readonly RendererBehavior _behavior;
+        private readonly List<IUnifiedOverlay> _overlays = new List<IUnifiedOverlay>();
         private CLLocationManager _locationManager;
 
         public UnifiedMapRenderer()
@@ -125,16 +127,15 @@ namespace fivenine.UnifiedMaps.iOS
 
         public void AddOverlay(IMapOverlay item)
         {
-            IMKOverlay overlay = null;
-
             if (item is ICircleOverlay)
             {
                 var circle = (ICircleOverlay)item;
-                overlay = new UnifiedCircleOverlay(MKCircle.Circle(circle.Location.ToCoordinate(), circle.Radius))
+                var overlay = new UnifiedCircleOverlay(MKCircle.Circle(circle.Location.ToCoordinate(), circle.Radius))
                 {
                     Data = circle
                 };
 
+                _overlays.Add(overlay);
                 Control.AddOverlay(overlay);
                 return;
             }
@@ -146,11 +147,12 @@ namespace fivenine.UnifiedMaps.iOS
                     .Select(p => new CLLocationCoordinate2D(p.Latitude, p.Longitude))
                     .ToArray();
 
-                overlay = new UnifiedPolylineOverlay(MKPolyline.FromCoordinates(coordinates))
+                var overlay = new UnifiedPolylineOverlay(MKPolyline.FromCoordinates(coordinates))
                 {
                     Data = polyline
                 };
 
+                _overlays.Add(overlay);
                 Control.AddOverlay(overlay);
                 return;
             }
@@ -158,13 +160,13 @@ namespace fivenine.UnifiedMaps.iOS
 
         public void RemoveOverlay(IMapOverlay item)
         {
-            var overlays = Control.Overlays
-                .OfType<IUnifiedOverlay>()
-                .Where(x => x.Data.Equals(item))
-                .Cast<IMKOverlay>()
-                .ToArray();
+            var overlay = _overlays.FirstOrDefault(x => x.Data == item);
 
-            Control.RemoveOverlays(overlays);
+            if (overlay != null)
+            {
+                Control.RemoveOverlay((IMKOverlay)overlay);
+                _overlays.Remove(overlay);
+            }
         }
 
         public void SetSelectedAnnotation()
