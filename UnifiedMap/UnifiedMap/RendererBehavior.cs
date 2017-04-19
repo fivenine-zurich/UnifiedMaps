@@ -30,6 +30,8 @@ namespace fivenine.UnifiedMaps
         void ApplyMapType();
 
         void SetSelectedAnnotation();
+
+		void ApplyDisplayNativeControls();
     }
 
     internal class RendererBehavior
@@ -240,6 +242,11 @@ namespace fivenine.UnifiedMaps
             {
                 _renderer.ApplyMapType();
             }
+
+			if (propertyName == UnifiedMap.ShouldDisplayNativeControlsProperty.PropertyName)
+			{
+				_renderer.ApplyDisplayNativeControls();
+			}
 
             if (propertyName == UnifiedMap.IsShowingUserProperty.PropertyName)
             {

@@ -68,8 +68,12 @@ namespace fivenine.UnifiedMaps.Droid
 
 		public void OnMapClick(LatLng point)
 		{
-			// Fix a discrepancy with iOS version. iOS deselects pin when map is tapped, but not on Android.
-			Map.SelectedItem = null;
+			// Add a conditional property for touch deselection
+			if (Map != null && Map.ShouldDeselectOnMapTouch)
+			{
+				// Fix a discrepancy with iOS version. iOS deselects pin when map is tapped, but not on Android.
+				Map.SelectedItem = null;
+			}
 		}
 
         public bool OnMarkerClick(Marker marker)
@@ -157,8 +161,7 @@ namespace fivenine.UnifiedMaps.Droid
             if (_googleMap == null)
                 return;
 
-            AddPinAsync(pin)
-                .HandleExceptions();
+            AddPinAsync(pin).HandleExceptions();
         }
 
         public void RemovePin(IMapPin pin)
@@ -252,7 +255,6 @@ namespace fivenine.UnifiedMaps.Droid
             if (_googleMap != null)
             {
                 _googleMap.UiSettings.ZoomGesturesEnabled = Element.HasZoomEnabled;
-                _googleMap.UiSettings.ZoomControlsEnabled = Element.HasZoomEnabled;
             }
         }
 
@@ -269,7 +271,6 @@ namespace fivenine.UnifiedMaps.Droid
             if (_googleMap != null)
             {
                 _googleMap.MyLocationEnabled = Element.IsShowingUser;
-                _googleMap.UiSettings.MyLocationButtonEnabled = Element.IsShowingUser;
             }
         }
 
@@ -313,6 +314,15 @@ namespace fivenine.UnifiedMaps.Droid
 				DeselectPins(); 
             }
         }
+
+		public void ApplyDisplayNativeControls()
+		{
+			if (_googleMap != null)
+			{
+				_googleMap.UiSettings.ZoomControlsEnabled = Element.ShouldDisplayNativeControls;
+				_googleMap.UiSettings.MyLocationButtonEnabled = Element.ShouldDisplayNativeControls;
+			}
+		}
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {
@@ -394,6 +404,12 @@ namespace fivenine.UnifiedMaps.Droid
 
             var selected = pin.EqualsSafe(Map.SelectedItem);
             mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
+
+			if (_markers.ContainsKey(pin))
+			{
+				return;
+			}
+
             var markerView = _googleMap.AddMarker(mapPin);
             _markers.Add(pin, markerView);
 
@@ -462,7 +478,8 @@ namespace fivenine.UnifiedMaps.Droid
 
 		private async void DeselectPins()
 		{
-			foreach (var marker in _markers)
+			var safeList = _markers.ToList();
+			foreach (var marker in safeList)
 			{
 				marker.Value.HideInfoWindow();
 				var pin = GetMapPinFromMarker(marker.Value);
