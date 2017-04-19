@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0] - 2017-04-19
+### Fixes
+ - #26 iOS Remove Overlay does not function. thx @Steve-Himself
+
+### Added
+ - Add conditional flags to enable/disable touch map to dismiss and show/hide native zoom and location buttons. Thx @renfred
+
 ## [1.3.9] - 2017-04-18
 ### Fixes
  - Fix item deselection issue and inconsistency between two versions #25, thx @renfred
