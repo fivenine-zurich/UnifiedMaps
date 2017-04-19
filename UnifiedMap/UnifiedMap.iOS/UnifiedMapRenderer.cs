@@ -164,7 +164,7 @@ namespace fivenine.UnifiedMaps.iOS
 
             if (overlay != null)
             {
-                Control.RemoveOverlays(new[] { (IMKOverlay)overlay });
+                Control.RemoveOverlay((IMKOverlay)overlay);
                 _overlays.Remove(overlay);
             }
         }
