@@ -62,6 +62,12 @@ namespace fivenine.UnifiedMaps
         public static readonly BindableProperty HasZoomEnabledProperty = BindableProperty.Create("HasZoomEnabled",
                 typeof(bool), typeof(UnifiedMap), true);
 
+		/// <summary>
+		/// The should display native zoom and location controls property (Android only).
+		/// </summary>
+		public static readonly BindableProperty ShouldDisplayNativeControlsProperty = BindableProperty.Create("ShouldDisplayNativeControls",
+				typeof(bool), typeof(UnifiedMap), false); // false by default to match with iOS
+
         /// <summary>
         /// The selected item property.
         /// </summary>
@@ -73,6 +79,13 @@ namespace fivenine.UnifiedMaps
         /// </summary>
         public static readonly BindableProperty SelectionChangedCommandProperty = BindableProperty.Create("SelectionChangedCommand",
                 typeof(Command<IMapAnnotation>), typeof(UnifiedMap), null);
+
+
+		/// <summary>
+		/// The property to indicate if deselection should occur when touching map.
+		/// </summary>
+		public static readonly BindableProperty ShouldDeselectOnMapTouchProperty = BindableProperty.Create("ShouldDeselectOnMapTouch",
+				typeof(bool), typeof(UnifiedMap), true);
 
         public static readonly BindableProperty VisibleRegionProperty = BindableProperty.Create("VisibleRegion",
                 typeof(MapRegion), typeof(UnifiedMap), null, propertyChanged: OnVisibleRegionChanged);
@@ -208,6 +221,30 @@ namespace fivenine.UnifiedMaps
             get { return (bool)GetValue(HasZoomEnabledProperty); }
             set { SetValue(HasZoomEnabledProperty, value); }
         }
+
+		/// <summary>
+		/// Gets or sets a value indicating deselection should occur when touching map.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if deselection should be enabled; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShouldDeselectOnMapTouch
+		{
+			get { return (bool)GetValue(ShouldDeselectOnMapTouchProperty); }
+			set { SetValue(ShouldDeselectOnMapTouchProperty, value); }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating if native zoom and location controls should be displayed (Android only).
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if controls should be enabled; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShouldDisplayNativeControls
+		{
+			get { return (bool)GetValue(ShouldDisplayNativeControlsProperty); }
+			set { SetValue(ShouldDisplayNativeControlsProperty, value); }
+		}
 
         /// <summary>
         /// Gets the visible region.

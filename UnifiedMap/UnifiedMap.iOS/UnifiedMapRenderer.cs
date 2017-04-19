@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +8,7 @@ using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.iOS;
 using Foundation;
 using MapKit;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -20,6 +21,7 @@ namespace fivenine.UnifiedMaps.iOS
     {
         private readonly RendererBehavior _behavior;
         private CLLocationManager _locationManager;
+		private bool _shouldNotDismiss;
 
         public UnifiedMapRenderer()
         {
@@ -33,7 +35,7 @@ namespace fivenine.UnifiedMaps.iOS
             get { return Element.SelectedItem; }
             set 
             {
-                if (!Element.SelectedItem.EqualsSafe(value))
+				if (!Element.SelectedItem.EqualsSafe(value))
                 {
                     Element.SelectedItem = value;
                 }
@@ -63,6 +65,11 @@ namespace fivenine.UnifiedMaps.iOS
         {
             Control.ScrollEnabled = Element.HasScrollEnabled;
         }
+
+		public void ApplyDisplayNativeControls()
+		{
+			// Does nothing as iOS does not have native zoom and location buttons
+		}
 
         public void ApplyMapType()
         {
@@ -182,7 +189,7 @@ namespace fivenine.UnifiedMaps.iOS
 
                 return;
             }
-
+			
             Control.SelectAnnotation(newItem, true);
         }
 
@@ -211,6 +218,51 @@ namespace fivenine.UnifiedMaps.iOS
                 _behavior.Initialize();
             }
         }
+
+		public override void TouchesBegan(NSSet touches, UIEvent evt)
+		{
+			base.TouchesBegan(touches, evt);
+			_shouldNotDismiss = false; // reset
+		}
+
+		public override void TouchesMoved(NSSet touches, UIEvent evt)
+		{
+			base.TouchesMoved(touches, evt);
+			_shouldNotDismiss = true;
+		}
+
+		public override void TouchesCancelled(NSSet touches, UIEvent evt)
+		{
+			base.TouchesCancelled(touches, evt);
+			_shouldNotDismiss = true;
+		}
+
+		public override void TouchesEnded(NSSet touches, UIEvent evt)
+		{
+			base.TouchesEnded(touches, evt);
+
+			// Add a conditional guard to deselect on map touch
+			if (Element != null && Element.ShouldDeselectOnMapTouch && _shouldNotDismiss)
+			{
+				var isAnnotation = false;
+				var touch = touches.FirstOrDefault() as UITouch;
+				if (touch != null && Control != null)
+				{
+					// Detect when an annotation is touched
+					// May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotaiton is touched
+					if (touch.View is MKAnnotationView)
+					{
+						isAnnotation = true;
+					}
+				}
+
+				if (!isAnnotation)
+				{
+					// Deselect annotation when map is touched
+					SelectedItem = null;
+				}
+			}
+		}
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
