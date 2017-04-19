@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.9] - 2017-04-18
+### Fixes
+ - Fix item deselection issue and inconsistency between two versions #25, thx @renfred
+
 ## [1.3.8] - 2017-03-22
 ### Fixes
 - #23 Android maps not showing user location, thx @shmoogems
