@@ -290,6 +290,7 @@ namespace fivenine.UnifiedMaps
             _renderer.ApplyHasScrollEnabled();
             _renderer.ApplyHasZoomEnabled();
             _renderer.ApplyIsShowingUser();
+            _renderer.ApplyDisplayNativeControls();
 
             AddAllPins();
             AddAllOverlays();
