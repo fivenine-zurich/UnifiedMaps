@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.1] - 2017-04-25
+### Fixes
+ - #29 Fix an issue where native controls are still shown when disabled. thx @renfred
+
 ## [1.4.0] - 2017-04-19
 ### Fixes
  - #26 iOS Remove Overlay does not function. thx @Steve-Himself
