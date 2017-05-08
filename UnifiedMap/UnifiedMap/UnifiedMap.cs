@@ -39,6 +39,12 @@ namespace fivenine.UnifiedMaps
             BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
         /// <summary>
+        /// The can show callout on tap property.
+        /// </summary>
+        public static readonly BindableProperty CanShowCalloutOnTapProperty = BindableProperty.Create("CanShowCalloutOnTap",
+            typeof (bool), typeof (UnifiedMap), true);
+        
+        /// <summary>
         /// The autofitallannotations property.
         /// </summary>
         public static readonly BindableProperty AutoFitAllAnnotationsProperty = BindableProperty.Create("AutoFitAllAnnotations",
@@ -172,6 +178,18 @@ namespace fivenine.UnifiedMaps
         {
             get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
             set { SetValue(PinCalloutTappedCommandProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets whether to show callout on tap.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if show callout on tap should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanShowCalloutOnTap
+        {
+            get { return (bool)GetValue(CanShowCalloutOnTapProperty); }
+            set { SetValue(CanShowCalloutOnTapProperty, value); }
         }
 
         /// <summary>
