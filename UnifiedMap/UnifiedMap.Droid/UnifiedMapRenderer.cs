@@ -413,7 +413,7 @@ namespace fivenine.UnifiedMaps.Droid
             var markerView = _googleMap.AddMarker(mapPin);
             _markers.Add(pin, markerView);
 
-            if (selected)
+            if (selected && Map.CanShowCalloutOnTap)
             {
                 markerView.ShowInfoWindow();
             }

@@ -62,7 +62,7 @@ namespace fivenine.UnifiedMaps.iOS
                 }
 
                 // Only show the callout if there is something to display
-                annotationView.CanShowCallout = string.IsNullOrWhiteSpace(pinAnnotation.Data.Title) == false;
+                annotationView.CanShowCallout = _renderer.Element.CanShowCalloutOnTap && !string.IsNullOrWhiteSpace(pinAnnotation.Data.Title);
 
                 if (annotationView.CanShowCallout
                     && _renderer.Element.PinCalloutTappedCommand != null
