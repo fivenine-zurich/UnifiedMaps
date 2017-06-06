@@ -30,7 +30,7 @@ namespace fivenine.UnifiedMaps.Droid
 
         private GoogleMap _googleMap;
 
-        public UnifiedMapRenderer()
+		public UnifiedMapRenderer() : base()
         {
             AutoPackage = false;
             _markers = new Dictionary<IMapAnnotation, Marker>();
@@ -39,6 +39,8 @@ namespace fivenine.UnifiedMaps.Droid
 
             _behavior = new RendererBehavior(this);
         }
+
+		public UnifiedMapRenderer(IntPtr javaReference, global::Android.Runtime.JniHandleOwnership transfer) : this() { }
 
         internal static Bundle Bundle
         {
