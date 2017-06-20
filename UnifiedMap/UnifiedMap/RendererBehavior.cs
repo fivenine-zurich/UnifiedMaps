@@ -269,6 +269,12 @@ namespace fivenine.UnifiedMaps
                 AddAllPins();
             }
 
+            if (propertyName == UnifiedMap.OverlaysProperty.PropertyName)
+            {
+                RegisterOverlayEvents(_renderer.Map);
+                AddAllOverlays();
+            }
+
             if (propertyName == UnifiedMap.SelectedItemProperty.PropertyName)
             {
                 _renderer.SetSelectedAnnotation();
