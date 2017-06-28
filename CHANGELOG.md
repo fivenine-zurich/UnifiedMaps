@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.4] - 2017-06-28
+## Fixes
+ - #33 Fix issue where Overlays were not drawn during init, thx @renfred
+
 ## [1.4.3] - 2017-06-06
 ## Fixes
  - #32 (IntPtr, JniHandleOwnership) constructor to avoid leaky abstraction, thx @shmoogems
