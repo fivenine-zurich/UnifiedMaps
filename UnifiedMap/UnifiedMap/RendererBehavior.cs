@@ -111,9 +111,9 @@ namespace fivenine.UnifiedMaps
 
         internal MapRegion GetRegionForAllAnnotations()
         {
-            var allPinPositions = _renderer.Map.Pins.OfType<IMapPin>().Select(p => p.Location);
+            var allPinPositions = _renderer.Map.Pins?.OfType<IMapPin>()?.Select(p => p.Location);
 
-            return MapRegion.FromPositions(allPinPositions);
+            return allPinPositions == null || allPinPositions.Count() == 0 ? MapRegion.Empty() : MapRegion.FromPositions(allPinPositions);
         }
 
         private void MoveToRegion(MapRegion mapRegion, bool animated)
