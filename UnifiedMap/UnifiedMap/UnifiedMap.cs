@@ -87,6 +87,12 @@ namespace fivenine.UnifiedMaps
                 typeof(Command<IMapAnnotation>), typeof(UnifiedMap), null);
 
 
+        /// <summary>
+        /// The initial zoom level of the map, -1 will ignore this property
+        /// </summary>
+        public static readonly BindableProperty ZoomLevelProperty = BindableProperty.Create(nameof(ZoomLevel),  
+                typeof(int), typeof(UnifiedMap), -1);
+        
 		/// <summary>
 		/// The property to indicate if deselection should occur when touching map.
 		/// </summary>
@@ -276,8 +282,20 @@ namespace fivenine.UnifiedMaps
             get { return (MapRegion)GetValue(VisibleRegionProperty); }
             set { SetValue(VisibleRegionProperty, value); }
         }
-
+        
         /// <summary>
+        /// Gets the zoom level.
+        /// </summary>
+        /// <value>
+        /// The zoom level.
+        /// </value>
+        public int ZoomLevel
+        {
+            get { return (int)GetValue(ZoomLevelProperty); }
+            set { SetValue(ZoomLevelProperty, value); }
+        }
+
+            /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
         /// <value>The selected item.</value>

@@ -143,6 +143,11 @@ namespace fivenine.UnifiedMaps.Droid
 
             var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
 
+            if (Map.ZoomLevel != -1)
+            {
+                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(region.Center.ToLatLng(), Map.ZoomLevel);
+            }
+
             try
             {
                 if (animated)
