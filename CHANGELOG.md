@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5] - 2017-07-17
+## Added
+ - #36 Ability to set initial Zoom Level for Google Maps on Android
+
 ## [1.4.5] - 2017-06-29
 ## Fixes
  - #34 Fix null reference exception when getting map region for all annotations, thx @renfred
