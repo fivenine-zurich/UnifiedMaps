@@ -88,7 +88,7 @@ namespace fivenine.UnifiedMaps
 
 
         /// <summary>
-        /// The initial zoom level of the map, -1 will ignore this property
+        /// The initial zoom level of the map, -1 will ignore this property (Android only).
         /// </summary>
         public static readonly BindableProperty ZoomLevelProperty = BindableProperty.Create(nameof(ZoomLevel),  
                 typeof(int), typeof(UnifiedMap), -1);
