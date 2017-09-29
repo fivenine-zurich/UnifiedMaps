@@ -10,7 +10,7 @@ namespace fivenine.UnifiedMaps.iOS
 
         public IMapPin Data 
         {
-            get { return _data; }
+            get { return _data;  }
             set { this._data = value; }
         }
 

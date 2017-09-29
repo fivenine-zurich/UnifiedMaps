@@ -392,6 +392,8 @@ namespace fivenine.UnifiedMaps.Droid
 
             var mapPin = new MarkerOptions();
 
+            mapPin.InvokeZIndex(pin.ZIndex);
+
             if (!string.IsNullOrWhiteSpace(pin.Title))
             {
                 mapPin.SetTitle(pin.Title);
