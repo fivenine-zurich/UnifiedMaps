@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.1] - 2017-10-03
+## Fixed
+ - #39 Fix IllegalArgumentException on Android sometimes when a pin is deselected
+
 ## [1.5] - 2017-07-17
 ## Added
  - #36 Ability to set initial Zoom Level for Google Maps on Android
