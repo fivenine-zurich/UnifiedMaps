@@ -480,7 +480,14 @@ namespace fivenine.UnifiedMaps.Droid
                 return;
             }
 
-            mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
+            try
+            {
+                mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
 		private async void DeselectPins()
