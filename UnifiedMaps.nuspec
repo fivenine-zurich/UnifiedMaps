@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>UnifiedMaps</id>
-    <version>0.0.0.1</version>
+    <version>2.0.0.0</version>
     <title>UnifiedMaps</title>
     <authors>Tobias Herrmann, Jan Humbel, Michael Höhn</authors>
     <owners>fivenine GmbH</owners>
@@ -15,10 +15,10 @@
     <tags>map portable pcl android ios xamarin monoandroid monodroid xamarin.forms</tags>
     <dependencies>
       <group>
-        <dependency id="Xamarin.Forms" version="2.3.2.127" />
+        <dependency id="Xamarin.Forms" version="2.3.4.224" />
       </group>
       <group targetFramework="MonoAndroid10">
-        <dependency id="Xamarin.GooglePlayServices.Maps" version="29.0.0.2" />
+        <dependency id="Xamarin.GooglePlayServices.Maps" version="32.961.0" />
       </group>
     </dependencies>
   </metadata>
