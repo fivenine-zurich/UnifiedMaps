@@ -76,6 +76,12 @@ namespace fivenine.UnifiedMaps
         public Point Anchor { get; set; }
 
         /// <summary>
+        /// Gets or sets the Z index.
+        /// </summary>
+        /// <value>The Z index.</value>
+        public int ZIndex { get; set; }
+
+        /// <summary>
         /// Determines whether the specified <see cref="IMapAnnotation"/> is equal to the current <see cref="T:fivenine.UnifiedMaps.MapPin"/>.
         /// </summary>
         /// <param name="other">The <see cref="IMapAnnotation"/> to compare with the current <see cref="T:fivenine.UnifiedMaps.MapPin"/>.</param>

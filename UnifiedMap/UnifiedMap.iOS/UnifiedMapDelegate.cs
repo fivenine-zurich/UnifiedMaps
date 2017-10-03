@@ -38,6 +38,11 @@ namespace fivenine.UnifiedMaps.iOS
                 return null;
             }
 
+            if (annotation == mapView.UserLocation)
+            {
+                return null;
+            }
+
             var pinAnnotation = annotation as UnifiedPointAnnotation;
             if (pinAnnotation != null)
             {
@@ -63,6 +68,8 @@ namespace fivenine.UnifiedMaps.iOS
 
                 // Only show the callout if there is something to display
                 annotationView.CanShowCallout = _renderer.Element.CanShowCalloutOnTap && !string.IsNullOrWhiteSpace(pinAnnotation.Data.Title);
+                // z index
+                annotationView.Layer.ZPosition = pinAnnotation.Data.ZIndex;
 
                 if (annotationView.CanShowCallout
                     && _renderer.Element.PinCalloutTappedCommand != null
@@ -103,7 +110,25 @@ namespace fivenine.UnifiedMaps.iOS
                 var isSelected = unifiedPoint.Data?.SelectedImage != null;
 
                 UpdateImage(view, unifiedPoint.Data, isSelected);
-                UpdatePinColor(view, unifiedPoint.Data, true);
+                UpdatePin(view, unifiedPoint.Data, true);
+                view.Layer.ZPosition = nfloat.MaxValue - 1;
+            }
+        }
+
+        public override void DidAddAnnotationViews(MKMapView mapView, MKAnnotationView[] views)
+        {
+            foreach (var view in views)
+            {
+                var classHandle = Class.GetHandle("MKModernUserLocationView");
+                var myClass = classHandle != IntPtr.Zero ? new Class(classHandle) : null;
+                if (myClass != null && view.IsKindOfClass(myClass))
+                {
+                    view.Layer.ZPosition = nfloat.MaxValue;
+                }
+                else if (view.Annotation is MKUserLocation)
+                {
+                    view.Layer.ZPosition = nfloat.MaxValue;
+                }
             }
         }
 
@@ -141,13 +166,14 @@ namespace fivenine.UnifiedMaps.iOS
             DidSelectAnnotationView(mapView, annotationView);
         }
 
-        private void UpdatePinColor(MKAnnotationView annotationView, IMapPin customAnnotation, bool selected = false)
+        private void UpdatePin(MKAnnotationView annotationView, IMapPin customAnnotation, bool selected = false)
         {
             var pinAnnotationView = annotationView as MKPinAnnotationView;
             if (pinAnnotationView != null)
             {
                 var color = selected ? customAnnotation.SelectedColor : customAnnotation.Color;
                 pinAnnotationView.PinTintColor = color.ToUIColor();
+                pinAnnotationView.Layer.ZPosition = customAnnotation.ZIndex;
             }
         }
 
@@ -175,7 +201,7 @@ namespace fivenine.UnifiedMaps.iOS
 			{
 				var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
 				UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
-				UpdatePinColor(_selectedAnnotationView, prevAnnotation.Data, false);
+				UpdatePin(_selectedAnnotationView, prevAnnotation.Data, false);
 			}
 		}
     }

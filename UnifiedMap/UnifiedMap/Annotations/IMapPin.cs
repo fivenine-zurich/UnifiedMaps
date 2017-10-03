@@ -64,5 +64,11 @@ namespace fivenine.UnifiedMaps
         /// </summary>
         /// <value>The anchor point.</value>
         Point Anchor { get; }
+
+        /// <summary>
+        /// Gets the Z index.
+        /// </summary>
+        /// <value>The Z index.</value>
+        int ZIndex { get; }
     }
 }

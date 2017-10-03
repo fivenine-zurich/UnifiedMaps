@@ -392,6 +392,8 @@ namespace fivenine.UnifiedMaps.Droid
 
             var mapPin = new MarkerOptions();
 
+            mapPin.InvokeZIndex(pin.ZIndex);
+
             if (!string.IsNullOrWhiteSpace(pin.Title))
             {
                 mapPin.SetTitle(pin.Title);
@@ -480,7 +482,15 @@ namespace fivenine.UnifiedMaps.Droid
                 return;
             }
 
-            mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
+            try
+            {
+                mapPin.SetIcon(await DeterminMarkerImage(pin, selected));
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"{nameof(UpdateMarkerImage)}: {ex.Message}");
+                mapPin.SetIcon(BitmapDescriptorFactory.DefaultMarker());
+            }
         }
 
 		private async void DeselectPins()
