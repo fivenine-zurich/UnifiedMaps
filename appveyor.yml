@@ -3,8 +3,16 @@ assembly_info:
 
 image: Visual Studio 2015
 
+environment:
+  api_key:
+    secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
+
 build_script:
   - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
+
+after_deploy:
+  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  - ps: ($artifacts.values | Where-Object {($_.path -like '*.nupkg') -and  !($_.path -like '*.symbols.nupkg')}) | foreach-object {nuget.exe push $_.path -Source https://www.nuget.org/api/v2/package -ApiKey $env:api_key; if ($lastexitcode -ne 0) {throw}}
 
 cache:
   - packages -> **\packages.config
@@ -13,12 +21,12 @@ build:
   verbosity: minimal
 
 deploy:
-- provider: NuGet
-  name: production
-  on:
-    appveyor_repo_tag: true
-  api_key:
-    secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
+# - provider: NuGet
+#   name: production
+#   on:
+#     appveyor_repo_tag: true
+#   api_key:
+#     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
 
 - provider: GitHub
   name: production
