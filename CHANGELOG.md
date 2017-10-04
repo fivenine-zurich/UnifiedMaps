@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6] - 2017-10-04
+## Framework updates:
+- Google services 29.0.0.2 -> 32.961.0
+- Xamarin Forms 2.3.2.127 -> 2.3.4.224
+- Android support packages 23.3.0 -> 24.2.1
+## Added
+Z-index:
+- User location icon will be at the top most (this align iOS and Google maps' behavior)
+- Map pin now has a (non-bindable) ZIndex property (of integer type, default to 0)
+
 ## [1.5.1] - 2017-10-03
 ## Fixed
  - #39 Fix IllegalArgumentException on Android sometimes when a pin is deselected
