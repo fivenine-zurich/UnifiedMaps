@@ -112,7 +112,7 @@ namespace fivenine.UnifiedMaps.iOS
 
                 UpdateImage(view, unifiedPoint.Data, isSelected);
                 UpdatePin(view, unifiedPoint.Data, true);
-                view.Layer.ZPosition = nfloat.MaxValue - 1;
+                view.Layer.ZPosition = int.MaxValue - 1;
             }
         }
 
@@ -125,11 +125,11 @@ namespace fivenine.UnifiedMaps.iOS
                 var myClass = classHandle != IntPtr.Zero ? new Class(classHandle) : null;
                 if (myClass != null && view.IsKindOfClass(myClass))
                 {
-                    view.Layer.ZPosition = nfloat.MaxValue;
+                    view.Layer.ZPosition = int.MaxValue;
                 }
                 else if (view.Annotation is MKUserLocation)
                 {
-                    view.Layer.ZPosition = nfloat.MaxValue;
+                    view.Layer.ZPosition = int.MaxValue;
                 }
             }
         }
