@@ -17,9 +17,6 @@ after_deploy:
 cache:
   - packages -> **\packages.config
 
-build:
-  verbosity: minimal
-
 deploy:
 - provider: GitHub
   name: production
