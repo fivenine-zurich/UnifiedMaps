@@ -22,6 +22,7 @@ namespace Sample
         private readonly Command _addPinCommand;
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
+        private readonly ICommand _moveToUserLocationcommand;
 
         private readonly Command _addPolylineCommand;
         private readonly Command _removePolylineCommand;
@@ -65,6 +66,9 @@ namespace Sample
 
             _clearSelectionCommand =
                 new Command(() => SelectedItem = null);
+
+            _moveToUserLocationcommand =
+                new Command(() => Map.MoveToUserLocation(false));
 
             _allPins = new LinkedList<IMapPin> (
                 new []
@@ -216,6 +220,8 @@ namespace Sample
         public ICommand SelectCommand => _selectCommand;
 
         public ICommand ClearSelectionCommand => _clearSelectionCommand;
+
+        public ICommand MoveToUserLocationCommand => _moveToUserLocationcommand;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

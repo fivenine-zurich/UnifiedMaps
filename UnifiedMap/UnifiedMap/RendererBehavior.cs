@@ -21,6 +21,8 @@ namespace fivenine.UnifiedMaps
 
         void MoveToRegion(MapRegion region, bool animated);
 
+        void MoveToUserLocation(bool animated);
+
         void ApplyHasZoomEnabled();
 
         void ApplyHasScrollEnabled();
@@ -53,11 +55,16 @@ namespace fivenine.UnifiedMaps
 
             MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
+
+            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageMapMoveToUserLocation,
+                (unifiedMap, animated) => MoveToUserLocation(animated));
+            
         }
 
         internal void RemoveEvents(UnifiedMap map)
         {
             MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
+            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageMapMoveToUserLocation);
 
             RemovePinEvents();
             RemoveOverlayEvents();
@@ -128,6 +135,13 @@ namespace fivenine.UnifiedMaps
                 _renderer.MoveToRegion(mapRegion, animated);
             }
         }
+
+
+        private void MoveToUserLocation(bool animated)
+        {
+            _renderer.MoveToUserLocation(animated);
+        }
+
 
         private void AddAllPins()
         {
