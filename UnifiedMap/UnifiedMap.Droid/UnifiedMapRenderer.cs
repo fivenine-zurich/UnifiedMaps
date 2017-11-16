@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
+using Android.Locations;
 using Android.OS;
 using Android.Util;
 using fivenine.UnifiedMaps;
@@ -17,9 +18,13 @@ using Xamarin.Forms.Platform.Android;
 
 namespace fivenine.UnifiedMaps.Droid
 {
-    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, GoogleMap.IOnCameraChangeListener,
-        IOnMapReadyCallback, GoogleMap.IOnInfoWindowClickListener, GoogleMap.IOnMarkerClickListener,
-        GoogleMap.IOnMapClickListener, IUnifiedMapRenderer
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, 
+        GoogleMap.IOnCameraChangeListener,
+        IOnMapReadyCallback, 
+        GoogleMap.IOnInfoWindowClickListener, 
+        GoogleMap.IOnMarkerClickListener,
+        GoogleMap.IOnMapClickListener,
+        IUnifiedMapRenderer
     {
         private static Bundle _bundle;
         private readonly RendererBehavior _behavior;
@@ -29,6 +34,7 @@ namespace fivenine.UnifiedMaps.Droid
         private readonly Dictionary<ICircleOverlay, Circle> _circles;
 
         private GoogleMap _googleMap;
+        private bool _requestedShowUserLocation;
 
 		public UnifiedMapRenderer() : base()
         {
@@ -39,6 +45,8 @@ namespace fivenine.UnifiedMaps.Droid
 
             _behavior = new RendererBehavior(this);
         }
+
+        public bool RequestedShowUserLocation => _requestedShowUserLocation;
 
 		public UnifiedMapRenderer(IntPtr javaReference, global::Android.Runtime.JniHandleOwnership transfer) : this() { }
 
@@ -55,6 +63,23 @@ namespace fivenine.UnifiedMaps.Droid
                 .Where(kv => kv.Value.Id.Equals(marker.Id))
                 .Select(kv => kv.Key as IMapPin)
                 .FirstOrDefault();
+        }
+
+        void OnMyLocationChanged(object sender, GoogleMap.MyLocationChangeEventArgs e)
+        {
+            if (RequestedShowUserLocation)
+            {
+                InternalMoveToRegion(MapRegion.FromPositions(new List<Position>{
+                    new Position(e.Location.Latitude, e.Location.Longitude)
+                }), true, 16);
+                ResetShowUserLocation();
+            }
+        }
+
+        public void ResetShowUserLocation()
+        {
+            _requestedShowUserLocation = false;
+            _googleMap.MyLocationEnabled = false;
         }
 
         public void OnInfoWindowClick(Marker marker)
@@ -128,39 +153,65 @@ namespace fivenine.UnifiedMaps.Droid
             _googleMap.SetOnCameraChangeListener(this);
             _googleMap.SetOnMapClickListener(this);
 
+            _googleMap.MyLocationChange += OnMyLocationChanged;
+
             ApplyPadding();
             _behavior.Initialize();
         }
 
         public UnifiedMap Map => Element;
 
-        public void MoveToRegion(MapRegion region, bool animated)
+        private void InternalMoveToRegion(MapRegion region, bool animated, int zoomLevel) 
         {
             if (_googleMap == null)
             {
                 return;
             }
 
-            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
-
-            if (Map.ZoomLevel != -1)
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), zoomLevel);
+            if (_requestedShowUserLocation)
             {
-                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(region.Center.ToLatLng(), Map.ZoomLevel);
-            }
+                var cameraPosition = new CameraPosition.Builder()
+                         .Target(new LatLng(region.Center.Latitude, region.Center.Longitude))
+                         .Zoom(zoomLevel)
+                         .Build();
 
+                cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
+            }
+            else if(Map.ZoomLevel != -1) {
+                cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), zoomLevel);
+            }
+      
             try
             {
                 if (animated)
                 {
                     _googleMap.AnimateCamera(cameraUpdate);
                 }
-                else {
+                else
+                {
                     _googleMap.MoveCamera(cameraUpdate);
                 }
             }
             catch (IllegalStateException)
             {
             }
+        }
+
+        public void MoveToRegion(MapRegion region, bool animated)
+        {
+            if(Map.ZoomLevel != -1) {
+                InternalMoveToRegion(region, animated, Map.ZoomLevel);
+            }
+            else {
+                InternalMoveToRegion(region, animated, 0);    
+            }
+        }
+
+        public void MoveToUserLocation(bool animated)
+        {
+            _googleMap.MyLocationEnabled = true;
+            _requestedShowUserLocation = true;
         }
 
         public void AddPin(IMapPin pin)
@@ -339,6 +390,7 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 var element = e.OldElement;
 
+                _googleMap.MyLocationChange -= OnMyLocationChanged;
                 _googleMap?.Dispose();
                 RemoveEvents(element);
             }
@@ -502,5 +554,10 @@ namespace fivenine.UnifiedMaps.Droid
 				await UpdateMarkerImage(pin, marker.Value, false); // force false
 			}
 		}
+
+        public void OnMyLocationChange(Location location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

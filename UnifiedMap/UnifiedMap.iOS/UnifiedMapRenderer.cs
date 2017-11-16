@@ -24,6 +24,7 @@ namespace fivenine.UnifiedMaps.iOS
         private readonly List<IUnifiedOverlay> _overlays = new List<IUnifiedOverlay>();
         private CLLocationManager _locationManager;
 		private bool _shouldNotDismiss;
+        private bool _requestedShowUserLocation = false;
 
         public UnifiedMapRenderer()
         {
@@ -44,13 +45,26 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
-        private UnifiedMapDelegate UnifiedDelegate => (UnifiedMapDelegate)Control.Delegate;
+       private UnifiedMapDelegate UnifiedDelegate => (UnifiedMapDelegate)Control.Delegate;
 
-        void IUnifiedMapRenderer.MoveToRegion(MapRegion mapRegion, bool animated)
+        public void MoveToRegion(MapRegion mapRegion, bool animated)
         {
             Control.SetRegion(new MKCoordinateRegion(
                 mapRegion.Center.ToCoordinate(),
                 mapRegion.ToSpan()), animated);
+        }
+
+        public void MoveToUserLocation(bool animated)
+        {
+            Control.ShowsUserLocation = true;
+            _requestedShowUserLocation = true;
+        }
+
+        public bool RequestedShowUserLocation => _requestedShowUserLocation;
+
+        public void ResetShowUserLocation() {
+            _requestedShowUserLocation = false;
+            Control.ShowsUserLocation = false;
         }
 
         public void FitAllAnnotations(bool animated)
@@ -217,6 +231,7 @@ namespace fivenine.UnifiedMaps.iOS
                 };
 
                 SetNativeControl(map);
+
                 _behavior.Initialize();
             }
         }

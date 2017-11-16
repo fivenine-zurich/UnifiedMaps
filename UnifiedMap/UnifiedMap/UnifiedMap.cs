@@ -13,6 +13,7 @@ namespace fivenine.UnifiedMaps
     public class UnifiedMap : View
     {
         internal const string MessageMapMoveToRegion = "MapMoveToRegion";
+        internal const string MessageMapMoveToUserLocation= "MessageMapMoveToUserLocation";
 
         /// <summary>
         /// Identifies the <see cref="MapType"/> bindable property.
@@ -361,6 +362,11 @@ namespace fivenine.UnifiedMaps
             }
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
+        }
+
+        public void MoveToUserLocation(bool animated = false) {
+            
+            MessagingCenter.Send(this, MessageMapMoveToUserLocation, animated);
         }
     }
 }

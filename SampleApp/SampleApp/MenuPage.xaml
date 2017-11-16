@@ -18,6 +18,7 @@
     <Button Text="Add polyline" Command="{Binding AddPolylineCommand}" />
     <Button Text="Remove polyline" Command="{Binding RemovePolylineCommand}" />
     <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
+    <Button Text="Move to User Location" Command="{Binding MoveToUserLocationCommand}" />
     <StackLayout>
       <Label>Zoom enabled</Label>
       <Switch IsToggled="{Binding HasZoomEnabled}"/>
