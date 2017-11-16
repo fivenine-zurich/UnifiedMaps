@@ -7,6 +7,9 @@ environment:
   api_key:
     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
 
+install:
+  - ps: .\appveyor_install.ps1
+
 build_script:
   - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
@@ -17,17 +20,7 @@ after_deploy:
 cache:
   - packages -> **\packages.config
 
-build:
-  verbosity: minimal
-
 deploy:
-# - provider: NuGet
-#   name: production
-#   on:
-#     appveyor_repo_tag: true
-#   api_key:
-#     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
-
 - provider: GitHub
   name: production
   on:
