@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7] - 2017-11-16
+## Framework updates:
+- Xamarin Forms 2.3.4.224 -> 2.4.0.18342
+
+## Added
+- Add property to enable/disable camera animation
+- Move to users current location method
+
 ## [1.6] - 2017-10-04
 ## Framework updates:
 - Google services 29.0.0.2 -> 32.961.0
