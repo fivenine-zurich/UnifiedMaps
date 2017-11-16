@@ -35,6 +35,7 @@ namespace Sample
         private bool _hasScrollEnabled = true;
         private bool _hasZoomEnabled = true;
         private bool _isShowingUserLocation;
+        private bool _cameraAnmiationEnabled = true;
         private IMapAnnotation _selectedItem;
 
         public UnifiedMapViewModel ()
@@ -196,6 +197,14 @@ namespace Sample
             {
                 _isShowingUserLocation = value;
                 OnPropertyChanged ();
+            }
+        }
+
+        public bool CameraAnimationEnabled {
+            get { return _cameraAnmiationEnabled; }
+            set{
+                _cameraAnmiationEnabled = value;
+                OnPropertyChanged();
             }
         }
 

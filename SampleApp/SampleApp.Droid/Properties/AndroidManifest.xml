@@ -5,7 +5,7 @@
 	<!-- See https://developers.google.com/maps/documentation/android/start#obtaining_an_api_key -->
 	<application android:label="UnifiedMaps" android:icon="@drawable/icon">
 		<!-- <uses-library android:name="com.google.android.maps" /> -->
-		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="API KEY" />
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAgnT_HMtjCl5MrKxKhAi_GpFTl5IRwV-g" />
 	</application>
 	<!-- Google Maps for Android v2 requires OpenGL ES v2 -->
 	<uses-feature android:glEsVersion="0x00020000" android:required="true" />

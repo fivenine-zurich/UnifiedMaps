@@ -75,6 +75,12 @@ namespace fivenine.UnifiedMaps
 				typeof(bool), typeof(UnifiedMap), false); // false by default to match with iOS
 
         /// <summary>
+        /// Enables or disables camera animation, True by default
+        /// </summary>
+        public static readonly BindableProperty CameraAnimationEnabledProperty = BindableProperty.Create(nameof(CameraAnimationEnabled),
+                typeof(bool), typeof(UnifiedMap), true);
+
+        /// <summary>
         /// The selected item property.
         /// </summary>
         public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create("SelectedItem",
@@ -271,6 +277,18 @@ namespace fivenine.UnifiedMaps
 		}
 
         /// <summary>
+        /// Gets or sets a value indicating if native zoom and location controls should be displayed (Android only).
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if controls should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool CameraAnimationEnabled
+        {
+            get { return (bool)GetValue(CameraAnimationEnabledProperty); }
+            set { SetValue(CameraAnimationEnabledProperty, value); }
+        }
+
+        /// <summary>
         /// Gets the visible region.
         /// </summary>
         /// <value>
@@ -338,6 +356,9 @@ namespace fivenine.UnifiedMaps
         {
             LastMoveToRegion = region;
 
+            if(!CameraAnimationEnabled) {
+                animated = false;
+            }
             // Send the move message to the platform renderer
             MessagingCenter.Send(this, MessageMapMoveToRegion, new Tuple<MapRegion, bool>(region, animated));
         }
