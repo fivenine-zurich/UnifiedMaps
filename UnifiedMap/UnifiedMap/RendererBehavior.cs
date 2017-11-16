@@ -46,6 +46,8 @@ namespace fivenine.UnifiedMaps
             _renderer = renderer;
         }
 
+        public bool CameraAnimationEnabled => _renderer.Map.CameraAnimationEnabled;
+
         internal void RegisterEvents(UnifiedMap map)
         {
             RegisterPinEvents(map);
@@ -143,7 +145,7 @@ namespace fivenine.UnifiedMaps
 
             if (_renderer.Map.AutoFitAllAnnotations)
             {
-                _renderer.FitAllAnnotations(false);
+                _renderer.FitAllAnnotations(CameraAnimationEnabled);
             }
         }
 
@@ -196,7 +198,7 @@ namespace fivenine.UnifiedMaps
 
             if (_renderer.Map.AutoFitAllAnnotations)
             {
-                _renderer.FitAllAnnotations(true);
+                _renderer.FitAllAnnotations(CameraAnimationEnabled);
             }
         }
 
@@ -232,7 +234,7 @@ namespace fivenine.UnifiedMaps
 
             if (_renderer.Map.AutoFitAllAnnotations)
             {
-                _renderer.FitAllAnnotations(true);
+                _renderer.FitAllAnnotations(CameraAnimationEnabled);
             }
         }
 

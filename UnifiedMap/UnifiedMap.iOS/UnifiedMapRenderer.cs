@@ -303,5 +303,7 @@ namespace fivenine.UnifiedMaps.iOS
         {
             _behavior.RemoveEvents(map);
         }
+
+  
     }
 }

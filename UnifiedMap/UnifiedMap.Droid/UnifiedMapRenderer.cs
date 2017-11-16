@@ -254,7 +254,7 @@ namespace fivenine.UnifiedMaps.Droid
         public void FitAllAnnotations(bool animated)
         {
             var region = _behavior.GetRegionForAllAnnotations();
-            MoveToRegion(region, animated);
+            MoveToRegion(region, false);
         }
 
         public void ApplyHasZoomEnabled()
