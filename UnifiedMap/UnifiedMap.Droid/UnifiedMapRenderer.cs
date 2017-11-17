@@ -179,7 +179,7 @@ namespace fivenine.UnifiedMaps.Droid
                 cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
             }
             else if(Map.ZoomLevel != -1) {
-                cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), zoomLevel);
+                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(region.Center.Latitude, region.Center.Longitude), zoomLevel);
             }
       
             try
