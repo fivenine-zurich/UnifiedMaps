@@ -9,6 +9,7 @@ namespace fivenine.UnifiedMaps
     {
         private const int LatitudeMax = 90;
         private const int LongitudeMax = 180;
+        private const double EarthRadiusMeters = 6376500.0;
 
         private readonly double _latitude;
         private readonly double _longitude;
@@ -115,5 +116,27 @@ namespace fivenine.UnifiedMaps
         /// </returns>
         /// <filterpriority>2</filterpriority>
         public override string ToString() => $"Position [Latitude {Latitude}, Longitude {Longitude}]";
+
+        /// <summary>
+        /// The distance between the two coordinates, in meters.
+        /// </summary>
+        /// <returns>The distance in meters.</returns>
+        /// <param name="other">The Position for the location to calculate the distance to.</param>
+        public double GetDistanceTo(Position other) 
+        {
+            var d1 = Latitude * (Math.PI / 180.0);
+            var num1 = Longitude * (Math.PI / 180.0);
+            var d2 = other.Latitude * (Math.PI / 180.0);
+            var num2 = other.Longitude * (Math.PI / 180.0) - num1;
+            var d3 = Math.Pow(Math.Sin((d2 - d1) / 2.0), 2.0) +
+                     Math.Cos(d1) * Math.Cos(d2) * Math.Pow(Math.Sin(num2 / 2.0), 2.0);
+
+            return EarthRadiusMeters * (2.0 * Math.Atan2(Math.Sqrt(d3), Math.Sqrt(1.0 - d3)));
+        }
+
+        private double Deg2Rad(double deg)
+        {
+            return (deg * Math.PI / LongitudeMax);
+        }
     }
 }
