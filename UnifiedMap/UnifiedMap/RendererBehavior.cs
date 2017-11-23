@@ -55,18 +55,18 @@ namespace fivenine.UnifiedMaps
             RegisterPinEvents(map);
             RegisterOverlayEvents(map);
 
-            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion,
+            MessagingCenter.Subscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, map.GetMoveToRegionMessage(),
                 (unifiedMap, span) => MoveToRegion(span.Item1, span.Item2));
 
-            MessagingCenter.Subscribe<UnifiedMap, bool>(this, UnifiedMap.MessageMapMoveToUserLocation,
+            MessagingCenter.Subscribe<UnifiedMap, bool>(this, map.GetMoveToUserLocationMessage(),
                 (unifiedMap, animated) => MoveToUserLocation(animated));
             
         }
 
         internal void RemoveEvents(UnifiedMap map)
         {
-            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, UnifiedMap.MessageMapMoveToRegion);
-            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, UnifiedMap.MessageMapMoveToUserLocation);
+            MessagingCenter.Unsubscribe<UnifiedMap, Tuple<MapRegion, bool>>(this, map.GetMoveToRegionMessage());
+            MessagingCenter.Unsubscribe<UnifiedMap, bool>(this, map.GetMoveToUserLocationMessage());
 
             RemovePinEvents();
             RemoveOverlayEvents();

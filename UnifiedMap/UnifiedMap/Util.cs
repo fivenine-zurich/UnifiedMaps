@@ -8,6 +8,9 @@ namespace fivenine.UnifiedMaps
     /// </summary>
     public static class Util
     {
+        internal const string MessageMapMoveToRegion = "MapMoveToRegion";
+        internal const string MessageMapMoveToUserLocation = "MessageMapMoveToUserLocation";
+
         /// <summary>
         /// Clamps the given value to the specified range.
         /// </summary>
@@ -61,5 +64,14 @@ namespace fivenine.UnifiedMaps
             return new Position(centralLatitude * 180 / Math.PI, centralLongitude * 180 / Math.PI);
         }
 
+        internal static string GetMoveToRegionMessage(this UnifiedMap map)
+        {
+            return $"{MessageMapMoveToRegion}-{map.GetHashCode()}";
+        }
+
+        internal static string GetMoveToUserLocationMessage(this UnifiedMap map)
+        {
+            return $"{MessageMapMoveToUserLocation}-{map.GetHashCode()}";
+        }
     }
 }
