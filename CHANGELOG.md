@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7.2] - 2017-11-24
+## Fixed
+- Map controls interfering with each other with MoveToRegion is invoked
+
 ## [1.7.1] - 2017-11-17
 ## Fixed
 - Fix GoogleMaps on Android not considering Zoom Level Property
