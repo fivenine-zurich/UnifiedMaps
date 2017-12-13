@@ -1,6 +1,7 @@
 # UnifiedMaps
 [![Build status](https://ci.appveyor.com/api/projects/status/vydv9kmdpya8jfac/branch/master?svg=true)](https://ci.appveyor.com/project/mightea/unifiedmaps/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/UnifiedMaps.svg)](https://www.nuget.org/packages/UnifiedMaps/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffiveninedigital%2FUnifiedMaps.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffiveninedigital%2FUnifiedMaps?ref=badge_shield)
 
 *A platform independent map implementation for Xamarin.Forms.*
 
@@ -72,3 +73,7 @@ In addition to the API key the following permissions are required:
 <uses-permission android:name="ch.fivenine.unifiedmaps.sample.permission.MAPS_RECEIVE" />
 <permission android:name="ch.fivenine.unifiedmaps.sample.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffiveninedigital%2FUnifiedMaps.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffiveninedigital%2FUnifiedMaps?ref=badge_large)
