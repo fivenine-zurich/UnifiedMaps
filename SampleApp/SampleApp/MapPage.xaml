@@ -7,24 +7,30 @@
              Title="UnifiedMaps Sample"
              Appearing="MapPage_OnAppearing">
     <StackLayout>
-        <unifiedMaps:UnifiedMap
-            x:Name="Map"
-            Pins="{Binding Pins}"
-            Overlays="{Binding Overlays}"
-            MapType="{Binding MapDisplayType}" 
-            PinCalloutTappedCommand="{Binding PinSelectedCommand}"
-            IsShowingUser="{Binding IsShowingUserLocation}"
-            HasScrollEnabled="{Binding HasScrollEnabled}"
-            HasZoomEnabled="{Binding HasZoomEnabled}"
-			SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-            CameraAnimationEnabled="{Binding CameraAnimationEnabled}"
-            HeightRequest="100"
-            WidthRequest="960"
-            ZoomLevel="16"
-            VerticalOptions="FillAndExpand"
-            >
-        </unifiedMaps:UnifiedMap>
+        <Grid VerticalOptions="FillAndExpand">
 
+        <unifiedMaps:UnifiedMap
+                Grid.Row="0"
+                x:Name="Map"
+                Pins="{Binding Pins}"
+                Overlays="{Binding Overlays}"
+                MapType="{Binding MapDisplayType}" 
+                PinCalloutTappedCommand="{Binding PinSelectedCommand}"
+                IsShowingUser="{Binding IsShowingUserLocation}"
+                HasScrollEnabled="{Binding HasScrollEnabled}"
+                HasZoomEnabled="{Binding HasZoomEnabled}"
+    			SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                CameraAnimationEnabled="{Binding CameraAnimationEnabled}"
+                HeightRequest="100"
+                WidthRequest="960"
+                ZoomLevel="16"
+                VerticalOptions="FillAndExpand" >
+        </unifiedMaps:UnifiedMap>
+            
+        <BoxView VerticalOptions="Center" HorizontalOptions="FillAndExpand" HeightRequest="0.5" BackgroundColor="Black"   />
+        <BoxView VerticalOptions="FillAndExpand" HorizontalOptions="Center" WidthRequest="0.5" BackgroundColor="Black"  />
+
+      </Grid>
 		<StackLayout
 			Orientation="Horizontal"
             HorizontalOptions="CenterAndExpand"

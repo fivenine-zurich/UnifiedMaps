@@ -69,7 +69,16 @@ namespace fivenine.UnifiedMaps.iOS
 
         public void FitAllAnnotations(bool animated)
         {
-            Control.ShowAnnotations(Control.Annotations, animated);
+            if(Control.Annotations.Length == 1) 
+            {
+                var singleAnnotation = Control.Annotations[0];
+                var region = new MapRegion(new Position(singleAnnotation.Coordinate.Latitude, singleAnnotation.Coordinate.Longitude), 0.01, 0.01);
+                MoveToRegion(region, animated);
+            } 
+            else 
+            {
+                Control.ShowAnnotations(Control.Annotations, animated);    
+            }
         }
 
         public void ApplyHasZoomEnabled()

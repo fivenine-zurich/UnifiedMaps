@@ -3,37 +3,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     x:Class="Sample.MenuPage"
     Title="Menu"
-    Icon="settings.png">
-  <StackLayout
-      Orientation="Vertical">
-    <ContentView
-        Padding="10, 36, 0, 5">
-      <Label
-          Text="MENU"
-          FontSize="Medium"/>
-    </ContentView>
+    Icon="settings.png"
+    Padding="20, 0, 20, 0">
 
-    <Button Text="Add pin" Command="{Binding AddPinCommand}" />
-    <Button Text="Remove pin" Command="{Binding RemovePinCommand}" />
-    <Button Text="Add polyline" Command="{Binding AddPolylineCommand}" />
-    <Button Text="Remove polyline" Command="{Binding RemovePolylineCommand}" />
-    <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
-    <Button Text="Move to User Location" Command="{Binding MoveToUserLocationCommand}" />
-    <StackLayout>
-      <Label>Zoom enabled</Label>
-      <Switch IsToggled="{Binding HasZoomEnabled}"/>
-    </StackLayout>
-    <StackLayout>
-      <Label>Scroll enabled</Label>
-      <Switch IsToggled="{Binding HasScrollEnabled}"/>
-    </StackLayout>
-    <StackLayout>
-      <Label>Show user location</Label>
-      <Switch IsToggled="{Binding IsShowingUserLocation}"/>
-    </StackLayout>
-    <StackLayout>
-      <Label>Camera Animation enabled</Label>
-      <Switch IsToggled="{Binding CameraAnimationEnabled}"/>
-    </StackLayout>
-  </StackLayout>
+    <ScrollView>
+      <StackLayout
+          Orientation="Vertical">
+        <ContentView
+            Padding="10, 36, 0, 5">
+          <Label
+              Text="MENU"
+              FontSize="Medium"/>
+        </ContentView>
+
+        <Button Text="Add pin" Command="{Binding AddPinCommand}" />
+        <Button Text="Remove pin" Command="{Binding RemovePinCommand}" />
+        <Button Text="Add polyline" Command="{Binding AddPolylineCommand}" />
+        <Button Text="Remove polyline" Command="{Binding RemovePolylineCommand}" />
+        <Button Text="Move to region" Command="{Binding MoveToRegionCommand}" />
+        <Button Text="Move to User Location" Command="{Binding MoveToUserLocationCommand}" />
+        <StackLayout>
+          <Label>Zoom enabled</Label>
+          <Switch IsToggled="{Binding HasZoomEnabled}"/>
+        </StackLayout>
+        <StackLayout>
+          <Label>Scroll enabled</Label>
+          <Switch IsToggled="{Binding HasScrollEnabled}"/>
+        </StackLayout>
+        <StackLayout>
+          <Label>Show user location</Label>
+          <Switch IsToggled="{Binding IsShowingUserLocation}"/>
+        </StackLayout>
+        <StackLayout>
+          <Label>Camera Animation enabled</Label>
+          <Switch IsToggled="{Binding CameraAnimationEnabled}"/>
+        </StackLayout>
+      </StackLayout>
+        </ScrollView>
 </ContentPage>
