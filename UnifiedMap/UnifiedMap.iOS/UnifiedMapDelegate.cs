@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CoreGraphics;
+using CoreLocation;
 using Foundation;
 using MapKit;
 using ObjCRuntime;
@@ -157,9 +158,9 @@ namespace fivenine.UnifiedMaps.iOS
         public override void RegionChanged(MKMapView mapView, bool animated)
         {
             var mkregion = MKCoordinateRegion.FromMapRect(mapView.VisibleMapRect);
-
-            var region = new MapRegion(new Position(mkregion.Center.Latitude, mkregion.Center.Longitude), 
-                                       mkregion.Span.LatitudeDelta, mkregion.Span.LongitudeDelta);
+            var region = new MapRegion(new Position(mkregion.Center.Latitude, mkregion.Center.Longitude),  
+                                       mkregion.Span.LatitudeDelta, mkregion.Span.LongitudeDelta); 
+            
             _renderer.Map.VisibleRegion = region;
         }
 
