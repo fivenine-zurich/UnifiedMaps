@@ -72,7 +72,7 @@ namespace fivenine.UnifiedMaps.iOS
             if(Control.Annotations.Length == 1) 
             {
                 var singleAnnotation = Control.Annotations[0];
-                var region = new MapRegion(new Position(singleAnnotation.Coordinate.Latitude, singleAnnotation.Coordinate.Longitude), 0.01, 0.01);
+                var region = new MapRegion(new Position(singleAnnotation.Coordinate.Latitude, singleAnnotation.Coordinate.Longitude), Element.IosSingleAnnotationZoom, Element.IosSingleAnnotationZoom);
                 MoveToRegion(region, animated);
             } 
             else 
