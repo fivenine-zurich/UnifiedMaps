@@ -90,12 +90,17 @@ namespace fivenine.UnifiedMaps
         public static readonly BindableProperty SelectionChangedCommandProperty = BindableProperty.Create("SelectionChangedCommand",
                 typeof(Command<IMapAnnotation>), typeof(UnifiedMap), null);
 
-
         /// <summary>
         /// The initial zoom level of the map, -1 will ignore this property (Android only).
         /// </summary>
         public static readonly BindableProperty ZoomLevelProperty = BindableProperty.Create(nameof(ZoomLevel),  
                 typeof(int), typeof(UnifiedMap), -1);
+
+        /// <summary>
+        /// The Zoom level for Apples MapKit if only one Annotation is visible, defaults to 0.005
+        /// </summary>
+        public static readonly BindableProperty IosSingleAnnotationZoomProperty = BindableProperty.Create(nameof(IosSingleAnnotationZoom),
+                typeof(double), typeof(UnifiedMap), 0.005);
         
 		/// <summary>
 		/// The property to indicate if deselection should occur when touching map.
@@ -309,6 +314,18 @@ namespace fivenine.UnifiedMaps
         {
             get { return (int)GetValue(ZoomLevelProperty); }
             set { SetValue(ZoomLevelProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets the zoom level for iOS if only a sinlge annotation is visible.
+        /// </summary>
+        /// <value>
+        /// The zoom level.
+        /// </value>
+        public double IosSingleAnnotationZoom
+        {
+            get { return (double)GetValue(IosSingleAnnotationZoomProperty); }
+            set { SetValue(IosSingleAnnotationZoomProperty, value); }
         }
 
             /// <summary>

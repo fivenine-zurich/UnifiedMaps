@@ -21,6 +21,7 @@
                 HasZoomEnabled="{Binding HasZoomEnabled}"
     			SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                 CameraAnimationEnabled="{Binding CameraAnimationEnabled}"
+                IosSingleAnnotationZoom="0.01"
                 HeightRequest="100"
                 WidthRequest="960"
                 ZoomLevel="16"
