@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.8.1] - 2017-12-24
+## Fixed
+- Fixes MoveToUserLocation disabled user annotation, set animated camera to default
+
 ## [1.8.0] - 2017-12-18
 ## Added
 - `IosSingleAnnotationZoom` added to set the visible size of the map if only one annotation is visible on iOS
