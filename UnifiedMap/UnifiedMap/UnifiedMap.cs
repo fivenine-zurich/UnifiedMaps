@@ -378,7 +378,7 @@ namespace fivenine.UnifiedMaps
             MessagingCenter.Send(this, this.GetMoveToRegionMessage(), new Tuple<MapRegion, bool>(region, animated));
         }
 
-        public void MoveToUserLocation(bool animated = false) {
+        public void MoveToUserLocation(bool animated = true) {
             
             MessagingCenter.Send(this, this.GetMoveToUserLocationMessage(), animated);
         }

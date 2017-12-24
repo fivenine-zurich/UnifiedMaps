@@ -208,21 +208,5 @@ namespace fivenine.UnifiedMaps.iOS
 				UpdatePin(_selectedAnnotationView, prevAnnotation.Data, false);
 			}
 		}
-
-        public override void DidUpdateUserLocation(MKMapView mapView, MKUserLocation userLocation)
-        {
-            if (mapView.ShowsUserLocation)
-            {
-                if (_renderer.RequestedShowUserLocation)
-                {
-                    _renderer.MoveToRegion(MapRegion.FromPositions(new List<Position>{
-                        new Position(userLocation.Coordinate.Latitude,
-                                     userLocation.Coordinate.Longitude)
-                    }), false);
-
-                    _renderer.ResetShowUserLocation();
-                }              
-            }
-        }
     }
 }

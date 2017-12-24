@@ -79,7 +79,6 @@ namespace fivenine.UnifiedMaps.Droid
         public void ResetShowUserLocation()
         {
             _requestedShowUserLocation = false;
-            _googleMap.MyLocationEnabled = false;
         }
 
         public void OnInfoWindowClick(Marker marker)
@@ -210,6 +209,7 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void MoveToUserLocation(bool animated)
         {
+            _googleMap.MyLocationEnabled = false;
             _googleMap.MyLocationEnabled = true;
             _requestedShowUserLocation = true;
         }
@@ -554,10 +554,5 @@ namespace fivenine.UnifiedMaps.Droid
 				await UpdateMarkerImage(pin, marker.Value, false); // force false
 			}
 		}
-
-        public void OnMyLocationChange(Location location)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
