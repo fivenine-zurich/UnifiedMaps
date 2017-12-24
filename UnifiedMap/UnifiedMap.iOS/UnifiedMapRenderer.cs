@@ -57,6 +57,8 @@ namespace fivenine.UnifiedMaps.iOS
         public void MoveToUserLocation(bool animated)
         {
             Control.ShowsUserLocation = true;
+            Control.SetCenterCoordinate(Control.UserLocation.Coordinate, animated);
+
             _requestedShowUserLocation = true;
         }
 
