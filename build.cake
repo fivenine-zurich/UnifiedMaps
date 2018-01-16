@@ -61,7 +61,7 @@ Task("Build")
       // Use MSBuild
       MSBuild("./UnifiedMaps.sln", settings => {
         settings.SetConfiguration(configuration);
-        settings.NodeReuse = false;
+        settings.MSBuildPlatform = Cake.Common.Tools.MSBuild.MSBuildPlatform.x86;
       });
     }
     else
