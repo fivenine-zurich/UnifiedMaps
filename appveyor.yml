@@ -7,6 +7,12 @@ environment:
   api_key:
     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
 
+install:
+  - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t tools
+  - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t platform-tools
+  - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t build-tools-25.0.6
+  - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t android-25
+
 build_script:
   - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
 
