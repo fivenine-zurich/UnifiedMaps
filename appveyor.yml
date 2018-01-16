@@ -4,6 +4,7 @@ assembly_info:
 image: Visual Studio 2017
 
 environment:
+  CAKE_SETTINGS_SKIPVERIFICATION: true
   api_key:
     secure: Y2galPIGOpTJkWxNHc4WCLD7XBhWbSN8wycewlocBpEU3U5WoDoJi4NZEbDONspD
 
@@ -14,7 +15,7 @@ install:
   - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t android-25
 
 build_script:
-  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release
+  - ps: .\build.ps1 -target Build-CI-AppVeyor -configuration Release -Verbosity diagnostic
 
 after_deploy:
   - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
