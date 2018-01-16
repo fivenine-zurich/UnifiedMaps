@@ -1,7 +1,7 @@
 assembly_info:
   patch: false
 
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 environment:
   api_key:
