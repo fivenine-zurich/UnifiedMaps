@@ -42,7 +42,7 @@ namespace Sample
         public UnifiedMapViewModel ()
         {
             _pinSelectedCommand =
-                new Command<MapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
+                new Command<IMapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
 
             _changeMapTypeCommand =
                 new Command<MapType>(m => MapDisplayType = m);

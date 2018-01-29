@@ -34,7 +34,7 @@ namespace fivenine.UnifiedMaps
         /// The bindable pin callout tapped command property.
         /// </summary>
         public static readonly BindableProperty PinCalloutTappedCommandProperty =
-            BindableProperty.Create("PinCalloutTappedCommand", typeof (Command<IMapPin>), typeof (UnifiedMap), null);
+            BindableProperty.Create(nameof(PinCalloutTappedCommand), typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
         /// <summary>
         /// The can show callout on tap property.
