@@ -156,6 +156,11 @@ namespace fivenine.UnifiedMaps.Droid
 
             ApplyPadding();
             _behavior.Initialize();
+
+            if(Map.VisibleRegion != null) 
+            {
+                InternalMoveToRegion(Map.VisibleRegion, false, -1);    
+            }
         }
 
         public UnifiedMap Map => Element;
