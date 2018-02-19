@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.9.1] - 2018-02-19
+## Fixed
+- Fixes initial visible region not correctly set on GoogleMaps on Android
+
 ## [1.9.0] - 2018-01-16
 ## Updated
 - Updated GooglePlayServices Dependencies on Android Projects
