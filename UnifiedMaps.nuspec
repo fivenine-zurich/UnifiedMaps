@@ -10,15 +10,15 @@
     <projectUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/fiveninedigital/UnifiedMaps/master/Icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Unified Maps provides a Xamarin.Forms map control for iOS and Android apps. It is designed to be a near drop in 
+    <description>Unified Maps provides a Xamarin.Forms map control for iOS and Android apps. It is designed to be a near drop in
     replacement for the Xamarin.Forms.Maps package but with enhanced functionality.</description>
     <tags>map portable pcl android ios xamarin monoandroid monodroid xamarin.forms</tags>
     <dependencies>
       <group>
-        <dependency id="Xamarin.Forms" version="2.3.4.224" />
+        <dependency id="Xamarin.Forms" version="2.4.0.18342" />
       </group>
       <group targetFramework="MonoAndroid10">
-        <dependency id="Xamarin.GooglePlayServices.Maps" version="32.961.0" />
+        <dependency id="Xamarin.GooglePlayServices.Maps" version="42.1021.1" />
       </group>
     </dependencies>
   </metadata>
