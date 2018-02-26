@@ -85,12 +85,10 @@ namespace fivenine.UnifiedMaps.iOS
                                             .Cast<IMKAnnotation>()
                                             .ToArray();
 
-                    Debug.WriteLine("FitAllAnnotations() ExcludeUserLocationFromFitAllAnnotations");
                     Control.ShowAnnotations(unifiedAnnotations, animated);
                 }
                 else
                 {
-                  Debug.WriteLine("FitAllAnnotations() ShowAll");
                   Control.ShowAnnotations(Control.Annotations, animated);
                 }
             }
