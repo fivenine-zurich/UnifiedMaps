@@ -9,6 +9,7 @@ using fivenine.UnifiedMaps;
 using Sample.Annotations;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
+using System;
 
 namespace Sample
 {
@@ -23,6 +24,7 @@ namespace Sample
         private readonly Command _removePinCommand;
         private readonly ICommand _moveToRegionCommand;
         private readonly ICommand _moveToUserLocationcommand;
+        private readonly ICommand _visibleRegionChangedCommand;
 
         private readonly Command _addPolylineCommand;
         private readonly Command _removePolylineCommand;
@@ -70,6 +72,9 @@ namespace Sample
 
             _moveToUserLocationcommand =
                 new Command(() => Map.MoveToUserLocation(false));
+
+            _visibleRegionChangedCommand =
+                new Command<MapRegion>((region) => RegionChanged(region));
 
             _allPins = new LinkedList<IMapPin> (
                 new []
@@ -148,6 +153,11 @@ namespace Sample
             AddPolyline (null);
 
             SelectedItem = Pins.LastOrDefault();
+        }
+
+        private void RegionChanged(MapRegion region)
+        {
+            Debug.WriteLine($"Region changed Lat: {region?.Center.Latitude} Lng: {region?.Center.Longitude}");
         }
 
         internal UnifiedMap Map { get; set; }
@@ -231,6 +241,8 @@ namespace Sample
         public ICommand ClearSelectionCommand => _clearSelectionCommand;
 
         public ICommand MoveToUserLocationCommand => _moveToUserLocationcommand;
+
+        public ICommand VisibleRegionChangedCommand => _visibleRegionChangedCommand;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
