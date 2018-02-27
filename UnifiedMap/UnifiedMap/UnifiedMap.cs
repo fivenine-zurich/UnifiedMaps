@@ -150,6 +150,8 @@ namespace fivenine.UnifiedMaps
             }
         }
 
+        public bool ExcludeUserLocationFromFitAllAnnotations { get; set; }
+
         /// <summary>
         /// The <see cref="MapType"/> display style of this <see cref="UnifiedMap"/>.
         /// </summary>

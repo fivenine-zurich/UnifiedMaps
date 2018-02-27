@@ -36,7 +36,7 @@ namespace fivenine.UnifiedMaps.iOS
         public IMapAnnotation SelectedItem
         {
             get { return Element.SelectedItem; }
-            set 
+            set
             {
 				if (!Element.SelectedItem.EqualsSafe(value))
                 {
@@ -71,15 +71,26 @@ namespace fivenine.UnifiedMaps.iOS
 
         public void FitAllAnnotations(bool animated)
         {
-            if(Control.Annotations.Length == 1) 
+            if(Control.Annotations.Length == 1)
             {
                 var singleAnnotation = Control.Annotations[0];
                 var region = new MapRegion(new Position(singleAnnotation.Coordinate.Latitude, singleAnnotation.Coordinate.Longitude), Element.IosSingleAnnotationZoom, Element.IosSingleAnnotationZoom);
                 MoveToRegion(region, animated);
-            } 
-            else 
+            }
+            else
             {
-                Control.ShowAnnotations(Control.Annotations, animated);    
+                if(Map.ExcludeUserLocationFromFitAllAnnotations)
+                {
+                    var unifiedAnnotations = Control.Annotations.OfType<IUnifiedAnnotation>()
+                                            .Cast<IMKAnnotation>()
+                                            .ToArray();
+
+                    Control.ShowAnnotations(unifiedAnnotations, animated);
+                }
+                else
+                {
+                  Control.ShowAnnotations(Control.Annotations, animated);
+                }
             }
         }
 
@@ -205,7 +216,7 @@ namespace fivenine.UnifiedMaps.iOS
         {
             var newItem = Control.Annotations
                 .OfType<IUnifiedAnnotation>()
-                .FirstOrDefault(point => point.Data == SelectedItem) 
+                .FirstOrDefault(point => point.Data == SelectedItem)
                  as IMKAnnotation;
 
             if (newItem == null)
@@ -216,7 +227,7 @@ namespace fivenine.UnifiedMaps.iOS
 
                 return;
             }
-			
+
             Control.SelectAnnotation(newItem, true);
         }
 
@@ -330,6 +341,6 @@ namespace fivenine.UnifiedMaps.iOS
             _behavior.RemoveEvents(map);
         }
 
-  
+
     }
 }
