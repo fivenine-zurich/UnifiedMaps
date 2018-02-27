@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.0] - 2018-02-20
+## Added
+- Added new Property `ExcludeUserLocationFromFitAllAnnotations` to disable automatic inclusion of user location in fitting visible region to map annotations on iOS
+
 ## [1.10.0] - 2018-02-20
 ## Updated
 - Changed dependencies in nuspec, the NuGet now requires Xamarin.Forms `2.4.18342` and Xamarin.GooglePlayServices.Maps `42.1021.1`
