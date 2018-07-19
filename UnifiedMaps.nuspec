@@ -7,7 +7,7 @@
     <authors>Tobias Herrmann, Jan Humbel, Michael Höhn</authors>
     <owners>fivenine GmbH</owners>
     <licenseUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/fiveninedigital/UnifiedMaps/blob/master/</projectUrl>
+    <projectUrl>https://github.com/fiveninedigital/UnifiedMaps/</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/fiveninedigital/UnifiedMaps/master/Icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Unified Maps provides a Xamarin.Forms map control for iOS and Android apps. It is designed to be a near drop in
