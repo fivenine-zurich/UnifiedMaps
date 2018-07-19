@@ -106,11 +106,10 @@ namespace fivenine.UnifiedMaps.Droid
         {
             var mapPin = GetMapPinFromMarker(marker);
 
-            Marker selectedMarker;
             var selectedPin = Map.SelectedItem;
             if (selectedPin != mapPin)
             {
-                if (selectedPin != null && _markers.TryGetValue(selectedPin, out selectedMarker))
+                if (selectedPin != null && _markers.TryGetValue(selectedPin, out var selectedMarker))
                 {
                     UpdateMarkerImage(selectedPin as IMapPin, selectedMarker, false)
                     .HandleExceptions();
@@ -365,9 +364,7 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void SetSelectedAnnotation()
         {
-            Marker selectedMarker;
-            var selectedItem = Map.SelectedItem as IMapPin;
-            if (selectedItem != null && _markers.TryGetValue(selectedItem, out selectedMarker))
+            if (Map.SelectedItem is IMapPin selectedItem && _markers.TryGetValue(selectedItem, out var selectedMarker))
             {
                 OnMarkerClick(selectedMarker);
             }
@@ -386,6 +383,17 @@ namespace fivenine.UnifiedMaps.Droid
 				_googleMap.UiSettings.MyLocationButtonEnabled = Element.ShouldDisplayNativeControls;
 			}
 		}
+
+        public void ResetPins()
+        {
+            foreach (var marker in _markers)
+            {
+                var markerView = marker.Value;
+                markerView.Remove();
+            }
+            _markers.Clear();
+            _googleMap.Clear();
+        }
 
         protected override void OnElementChanged(ElementChangedEventArgs<UnifiedMap> e)
         {

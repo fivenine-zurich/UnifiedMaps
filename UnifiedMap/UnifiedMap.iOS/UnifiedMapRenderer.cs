@@ -109,6 +109,12 @@ namespace fivenine.UnifiedMaps.iOS
 			// Does nothing as iOS does not have native zoom and location buttons
 		}
 
+        public void ResetPins()
+        {
+            var annotations = Control.Annotations;
+            Control.RemoveAnnotations(annotations);   
+        }
+
         public void ApplyMapType()
         {
             switch (Element.MapType)
