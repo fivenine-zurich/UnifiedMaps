@@ -15,7 +15,7 @@
     <tags>map portable pcl android ios xamarin monoandroid monodroid xamarin.forms</tags>
     <dependencies>
       <group>
-        <dependency id="Xamarin.Forms" version="2.4.0.18342" />
+        <dependency id="Xamarin.Forms" version="3.0.0.561731" />
       </group>
       <group targetFramework="MonoAndroid10">
         <dependency id="Xamarin.GooglePlayServices.Maps" version="42.1021.1" />
