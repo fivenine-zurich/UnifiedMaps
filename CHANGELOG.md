@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.12.0] - 2018-07-20
+## Added
+- Clearing binded ObservableCollections with markers now remove all Markers from the Map.
+
+## Updated
+- Changed dependencies in nuspec, the NuGet now requires Xamarin.Forms `3.0.0.561731` and Xamarin.GooglePlayServices.Maps `60.1142.1`
+- Fix GitHub URL in nuspec
+
 ## [1.11.0] - 2018-02-20
 ## Added
 - Added new Property `ExcludeUserLocationFromFitAllAnnotations` to disable automatic inclusion of user location in fitting visible region to map annotations on iOS
