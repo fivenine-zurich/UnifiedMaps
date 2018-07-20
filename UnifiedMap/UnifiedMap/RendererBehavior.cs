@@ -34,6 +34,8 @@ namespace fivenine.UnifiedMaps
         void SetSelectedAnnotation();
 
 		void ApplyDisplayNativeControls();
+        
+        void ResetPins();
     }
 
     internal class RendererBehavior
@@ -205,7 +207,8 @@ namespace fivenine.UnifiedMaps
                 case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException($"The operation {e.Action} is not supported for MapPins");
+                    _renderer.ResetPins();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
