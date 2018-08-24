@@ -115,10 +115,23 @@ namespace fivenine.UnifiedMaps
                 typeof(Command<MapRegion>), typeof(UnifiedMap), null);
 
         /// <summary>
+        /// Occurs when the pin is clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinClicked;
+
+        /// <summary>
+        /// Occurs when the pin info window is clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
+
+        /// <summary>
         /// Occurs when the selected annotation changes.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
 
+        /// <summary>
+        /// Occurs when the visible region changes.
+        /// </summary>
         public event EventHandler<MapEventArgs<MapRegion>> VisibleRegionChanged;
 
         /// <summary>
@@ -383,6 +396,22 @@ namespace fivenine.UnifiedMaps
         public void MoveToUserLocation(bool animated = true) {
             
             MessagingCenter.Send(this, this.GetMoveToUserLocationMessage(), animated);
+        }
+
+        /// <summary>
+        /// Send the pin clicked event.
+        /// </summary>
+        public void SendPinClicked(IMapAnnotation pin)
+        {
+            PinClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin info window  clicked event.
+        /// </summary>
+        public void SendInfoWindowClicked(IMapAnnotation pin)
+        {
+            InfoWindowClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
     }
 }
