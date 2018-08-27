@@ -83,12 +83,14 @@ namespace fivenine.UnifiedMaps.Droid
 
         public void OnInfoWindowClick(Marker marker)
         {
-            var mapPin = GetMapPinFromMarker(marker);
-
-            var command = Element.PinCalloutTappedCommand;
-            if (mapPin != null && command != null && command.CanExecute(mapPin))
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
             {
-                command.Execute(mapPin);
+                var command = Element.PinCalloutTappedCommand;
+                if (command != null && command.CanExecute(mapPin))
+                {
+                    command.Execute(mapPin);
+                }
+                Map.SendInfoWindowClicked(mapPin);
             }
         }
 
@@ -124,6 +126,7 @@ namespace fivenine.UnifiedMaps.Droid
             else {
                 marker.ShowInfoWindow();
             }
+            Map.SendPinClicked(mapPin);
             return true; // return true to bypass default android behavior
         }
 

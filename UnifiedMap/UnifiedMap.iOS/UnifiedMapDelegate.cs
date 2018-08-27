@@ -115,6 +115,7 @@ namespace fivenine.UnifiedMaps.iOS
                 UpdateImage(view, unifiedPoint.Data, isSelected);
                 UpdatePin(view, unifiedPoint.Data, true);
                 view.Layer.ZPosition = int.MaxValue - 1;
+                _renderer.Map.SendPinClicked(unifiedPoint.Data);
             }
         }
 
@@ -152,6 +153,7 @@ namespace fivenine.UnifiedMaps.iOS
                 {
                     pinSelectedCommand.Execute(pinAnnotation.Data);
                 }
+                _renderer.Map.SendInfoWindowClicked(pinAnnotation.Data);
             }
         }
 
