@@ -287,21 +287,27 @@ namespace fivenine.UnifiedMaps.iOS
 			base.TouchesEnded(touches, evt);
 
 			// Add a conditional guard to deselect on map touch
-			if (Element != null && Element.ShouldDeselectOnMapTouch && _shouldNotDismiss)
+			if (Element != null && Element.ShouldDeselectOnMapTouch && !_shouldNotDismiss)
 			{
 				var isAnnotation = false;
-				var touch = touches.FirstOrDefault() as UITouch;
-				if (touch != null && Control != null)
-				{
-					// Detect when an annotation is touched
-					// May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotaiton is touched
-					if (touch.View is MKAnnotationView)
-					{
-						isAnnotation = true;
-					}
-				}
+                if (touches.FirstOrDefault() is UITouch touch && Control != null)
+                {
+                    // MKNewAnnotationContainerView is a private inner class, so you cannot compare directly
+                    if (touch.View.Class.Name == "MKNewAnnotationContainerView")
+                    {
+                        var cgPoint = touch.LocationInView(Control);
+                        var location = Control.ConvertPoint(cgPoint, Control);
+                        Element.SendMapClicked(new Position(location.Latitude, location.Longitude));
+                    }
+                    // Detect when an annotation is touched
+                    // May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotaiton is touched
+                    if (touch.View is MKAnnotationView)
+                    {
+                        isAnnotation = true;
+                    }
+                }
 
-				if (!isAnnotation)
+                if (!isAnnotation)
 				{
 					// Deselect annotation when map is touched
 					SelectedItem = null;
