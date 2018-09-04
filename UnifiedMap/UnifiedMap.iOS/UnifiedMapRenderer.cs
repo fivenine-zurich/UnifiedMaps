@@ -287,7 +287,7 @@ namespace fivenine.UnifiedMaps.iOS
 			base.TouchesEnded(touches, evt);
 
 			// Add a conditional guard to deselect on map touch
-			if (Element != null && Element.ShouldDeselectOnMapTouch && _shouldNotDismiss)
+			if (Element != null && Element.ShouldDeselectOnMapTouch && !_shouldNotDismiss)
 			{
 				var isAnnotation = false;
 				var touch = touches.FirstOrDefault() as UITouch;
