@@ -145,6 +145,11 @@ namespace fivenine.UnifiedMaps
         public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
 
         /// <summary>
+        /// Occurs when the pin info window is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowLongClicked;
+
+        /// <summary>
         /// Occurs when the map is clicked.
         /// </summary>
         public event EventHandler<MapEventArgs<Position>> MapClicked;
@@ -431,7 +436,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Send the pin clicked event.
         /// </summary>
-        public void SendPinClicked(IMapAnnotation pin)
+        internal void SendPinClicked(IMapAnnotation pin)
         {
             PinClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
@@ -439,7 +444,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Send the pin long clicked event.
         /// </summary>
-        public void SendPinLongClicked(IMapAnnotation pin)
+        internal void SendPinLongClicked(IMapAnnotation pin)
         {
             PinLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
@@ -469,17 +474,25 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
-        /// Send the pin info window  clicked event.
+        /// Send the pin info window clicked event.
         /// </summary>
-        public void SendInfoWindowClicked(IMapAnnotation pin)
+        internal void SendInfoWindowClicked(IMapAnnotation pin)
         {
             InfoWindowClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>
+        /// Send the pin info window Long clicked event.
+        /// </summary>
+        internal void SendInfoWindowLongClicked(IMapAnnotation pin)
+        {
+            InfoWindowLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
         /// Send map clicked event.
         /// </summary>
-        public void SendMapClicked(Position point)
+        internal void SendMapClicked(Position point)
         {
             MapClicked?.Invoke(this, new MapEventArgs<Position>(point));
         }
@@ -487,7 +500,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Send map clicked event.
         /// </summary>
-        public void SendMapLongClicked(Position point)
+        internal void SendMapLongClicked(Position point)
         {
             MapLongClicked?.Invoke(this, new MapEventArgs<Position>(point));
         }

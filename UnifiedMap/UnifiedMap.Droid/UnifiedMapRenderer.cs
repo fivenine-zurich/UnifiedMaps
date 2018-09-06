@@ -21,7 +21,8 @@ namespace fivenine.UnifiedMaps.Droid
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, 
         GoogleMap.IOnCameraChangeListener,
         IOnMapReadyCallback, 
-        GoogleMap.IOnInfoWindowClickListener, 
+        GoogleMap.IOnInfoWindowClickListener,
+        GoogleMap.IOnInfoWindowLongClickListener,
         GoogleMap.IOnMarkerClickListener,
         GoogleMap.IOnMarkerDragListener,
         GoogleMap.IOnMapClickListener,
@@ -96,7 +97,15 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-		public void OnMapClick(LatLng point)
+        public void OnInfoWindowLongClick(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                Map.SendInfoWindowLongClicked(mapPin);
+            }
+        }
+
+        public void OnMapClick(LatLng point)
 		{
 			// Add a conditional property for touch deselection
 			if (Map != null)
@@ -521,6 +530,8 @@ namespace fivenine.UnifiedMaps.Droid
             var mapPin = new MarkerOptions();
 
             mapPin.InvokeZIndex(pin.ZIndex);
+
+            // For draggable and LongPress Events
             mapPin.Draggable(true);
 
             if (!string.IsNullOrWhiteSpace(pin.Title))
@@ -564,6 +575,7 @@ namespace fivenine.UnifiedMaps.Droid
         private void RegisterListeners()
         {
             _googleMap.SetOnInfoWindowClickListener(this);
+            _googleMap.SetOnInfoWindowLongClickListener(this);
             _googleMap.SetOnMarkerClickListener(this); 
             _googleMap.SetOnMarkerDragListener(this);
             _googleMap.SetOnCameraChangeListener(this);
@@ -574,6 +586,7 @@ namespace fivenine.UnifiedMaps.Droid
         private void RemoveListeners()
         {
             _googleMap.SetOnInfoWindowClickListener(null);
+            _googleMap.SetOnInfoWindowLongClickListener(null);
             _googleMap.SetOnMarkerClickListener(null);
             _googleMap.SetOnMarkerDragListener(null);
             _googleMap.SetOnCameraChangeListener(null);

@@ -84,7 +84,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Gets or sets the draggable property.
         /// </summary>
-        /// <value>The draggable property.</value>
+        /// <value> name="true" Will enable drag and disable long press gestures</value>
         public bool Draggable { get; set; }
 
         /// <summary>

@@ -21,10 +21,12 @@ namespace fivenine.UnifiedMaps.iOS
 
         private IUnifiedAnnotation _selectedAnnotation;
         private MKAnnotationView _selectedAnnotationView;
+        UILongPressGestureRecognizer _infoWindowLongPress;
 
         public UnifiedMapDelegate(UnifiedMapRenderer renderer)
         {
             _renderer = renderer;
+            _infoWindowLongPress = new UILongPressGestureRecognizer(HandleLongPress);
         }
 
         public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
@@ -110,6 +112,8 @@ namespace fivenine.UnifiedMaps.iOS
             _selectedAnnotation = unifiedPoint;
             _selectedAnnotationView = view;
 
+            _selectedAnnotationView.AddGestureRecognizer(_infoWindowLongPress);
+
             if (unifiedPoint != null)
             {
                 _renderer.SelectedItem = unifiedPoint.Data;
@@ -119,6 +123,20 @@ namespace fivenine.UnifiedMaps.iOS
                 UpdatePin(view, unifiedPoint.Data, true);
                 view.Layer.ZPosition = int.MaxValue - 1;
             }
+        }
+
+        public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        {
+            // Fix issue where Pins already deselected internally but it's still highlighted on UI
+            DeselectPin();
+
+            _selectedAnnotationView.RemoveGestureRecognizer(_infoWindowLongPress);
+        }
+
+        private void HandleLongPress(UILongPressGestureRecognizer o)
+        {
+            if (o.State == UIGestureRecognizerState.Began && o.View is MKAnnotationView view && view.Annotation is UnifiedPointAnnotation unifiedPoint)
+                    _renderer.Map.SendInfoWindowLongClicked(unifiedPoint.Data);
         }
 
         public override void ChangedDragState(MKMapView mapView, MKAnnotationView annotationView, MKAnnotationViewDragState newState, MKAnnotationViewDragState oldState)
@@ -165,14 +183,10 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
-        public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
-		{
-			// Fix issue where Pins already deselected internally but it's still highlighted on UI
-			DeselectPin();
-		}
-
         public override void CalloutAccessoryControlTapped(MKMapView mapView, MKAnnotationView view, UIControl control)
         {
+            if (Runtime.GetNSObject(view.Annotation.Handle) is MKUserLocation userLocationAnnotation)
+                return;
             var pinAnnotation = view.Annotation as UnifiedPointAnnotation;
             if (pinAnnotation != null)
             {
