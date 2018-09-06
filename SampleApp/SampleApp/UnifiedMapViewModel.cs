@@ -120,7 +120,8 @@ namespace Sample
                         Location = new Position(47.389097, 8.517756),
                         Image = "pin_icon",
                         SelectedImage = "pin_icon_active",
-                        Anchor = new Point(0.5, 1)
+                        Anchor = new Point(0.5, 1),
+                        Draggable = true
                     },
                 });
 

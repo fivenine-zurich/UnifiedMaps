@@ -29,7 +29,7 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The location.
         /// </value>
-        Position Location { get; }
+        Position Location { get; set; }
 
         /// <summary>
         /// Gets the color of the map pin.
@@ -70,5 +70,11 @@ namespace fivenine.UnifiedMaps
         /// </summary>
         /// <value>The Z index.</value>
         int ZIndex { get; }
+
+        /// <summary>
+        /// Gets the draggable property.
+        /// </summary>
+        /// <value>The draggable property.</value>
+        bool Draggable { get; set; }
     }
 }

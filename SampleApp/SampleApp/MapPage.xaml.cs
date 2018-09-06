@@ -17,6 +17,10 @@ namespace Sample
             Map.InfoWindowClicked += (sender, e) => Debug.WriteLine("Info Window Clicked");
             Map.MapClicked += (sender, e) => Debug.WriteLine($"Map Clicked, {{latitude: {((Position)e.Value).Latitude} longitude: {((Position)e.Value).Longitude}}}");
             Map.MapLongClicked += (sender, e) => Debug.WriteLine($"Map Long Clicked, {{latitude: {((Position)e.Value).Latitude} longitude: {((Position)e.Value).Longitude}}}");
+            Map.PinLongClicked += (sender, e) => Debug.WriteLine("Pin Long Clicked");
+            Map.PinDragStart += (sender, e) => Debug.WriteLine("Pin Drag Start");
+            Map.PinDragging += (sender, e) => Debug.WriteLine("Pin Dragging");
+            Map.PinDragEnd += (sender, e) => Debug.WriteLine("Pin Drag End");
         }
 
         private void MapPage_OnAppearing(object sender, EventArgs e)

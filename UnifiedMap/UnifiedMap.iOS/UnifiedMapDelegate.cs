@@ -68,6 +68,9 @@ namespace fivenine.UnifiedMaps.iOS
                     UpdateImage(annotationView, pinAnnotation.Data);
                 }
 
+                // For Draggable
+                annotationView.Draggable = pinAnnotation.Data.Draggable;
+
                 // z index
                 annotationView.Layer.ZPosition = pinAnnotation.Data.ZIndex;
 
@@ -115,7 +118,32 @@ namespace fivenine.UnifiedMaps.iOS
                 UpdateImage(view, unifiedPoint.Data, isSelected);
                 UpdatePin(view, unifiedPoint.Data, true);
                 view.Layer.ZPosition = int.MaxValue - 1;
-                _renderer.Map.SendPinClicked(unifiedPoint.Data);
+            }
+        }
+
+        public override void ChangedDragState(MKMapView mapView, MKAnnotationView annotationView, MKAnnotationViewDragState newState, MKAnnotationViewDragState oldState)
+        {
+            if (annotationView?.Annotation is UnifiedPointAnnotation unifiedPoint)
+            {
+                switch (newState)
+                {
+                    case MKAnnotationViewDragState.Starting:
+                        _renderer.Map.SendPinDragStart(unifiedPoint.Data);
+                        break;
+                    case MKAnnotationViewDragState.Dragging:
+                        _renderer.Map.SendPinDragging(unifiedPoint.Data);
+                        break;
+                    case MKAnnotationViewDragState.Ending:
+                        _renderer.Map.SendPinDragEnd(unifiedPoint.Data);
+                        annotationView.SetDragState(MKAnnotationViewDragState.None, false);
+                        break;
+                    case MKAnnotationViewDragState.Canceling:
+                        annotationView.SetDragState(MKAnnotationViewDragState.None, false);
+                        break;
+                    default:
+                        break;
+                }
+                unifiedPoint.Data.Location = new Position(unifiedPoint.Coordinate.Latitude, unifiedPoint.Coordinate.Longitude);
             }
         }
 

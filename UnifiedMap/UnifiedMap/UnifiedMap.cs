@@ -120,6 +120,26 @@ namespace fivenine.UnifiedMaps
         public event EventHandler<MapEventArgs<IMapAnnotation>> PinClicked;
 
         /// <summary>
+        /// Occurs when the pin is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinLongClicked;
+
+        /// <summary>
+        /// Occurs when the pin drag is start.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragStart;
+
+        /// <summary>
+        /// Occurs when the pin is dragging.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragging;
+
+        /// <summary>
+        /// Occurs when the pin drag is ended.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragEnd;
+
+        /// <summary>
         /// Occurs when the pin info window is clicked.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
@@ -414,6 +434,38 @@ namespace fivenine.UnifiedMaps
         public void SendPinClicked(IMapAnnotation pin)
         {
             PinClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin long clicked event.
+        /// </summary>
+        public void SendPinLongClicked(IMapAnnotation pin)
+        {
+            PinLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin drag start event.
+        /// </summary>
+        internal void SendPinDragStart(IMapAnnotation pin)
+        {
+            PinDragStart?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin dragging event.
+        /// </summary>
+        internal void SendPinDragging(IMapAnnotation pin)
+        {
+            PinDragging?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin drag end event.
+        /// </summary>
+        internal void SendPinDragEnd(IMapAnnotation pin)
+        {
+            PinDragEnd?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>

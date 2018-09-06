@@ -82,6 +82,12 @@ namespace fivenine.UnifiedMaps
         public int ZIndex { get; set; }
 
         /// <summary>
+        /// Gets or sets the draggable property.
+        /// </summary>
+        /// <value>The draggable property.</value>
+        public bool Draggable { get; set; }
+
+        /// <summary>
         /// Determines whether the specified <see cref="IMapAnnotation"/> is equal to the current <see cref="T:fivenine.UnifiedMaps.MapPin"/>.
         /// </summary>
         /// <param name="other">The <see cref="IMapAnnotation"/> to compare with the current <see cref="T:fivenine.UnifiedMaps.MapPin"/>.</param>

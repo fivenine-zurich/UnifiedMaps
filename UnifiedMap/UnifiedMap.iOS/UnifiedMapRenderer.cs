@@ -309,9 +309,13 @@ namespace fivenine.UnifiedMaps.iOS
                     }
                     // Detect when an annotation is touched
                     // May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotation is touched
-                    if (touch.View is MKAnnotationView)
+                    if (touch.View is MKAnnotationView view && view.Annotation is UnifiedPointAnnotation unifiedPoint)
                     {
                         isAnnotation = true;
+                        if (touch.Timestamp - _touchBegan >= 1) // One second
+                            Element.SendPinLongClicked(unifiedPoint.Data);
+                        else
+                            Element.SendPinClicked(unifiedPoint.Data);
                     }
                 }
 

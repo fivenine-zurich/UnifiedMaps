@@ -23,6 +23,7 @@ namespace fivenine.UnifiedMaps.Droid
         IOnMapReadyCallback, 
         GoogleMap.IOnInfoWindowClickListener, 
         GoogleMap.IOnMarkerClickListener,
+        GoogleMap.IOnMarkerDragListener,
         GoogleMap.IOnMapClickListener,
         GoogleMap.IOnMapLongClickListener,
         IUnifiedMapRenderer
@@ -140,6 +141,55 @@ namespace fivenine.UnifiedMaps.Droid
             }
             Map.SendPinClicked(mapPin);
             return true; // return true to bypass default android behavior
+        }
+
+        public void OnMarkerDragStart(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragStart(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                    Map.SendPinLongClicked(mapPin);
+                }
+            }
+        }
+
+        public void OnMarkerDrag(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragging(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                }
+            }
+        }
+
+        public void OnMarkerDragEnd(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragEnd(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                }
+            }
         }
 
         public void OnCameraChange(CameraPosition position)
@@ -377,7 +427,8 @@ namespace fivenine.UnifiedMaps.Droid
         {
             if (Map.SelectedItem is IMapPin selectedItem && _markers.TryGetValue(selectedItem, out var selectedMarker))
             {
-                OnMarkerClick(selectedMarker);
+                // Refacto -> OnMarkerClick is calling twice, cause of the Marker Click listener
+                //OnMarkerClick(selectedMarker);
             }
             else
             {
@@ -470,6 +521,7 @@ namespace fivenine.UnifiedMaps.Droid
             var mapPin = new MarkerOptions();
 
             mapPin.InvokeZIndex(pin.ZIndex);
+            mapPin.Draggable(true);
 
             if (!string.IsNullOrWhiteSpace(pin.Title))
             {
@@ -512,7 +564,8 @@ namespace fivenine.UnifiedMaps.Droid
         private void RegisterListeners()
         {
             _googleMap.SetOnInfoWindowClickListener(this);
-            _googleMap.SetOnMarkerClickListener(this);
+            _googleMap.SetOnMarkerClickListener(this); 
+            _googleMap.SetOnMarkerDragListener(this);
             _googleMap.SetOnCameraChangeListener(this);
             _googleMap.SetOnMapClickListener(this);
             _googleMap.SetOnMapLongClickListener(this);
@@ -522,6 +575,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             _googleMap.SetOnInfoWindowClickListener(null);
             _googleMap.SetOnMarkerClickListener(null);
+            _googleMap.SetOnMarkerDragListener(null);
             _googleMap.SetOnCameraChangeListener(null);
             _googleMap.SetOnMapClickListener(null);
             _googleMap.SetOnMapLongClickListener(null);
