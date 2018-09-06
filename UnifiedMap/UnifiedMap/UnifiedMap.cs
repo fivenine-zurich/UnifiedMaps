@@ -33,6 +33,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// The bindable pin callout tapped command property.
         /// </summary>
+        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
         public static readonly BindableProperty PinCalloutTappedCommandProperty =
             BindableProperty.Create(nameof(PinCalloutTappedCommand), typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
@@ -239,6 +240,7 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pin callout tapped command.
         /// </value>
+        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
         public Command<IMapPin> PinCalloutTappedCommand
         {
             get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
