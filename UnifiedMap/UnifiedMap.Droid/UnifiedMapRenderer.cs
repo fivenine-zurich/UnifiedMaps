@@ -97,11 +97,14 @@ namespace fivenine.UnifiedMaps.Droid
 		public void OnMapClick(LatLng point)
 		{
 			// Add a conditional property for touch deselection
-			if (Map != null && Map.ShouldDeselectOnMapTouch)
+			if (Map != null)
 			{
-				// Fix a discrepancy with iOS version. iOS deselects pin when map is tapped, but not on Android.
-				Map.SelectedItem = null;
-			}
+                // Fix a discrepancy with iOS version. iOS deselects pin when map is tapped, but not on Android.
+                if (Map.ShouldDeselectOnMapTouch)
+                    Map.SelectedItem = null;
+
+                Map.SendMapClicked(new Position(point.Latitude, point.Longitude));
+            }
 		}
 
         public bool OnMarkerClick(Marker marker)

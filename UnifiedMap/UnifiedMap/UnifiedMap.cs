@@ -125,6 +125,11 @@ namespace fivenine.UnifiedMaps
         public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
 
         /// <summary>
+        /// Occurs when the map is clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<Position>> MapClicked;
+
+        /// <summary>
         /// Occurs when the selected annotation changes.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
@@ -412,6 +417,14 @@ namespace fivenine.UnifiedMaps
         public void SendInfoWindowClicked(IMapAnnotation pin)
         {
             InfoWindowClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send map clicked event.
+        /// </summary>
+        public void SendMapClicked(Position point)
+        {
+            MapClicked?.Invoke(this, new MapEventArgs<Position>(point));
         }
     }
 }
