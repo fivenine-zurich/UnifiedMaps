@@ -24,6 +24,7 @@ namespace fivenine.UnifiedMaps.iOS
         private readonly List<IUnifiedOverlay> _overlays = new List<IUnifiedOverlay>();
         private CLLocationManager _locationManager;
 		private bool _shouldNotDismiss;
+        private double _touchBegan;
         private bool _requestedShowUserLocation = false;
 
         public UnifiedMapRenderer()
@@ -267,7 +268,11 @@ namespace fivenine.UnifiedMaps.iOS
 		public override void TouchesBegan(NSSet touches, UIEvent evt)
 		{
 			base.TouchesBegan(touches, evt);
-			_shouldNotDismiss = false; // reset
+            if (touches.FirstOrDefault() is UITouch touch && Control != null)
+            {
+               _touchBegan = touch.Timestamp;
+            }
+            _shouldNotDismiss = false; // reset
 		}
 
 		public override void TouchesMoved(NSSet touches, UIEvent evt)
@@ -297,10 +302,13 @@ namespace fivenine.UnifiedMaps.iOS
                     {
                         var cgPoint = touch.LocationInView(Control);
                         var location = Control.ConvertPoint(cgPoint, Control);
-                        Element.SendMapClicked(new Position(location.Latitude, location.Longitude));
+                        if (touch.Timestamp - _touchBegan >= 1) // One second
+                            Element.SendMapLongClicked(new Position(location.Latitude, location.Longitude));
+                        else
+                            Element.SendMapClicked(new Position(location.Latitude, location.Longitude));
                     }
                     // Detect when an annotation is touched
-                    // May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotaiton is touched
+                    // May be enhanced in the future to detect when an MKCircle, MKPolyline or MKPointAnnotation is touched
                     if (touch.View is MKAnnotationView)
                     {
                         isAnnotation = true;

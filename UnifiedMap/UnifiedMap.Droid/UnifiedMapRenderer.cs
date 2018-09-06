@@ -24,6 +24,7 @@ namespace fivenine.UnifiedMaps.Droid
         GoogleMap.IOnInfoWindowClickListener, 
         GoogleMap.IOnMarkerClickListener,
         GoogleMap.IOnMapClickListener,
+        GoogleMap.IOnMapLongClickListener,
         IUnifiedMapRenderer
     {
         private static Bundle _bundle;
@@ -107,6 +108,14 @@ namespace fivenine.UnifiedMaps.Droid
             }
 		}
 
+        public void OnMapLongClick(LatLng point)
+        {
+            if (Map != null)
+            {
+                Map.SendMapLongClicked(new Position(point.Latitude, point.Longitude));
+            }
+        }
+
         public bool OnMarkerClick(Marker marker)
         {
             var mapPin = GetMapPinFromMarker(marker);
@@ -151,11 +160,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             _googleMap = googleMap;
 
-            // Register listeners
-            _googleMap.SetOnInfoWindowClickListener(this);
-            _googleMap.SetOnMarkerClickListener(this);
-            _googleMap.SetOnCameraChangeListener(this);
-            _googleMap.SetOnMapClickListener(this);
+            RegisterListeners();
 
             _googleMap.MyLocationChange += OnMyLocationChanged;
 
@@ -446,6 +451,7 @@ namespace fivenine.UnifiedMaps.Droid
 
                 if (_googleMap != null)
                 {
+                    RemoveListeners();
                     _googleMap.Dispose();
                     _googleMap = null;
                 }
@@ -501,6 +507,24 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 markerView.HideInfoWindow();
             }
+        }
+
+        private void RegisterListeners()
+        {
+            _googleMap.SetOnInfoWindowClickListener(this);
+            _googleMap.SetOnMarkerClickListener(this);
+            _googleMap.SetOnCameraChangeListener(this);
+            _googleMap.SetOnMapClickListener(this);
+            _googleMap.SetOnMapLongClickListener(this);
+        }
+
+        private void RemoveListeners()
+        {
+            _googleMap.SetOnInfoWindowClickListener(null);
+            _googleMap.SetOnMarkerClickListener(null);
+            _googleMap.SetOnCameraChangeListener(null);
+            _googleMap.SetOnMapClickListener(null);
+            _googleMap.SetOnMapLongClickListener(null);
         }
 
         private void RegisterEvents(UnifiedMap map)

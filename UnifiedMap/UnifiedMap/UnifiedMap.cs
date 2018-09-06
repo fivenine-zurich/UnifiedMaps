@@ -130,6 +130,11 @@ namespace fivenine.UnifiedMaps
         public event EventHandler<MapEventArgs<Position>> MapClicked;
 
         /// <summary>
+        /// Occurs when the map is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<Position>> MapLongClicked;
+
+        /// <summary>
         /// Occurs when the selected annotation changes.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> SelectionChanged;
@@ -425,6 +430,14 @@ namespace fivenine.UnifiedMaps
         public void SendMapClicked(Position point)
         {
             MapClicked?.Invoke(this, new MapEventArgs<Position>(point));
+        }
+
+        /// <summary>
+        /// Send map clicked event.
+        /// </summary>
+        public void SendMapLongClicked(Position point)
+        {
+            MapLongClicked?.Invoke(this, new MapEventArgs<Position>(point));
         }
     }
 }
