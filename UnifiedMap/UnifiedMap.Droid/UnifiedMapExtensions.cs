@@ -14,7 +14,9 @@ namespace fivenine.UnifiedMaps.Droid
             var southwest = new LatLng(region.MinY, region.MinX);
             var northeast = new LatLng(region.MaxY, region.MaxX);
 
-            return new LatLngBounds(southwest, northeast);
+            return new LatLngBounds.Builder().
+                                       Include(southwest).
+                                       Include(northeast).Build();
         }
     }
 }

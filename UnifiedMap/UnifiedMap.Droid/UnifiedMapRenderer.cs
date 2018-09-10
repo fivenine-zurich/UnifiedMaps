@@ -72,9 +72,9 @@ namespace fivenine.UnifiedMaps.Droid
         {
             if (RequestedShowUserLocation)
             {
-                InternalMoveToRegion(MapRegion.FromPositions(new List<Position>{
+                MoveToRegion(MapRegion.FromPositions(new List<Position>{
                     new Position(e.Location.Latitude, e.Location.Longitude)
-                }), true, 16);
+                }), true);
                 ResetShowUserLocation();
             }
         }
@@ -228,33 +228,23 @@ namespace fivenine.UnifiedMaps.Droid
 
             if(Map.VisibleRegion != null) 
             {
-                InternalMoveToRegion(Map.VisibleRegion, false, -1);    
+                MoveToRegion(Map.VisibleRegion, false);    
             }
         }
 
         public UnifiedMap Map => Element;
 
-        private void InternalMoveToRegion(MapRegion region, bool animated, int zoomLevel) 
+        public void MoveToRegion(MapRegion region, bool animated)
         {
             if (_googleMap == null)
-            {
                 return;
-            }
 
-            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), zoomLevel);
-            if (_requestedShowUserLocation)
-            {
-                var cameraPosition = new CameraPosition.Builder()
-                         .Target(new LatLng(region.Center.Latitude, region.Center.Longitude))
-                         .Zoom(zoomLevel)
-                         .Build();
+            var cameraUpdate = CameraUpdateFactory.NewLatLngBounds(region.ToBounds(), 0);
+            if (Map.ZoomLevel != -1)
+                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(region.Center.Latitude, region.Center.Longitude), Map.ZoomLevel);
+            else if (_requestedShowUserLocation)
+                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(region.Center.Latitude, region.Center.Longitude), 16);
 
-                cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
-            }
-            else if(Map.ZoomLevel != -1) {
-                cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(region.Center.Latitude, region.Center.Longitude), zoomLevel);
-            }
-      
             try
             {
                 if (animated)
@@ -266,18 +256,9 @@ namespace fivenine.UnifiedMaps.Droid
                     _googleMap.MoveCamera(cameraUpdate);
                 }
             }
-            catch (IllegalStateException)
+            catch (IllegalStateException e)
             {
-            }
-        }
-
-        public void MoveToRegion(MapRegion region, bool animated)
-        {
-            if(Map.ZoomLevel != -1) {
-                InternalMoveToRegion(region, animated, Map.ZoomLevel);
-            }
-            else {
-                InternalMoveToRegion(region, animated, 0);    
+                Console.WriteLine("MoveToRegion exception: " + e);
             }
         }
 

@@ -56,7 +56,7 @@ namespace Sample
                 new Command(RemovePin, o => Pins.Any());
 
             _moveToRegionCommand =
-                new Command(() => Map.MoveToRegion(animated: true));
+                new Command(() => Map.MoveToRegion(new MapRegion(new Position(47.389097, 8.517756), 400)));
 
             _addPolylineCommand =
                 new Command(AddPolyline, o => _allPolylines.Any());
