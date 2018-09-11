@@ -33,7 +33,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// The bindable pin callout tapped command property.
         /// </summary>
-        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
+        [Obsolete("This method will soon be deprecated. Use PinInfoViewClicked event instead.")]
         public static readonly BindableProperty PinCalloutTappedCommandProperty =
             BindableProperty.Create(nameof(PinCalloutTappedCommand), typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
@@ -143,12 +143,12 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Occurs when the pin info window is clicked.
         /// </summary>
-        public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinInfoViewClicked;
 
         /// <summary>
         /// Occurs when the pin info window is long clicked.
         /// </summary>
-        public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowLongClicked;
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinInfoViewLongClicked;
 
         /// <summary>
         /// Occurs when the map is clicked.
@@ -240,7 +240,7 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pin callout tapped command.
         /// </value>
-        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
+        [Obsolete("This method will soon be deprecated. Use PinInfoViewClicked event instead.")]
         public Command<IMapPin> PinCalloutTappedCommand
         {
             get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
@@ -478,17 +478,17 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Send the pin info window clicked event.
         /// </summary>
-        internal void SendInfoWindowClicked(IMapAnnotation pin)
+        internal void SendPinInfoViewClicked(IMapAnnotation pin)
         {
-            InfoWindowClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+            PinInfoViewClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>
         /// Send the pin info window Long clicked event.
         /// </summary>
-        internal void SendInfoWindowLongClicked(IMapAnnotation pin)
+        internal void SendPinInfoViewLongClicked(IMapAnnotation pin)
         {
-            InfoWindowLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+            PinInfoViewLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>

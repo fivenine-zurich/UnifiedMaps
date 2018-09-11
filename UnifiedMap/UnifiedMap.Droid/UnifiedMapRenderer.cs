@@ -93,7 +93,7 @@ namespace fivenine.UnifiedMaps.Droid
                 {
                     command.Execute(mapPin);
                 }
-                Map.SendInfoWindowClicked(mapPin);
+                Map.SendPinInfoViewClicked(mapPin);
             }
         }
 
@@ -101,7 +101,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             if (GetMapPinFromMarker(marker) is IMapPin mapPin)
             {
-                Map.SendInfoWindowLongClicked(mapPin);
+                Map.SendPinInfoViewLongClicked(mapPin);
             }
         }
 

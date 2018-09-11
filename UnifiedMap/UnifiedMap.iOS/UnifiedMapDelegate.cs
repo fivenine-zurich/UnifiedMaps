@@ -21,12 +21,12 @@ namespace fivenine.UnifiedMaps.iOS
 
         private IUnifiedAnnotation _selectedAnnotation;
         private MKAnnotationView _selectedAnnotationView;
-        UILongPressGestureRecognizer _infoWindowLongPress;
+        UILongPressGestureRecognizer _PinInfoViewLongPress;
 
         public UnifiedMapDelegate(UnifiedMapRenderer renderer)
         {
             _renderer = renderer;
-            _infoWindowLongPress = new UILongPressGestureRecognizer(HandleLongPress);
+            _PinInfoViewLongPress = new UILongPressGestureRecognizer(HandlePinInfoViewLongPress);
         }
 
         public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
@@ -94,7 +94,7 @@ namespace fivenine.UnifiedMaps.iOS
                 _selectedAnnotation = unifiedPoint;
                 _selectedAnnotationView = view;
 
-                _selectedAnnotationView.AddGestureRecognizer(_infoWindowLongPress);
+                _selectedAnnotationView.AddGestureRecognizer(_PinInfoViewLongPress);
 
                 _renderer.SelectedItem = unifiedPoint.Data;
                 var isSelected = unifiedPoint.Data?.SelectedImage != null;
@@ -119,17 +119,17 @@ namespace fivenine.UnifiedMaps.iOS
 
             if (view?.Annotation is UnifiedPointAnnotation unifiedPoint)
             {
-                _selectedAnnotationView.RemoveGestureRecognizer(_infoWindowLongPress);
+                _selectedAnnotationView.RemoveGestureRecognizer(_PinInfoViewLongPress);
             }
         }
 
-        private void HandleLongPress(UILongPressGestureRecognizer o)
+        private void HandlePinInfoViewLongPress(UILongPressGestureRecognizer o)
         {
             if (o.State == UIGestureRecognizerState.Began
                 && o.View is MKAnnotationView view
                 && view.Annotation is UnifiedPointAnnotation unifiedPoint)
             {
-                _renderer.Map.SendInfoWindowLongClicked(unifiedPoint.Data);
+                _renderer.Map.SendPinInfoViewLongClicked(unifiedPoint.Data);
             }
         }
 
@@ -186,7 +186,7 @@ namespace fivenine.UnifiedMaps.iOS
                 {
                     pinSelectedCommand.Execute(pinAnnotation.Data);
                 }
-                _renderer.Map.SendInfoWindowClicked(pinAnnotation.Data);
+                _renderer.Map.SendPinInfoViewClicked(pinAnnotation.Data);
             }
         }
 
