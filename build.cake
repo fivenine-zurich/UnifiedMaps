@@ -94,9 +94,9 @@ Task("NuGet-Pack")
         Copyright               = "fivenine GmbH " + DateTime.Now.Year,
         BasePath                = "./bin",
         Files                   = new [] {
-            // PCL Profile259
-            new NuSpecContent {Source = replacer("PCL/UnifiedMap.dll"), Target = replacer("lib/portable-net45+win+wpa81+wp80/")},
-            new NuSpecContent {Source = replacer("PCL/UnifiedMap.xml"), Target = replacer("lib/portable-net45+win+wpa81+wp80/")},
+            // netstandard2.0
+            new NuSpecContent {Source = replacer("pcl/netstandard2.0/UnifiedMap.dll"), Target = replacer("lib/netstandard2.0/")},
+            new NuSpecContent {Source = replacer("pcl/netstandard2.0/UnifiedMap.xml"), Target = replacer("lib/netstandard2.0/")},
 
             // Xamarin.iOS Unified API
             new NuSpecContent {Source = replacer("Xamarin.iOS10/UnifiedMap*.dll"), Target = replacer("lib/Xamarin.iOS10/")},
