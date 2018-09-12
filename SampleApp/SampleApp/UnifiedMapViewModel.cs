@@ -18,7 +18,7 @@ namespace Sample
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly ICommand _pinSelectedCommand;
+        private readonly ICommand _inInfoWindowsClickCommand;
         private readonly ICommand _changeMapTypeCommand;
         private readonly Command _addPinCommand;
         private readonly Command _removePinCommand;
@@ -43,8 +43,8 @@ namespace Sample
 
         public UnifiedMapViewModel ()
         {
-            _pinSelectedCommand =
-                new Command<IMapPin>(pin => Debug.WriteLine($"Pin {pin.Title} was selected"));
+            _inInfoWindowsClickCommand =
+                new Command<IMapPin>(pin => Debug.WriteLine($"The Pin {pin.Title} Info Window has been click"));
 
             _changeMapTypeCommand =
                 new Command<MapType>(m => MapDisplayType = m);
@@ -120,7 +120,8 @@ namespace Sample
                         Location = new Position(47.389097, 8.517756),
                         Image = "pin_icon",
                         SelectedImage = "pin_icon_active",
-                        Anchor = new Point(0.5, 1)
+                        Anchor = new Point(0.5, 1),
+                        Draggable = true
                     },
                 });
 
@@ -222,7 +223,7 @@ namespace Sample
             }
         }
 
-        public ICommand PinSelectedCommand => _pinSelectedCommand;
+        public ICommand PinSelectedCommand => _inInfoWindowsClickCommand;
 
         public ICommand ChangeMapTypeCommand => _changeMapTypeCommand;
 

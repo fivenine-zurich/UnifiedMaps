@@ -33,6 +33,7 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// The bindable pin callout tapped command property.
         /// </summary>
+        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
         public static readonly BindableProperty PinCalloutTappedCommandProperty =
             BindableProperty.Create(nameof(PinCalloutTappedCommand), typeof (Command<IMapPin>), typeof (UnifiedMap), null);
 
@@ -120,14 +121,44 @@ namespace fivenine.UnifiedMaps
         public event EventHandler<MapEventArgs<IMapAnnotation>> PinClicked;
 
         /// <summary>
+        /// Occurs when the pin is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinLongClicked;
+
+        /// <summary>
+        /// Occurs when the pin drag is start.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragStart;
+
+        /// <summary>
+        /// Occurs when the pin is dragging.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragging;
+
+        /// <summary>
+        /// Occurs when the pin drag is ended.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> PinDragEnd;
+
+        /// <summary>
         /// Occurs when the pin info window is clicked.
         /// </summary>
         public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowClicked;
 
         /// <summary>
+        /// Occurs when the pin info window is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<IMapAnnotation>> InfoWindowLongClicked;
+
+        /// <summary>
         /// Occurs when the map is clicked.
         /// </summary>
         public event EventHandler<MapEventArgs<Position>> MapClicked;
+
+        /// <summary>
+        /// Occurs when the map is long clicked.
+        /// </summary>
+        public event EventHandler<MapEventArgs<Position>> MapLongClicked;
 
         /// <summary>
         /// Occurs when the selected annotation changes.
@@ -209,6 +240,7 @@ namespace fivenine.UnifiedMaps
         /// <value>
         /// The pin callout tapped command.
         /// </value>
+        [Obsolete("This method will soon be deprecated. Use InfoWindowClicked event instead.")]
         public Command<IMapPin> PinCalloutTappedCommand
         {
             get { return (Command<IMapPin>)GetValue(PinCalloutTappedCommandProperty); }
@@ -406,25 +438,73 @@ namespace fivenine.UnifiedMaps
         /// <summary>
         /// Send the pin clicked event.
         /// </summary>
-        public void SendPinClicked(IMapAnnotation pin)
+        internal void SendPinClicked(IMapAnnotation pin)
         {
             PinClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>
-        /// Send the pin info window  clicked event.
+        /// Send the pin long clicked event.
         /// </summary>
-        public void SendInfoWindowClicked(IMapAnnotation pin)
+        internal void SendPinLongClicked(IMapAnnotation pin)
+        {
+            PinLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin drag start event.
+        /// </summary>
+        internal void SendPinDragStart(IMapAnnotation pin)
+        {
+            PinDragStart?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin dragging event.
+        /// </summary>
+        internal void SendPinDragging(IMapAnnotation pin)
+        {
+            PinDragging?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin drag end event.
+        /// </summary>
+        internal void SendPinDragEnd(IMapAnnotation pin)
+        {
+            PinDragEnd?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
+        /// Send the pin info window clicked event.
+        /// </summary>
+        internal void SendInfoWindowClicked(IMapAnnotation pin)
         {
             InfoWindowClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
         }
 
         /// <summary>
+        /// Send the pin info window Long clicked event.
+        /// </summary>
+        internal void SendInfoWindowLongClicked(IMapAnnotation pin)
+        {
+            InfoWindowLongClicked?.Invoke(this, new MapEventArgs<IMapAnnotation>(pin));
+        }
+
+        /// <summary>
         /// Send map clicked event.
         /// </summary>
-        public void SendMapClicked(Position point)
+        internal void SendMapClicked(Position point)
         {
             MapClicked?.Invoke(this, new MapEventArgs<Position>(point));
+        }
+
+        /// <summary>
+        /// Send map clicked event.
+        /// </summary>
+        internal void SendMapLongClicked(Position point)
+        {
+            MapLongClicked?.Invoke(this, new MapEventArgs<Position>(point));
         }
     }
 }

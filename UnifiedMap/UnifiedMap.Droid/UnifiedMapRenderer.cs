@@ -21,9 +21,12 @@ namespace fivenine.UnifiedMaps.Droid
     public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, 
         GoogleMap.IOnCameraChangeListener,
         IOnMapReadyCallback, 
-        GoogleMap.IOnInfoWindowClickListener, 
+        GoogleMap.IOnInfoWindowClickListener,
+        GoogleMap.IOnInfoWindowLongClickListener,
         GoogleMap.IOnMarkerClickListener,
+        GoogleMap.IOnMarkerDragListener,
         GoogleMap.IOnMapClickListener,
+        GoogleMap.IOnMapLongClickListener,
         IUnifiedMapRenderer
     {
         private static Bundle _bundle;
@@ -94,7 +97,15 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-		public void OnMapClick(LatLng point)
+        public void OnInfoWindowLongClick(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                Map.SendInfoWindowLongClicked(mapPin);
+            }
+        }
+
+        public void OnMapClick(LatLng point)
 		{
 			// Add a conditional property for touch deselection
 			if (Map != null)
@@ -106,6 +117,14 @@ namespace fivenine.UnifiedMaps.Droid
                 Map.SendMapClicked(new Position(point.Latitude, point.Longitude));
             }
 		}
+
+        public void OnMapLongClick(LatLng point)
+        {
+            if (Map != null)
+            {
+                Map.SendMapLongClicked(new Position(point.Latitude, point.Longitude));
+            }
+        }
 
         public bool OnMarkerClick(Marker marker)
         {
@@ -133,6 +152,55 @@ namespace fivenine.UnifiedMaps.Droid
             return true; // return true to bypass default android behavior
         }
 
+        public void OnMarkerDragStart(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragStart(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                    Map.SendPinLongClicked(mapPin);
+                }
+            }
+        }
+
+        public void OnMarkerDrag(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragging(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                }
+            }
+        }
+
+        public void OnMarkerDragEnd(Marker marker)
+        {
+            if (GetMapPinFromMarker(marker) is IMapPin mapPin)
+            {
+                if (mapPin.Draggable)
+                {
+                    mapPin.Location = new Position(marker.Position.Latitude, marker.Position.Longitude);
+                    Map.SendPinDragEnd(mapPin);
+                }
+                else
+                {
+                    marker.Position = new LatLng(mapPin.Location.Latitude, mapPin.Location.Longitude);
+                }
+            }
+        }
+
         public void OnCameraChange(CameraPosition position)
         {
             if (_googleMap == null)
@@ -151,11 +219,7 @@ namespace fivenine.UnifiedMaps.Droid
         {
             _googleMap = googleMap;
 
-            // Register listeners
-            _googleMap.SetOnInfoWindowClickListener(this);
-            _googleMap.SetOnMarkerClickListener(this);
-            _googleMap.SetOnCameraChangeListener(this);
-            _googleMap.SetOnMapClickListener(this);
+            RegisterListeners();
 
             _googleMap.MyLocationChange += OnMyLocationChanged;
 
@@ -372,7 +436,8 @@ namespace fivenine.UnifiedMaps.Droid
         {
             if (Map.SelectedItem is IMapPin selectedItem && _markers.TryGetValue(selectedItem, out var selectedMarker))
             {
-                OnMarkerClick(selectedMarker);
+                // Refacto -> OnMarkerClick is calling twice, cause of the Marker Click listener
+                //OnMarkerClick(selectedMarker);
             }
             else
             {
@@ -446,6 +511,7 @@ namespace fivenine.UnifiedMaps.Droid
 
                 if (_googleMap != null)
                 {
+                    RemoveListeners();
                     _googleMap.Dispose();
                     _googleMap = null;
                 }
@@ -464,6 +530,9 @@ namespace fivenine.UnifiedMaps.Droid
             var mapPin = new MarkerOptions();
 
             mapPin.InvokeZIndex(pin.ZIndex);
+
+            // For draggable and LongPress Events
+            mapPin.Draggable(true);
 
             if (!string.IsNullOrWhiteSpace(pin.Title))
             {
@@ -501,6 +570,28 @@ namespace fivenine.UnifiedMaps.Droid
             {
                 markerView.HideInfoWindow();
             }
+        }
+
+        private void RegisterListeners()
+        {
+            _googleMap.SetOnInfoWindowClickListener(this);
+            _googleMap.SetOnInfoWindowLongClickListener(this);
+            _googleMap.SetOnMarkerClickListener(this); 
+            _googleMap.SetOnMarkerDragListener(this);
+            _googleMap.SetOnCameraChangeListener(this);
+            _googleMap.SetOnMapClickListener(this);
+            _googleMap.SetOnMapLongClickListener(this);
+        }
+
+        private void RemoveListeners()
+        {
+            _googleMap.SetOnInfoWindowClickListener(null);
+            _googleMap.SetOnInfoWindowLongClickListener(null);
+            _googleMap.SetOnMarkerClickListener(null);
+            _googleMap.SetOnMarkerDragListener(null);
+            _googleMap.SetOnCameraChangeListener(null);
+            _googleMap.SetOnMapClickListener(null);
+            _googleMap.SetOnMapLongClickListener(null);
         }
 
         private void RegisterEvents(UnifiedMap map)

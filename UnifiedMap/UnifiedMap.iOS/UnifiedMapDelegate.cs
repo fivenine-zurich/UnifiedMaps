@@ -21,32 +21,17 @@ namespace fivenine.UnifiedMaps.iOS
 
         private IUnifiedAnnotation _selectedAnnotation;
         private MKAnnotationView _selectedAnnotationView;
+        UILongPressGestureRecognizer _infoWindowLongPress;
 
         public UnifiedMapDelegate(UnifiedMapRenderer renderer)
         {
             _renderer = renderer;
+            _infoWindowLongPress = new UILongPressGestureRecognizer(HandleLongPress);
         }
 
         public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
-            if (Runtime.GetNSObject(annotation.Handle) is MKUserLocation)
-            {
-                return null;
-            }
-
-            var unifiedAnnotation = annotation as IUnifiedAnnotation;
-            if (unifiedAnnotation == null)
-            {
-                return null;
-            }
-
-            //if (annotation == mapView.UserLocation)
-            //{
-            //    return null;
-            //}
-
-            var pinAnnotation = annotation as UnifiedPointAnnotation;
-            if (pinAnnotation != null)
+            if (annotation is UnifiedPointAnnotation pinAnnotation)
             {
                 var data = pinAnnotation.Data;
                 MKAnnotationView annotationView = null;
@@ -67,6 +52,9 @@ namespace fivenine.UnifiedMaps.iOS
 
                     UpdateImage(annotationView, pinAnnotation.Data);
                 }
+
+                // For Draggable
+                annotationView.Draggable = pinAnnotation.Data.Draggable;
 
                 // z index
                 annotationView.Layer.ZPosition = pinAnnotation.Data.ZIndex;
@@ -90,12 +78,10 @@ namespace fivenine.UnifiedMaps.iOS
 
         public override MKOverlayRenderer OverlayRenderer(MKMapView mapView, IMKOverlay overlay)
         {
-            var unifiedOverlay = overlay as IUnifiedOverlay;
-            if (unifiedOverlay != null)
+            if (overlay is IUnifiedOverlay unifiedOverlay)
             {
                 return unifiedOverlay.GetRenderer();
             }
-
             return null;
         }
 
@@ -103,50 +89,97 @@ namespace fivenine.UnifiedMaps.iOS
         {
             DeselectPin();
 
-            var unifiedPoint = view?.Annotation as UnifiedPointAnnotation;
-            _selectedAnnotation = unifiedPoint;
-            _selectedAnnotationView = view;
-
-            if (unifiedPoint != null)
+            if (view?.Annotation is UnifiedPointAnnotation unifiedPoint)
             {
+                _selectedAnnotation = unifiedPoint;
+                _selectedAnnotationView = view;
+
+                _selectedAnnotationView.AddGestureRecognizer(_infoWindowLongPress);
+
                 _renderer.SelectedItem = unifiedPoint.Data;
                 var isSelected = unifiedPoint.Data?.SelectedImage != null;
 
                 UpdateImage(view, unifiedPoint.Data, isSelected);
                 UpdatePin(view, unifiedPoint.Data, true);
                 view.Layer.ZPosition = int.MaxValue - 1;
-                _renderer.Map.SendPinClicked(unifiedPoint.Data);
+            }
+            else if (view.Class.Name == "MKModernUserLocationView")
+            {
+                // Ensure that when UserLocation pin is added it's always at the top
+                view.Layer.ZPosition = int.MaxValue;
+                // Remove InfoWindow from MKModernUserLocationView
+                view.CanShowCallout = false;
+            }
+        }
+
+        public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
+        {
+            // Fix issue where Pins already deselected internally but it's still highlighted on UI
+            DeselectPin();
+
+            if (view?.Annotation is UnifiedPointAnnotation unifiedPoint)
+            {
+                _selectedAnnotationView.RemoveGestureRecognizer(_infoWindowLongPress);
+            }
+        }
+
+        private void HandleLongPress(UILongPressGestureRecognizer o)
+        {
+            if (o.State == UIGestureRecognizerState.Began
+                && o.View is MKAnnotationView view
+                && view.Annotation is UnifiedPointAnnotation unifiedPoint)
+            {
+                _renderer.Map.SendInfoWindowLongClicked(unifiedPoint.Data);
+            }
+        }
+
+        public override void ChangedDragState(MKMapView mapView, MKAnnotationView annotationView, MKAnnotationViewDragState newState, MKAnnotationViewDragState oldState)
+        {
+            if (annotationView?.Annotation is UnifiedPointAnnotation unifiedPoint)
+            {
+                switch (newState)
+                {
+                    case MKAnnotationViewDragState.Starting:
+                        _renderer.Map.SendPinDragStart(unifiedPoint.Data);
+                        break;
+                    case MKAnnotationViewDragState.Dragging:
+                        _renderer.Map.SendPinDragging(unifiedPoint.Data);
+                        break;
+                    case MKAnnotationViewDragState.Ending:
+                        _renderer.Map.SendPinDragEnd(unifiedPoint.Data);
+                        annotationView.SetDragState(MKAnnotationViewDragState.None, false);
+                        break;
+                    case MKAnnotationViewDragState.Canceling:
+                        annotationView.SetDragState(MKAnnotationViewDragState.None, false);
+                        break;
+                    default:
+                        break;
+                }
+                unifiedPoint.Data.Location = new Position(unifiedPoint.Coordinate.Latitude, unifiedPoint.Coordinate.Longitude);
             }
         }
 
         public override void DidAddAnnotationViews(MKMapView mapView, MKAnnotationView[] views)
         {
-            // Ensure that when UserLocation pin is added it's always at the top
             foreach (var view in views)
             {
-                var classHandle = Class.GetHandle("MKModernUserLocationView");
-                var myClass = classHandle != IntPtr.Zero ? new Class(classHandle) : null;
-                if (myClass != null && view.IsKindOfClass(myClass))
+                if (view?.Annotation is UnifiedPointAnnotation unifiedPoint)
                 {
-                    view.Layer.ZPosition = int.MaxValue;
+                    view.Layer.ZPosition = unifiedPoint.Data.ZIndex;
                 }
-                else if (view.Annotation is MKUserLocation)
+                else if (view.Class.Name == "MKModernUserLocationView")
                 {
+                    // Ensure that when UserLocation pin is added it's always at the top
                     view.Layer.ZPosition = int.MaxValue;
+                    // Remove InfoWindow from MKModernUserLocationView
+                    view.CanShowCallout = false;
                 }
             }
         }
 
-        public override void DidDeselectAnnotationView(MKMapView mapView, MKAnnotationView view)
-		{
-			// Fix issue where Pins already deselected internally but it's still highlighted on UI
-			DeselectPin();
-		}
-
         public override void CalloutAccessoryControlTapped(MKMapView mapView, MKAnnotationView view, UIControl control)
         {
-            var pinAnnotation = view.Annotation as UnifiedPointAnnotation;
-            if (pinAnnotation != null)
+            if (view.Annotation is UnifiedPointAnnotation pinAnnotation)
             {
                 var pinSelectedCommand = _renderer.Element.PinCalloutTappedCommand;
                 if (pinSelectedCommand.CanExecute(pinAnnotation.Data))
@@ -174,8 +207,7 @@ namespace fivenine.UnifiedMaps.iOS
 
         private void UpdatePin(MKAnnotationView annotationView, IMapPin customAnnotation, bool selected = false)
         {
-            var pinAnnotationView = annotationView as MKPinAnnotationView;
-            if (pinAnnotationView != null)
+            if (annotationView is MKPinAnnotationView pinAnnotationView)
             {
                 var color = selected ? customAnnotation.SelectedColor : customAnnotation.Color;
                 pinAnnotationView.PinTintColor = color.ToUIColor();
@@ -201,14 +233,14 @@ namespace fivenine.UnifiedMaps.iOS
             }
         }
 
-		private void DeselectPin()
-		{
-			if (_selectedAnnotation is UnifiedPointAnnotation)
-			{
-				var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
-				UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
-				UpdatePin(_selectedAnnotationView, prevAnnotation.Data, false);
-			}
-		}
+        private void DeselectPin()
+        {
+            if (_selectedAnnotation is UnifiedPointAnnotation)
+            {
+                var prevAnnotation = (UnifiedPointAnnotation)_selectedAnnotation;
+                UpdateImage(_selectedAnnotationView, prevAnnotation.Data, false);
+                UpdatePin(_selectedAnnotationView, prevAnnotation.Data, false);
+            }
+        }
     }
 }
