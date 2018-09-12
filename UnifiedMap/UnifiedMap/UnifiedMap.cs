@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("UnifiedMap.iOS")]
+[assembly: InternalsVisibleTo("UnifiedMap.Droid")]
+
 namespace fivenine.UnifiedMaps
 {
     /// <summary>
