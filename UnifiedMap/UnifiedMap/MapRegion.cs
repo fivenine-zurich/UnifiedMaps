@@ -81,6 +81,20 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
+        /// Discribes a Circular region. This region usually encloses a set of geometries or represents a area of view.
+        /// </summary>
+        /// <param name="center">The center position value.</param>
+        /// <param name="radius">The radius Value</param>
+        public MapRegion(Position center, double radius)
+            : this(
+                center.GetPositionFromAngle(radius, 90).Longitude,  // east
+                center.GetPositionFromAngle(radius, 0).Latitude,    // north
+                center.GetPositionFromAngle(radius, 270).Longitude, // west
+                center.GetPositionFromAngle(radius, 180).Latitude)  // south
+        {
+        }
+
+        /// <summary>
         /// Discribes a rectangular region. This region usually encloses a set of geometries or represents a area of view.
         /// </summary>
         /// <param name="minX">Mininium X value (longitude), left most coordinate.</param>

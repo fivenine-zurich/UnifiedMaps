@@ -14,8 +14,8 @@ namespace Sample
             InitializeComponent();
 
             Map.PinClicked += (sender, e) => Debug.WriteLine("Pin Clicked");
-            Map.InfoWindowClicked += (sender, e) => Debug.WriteLine("Info Window Clicked");
-            Map.InfoWindowLongClicked += (sender, e) => Debug.WriteLine("Info Window Long Clicked");
+            Map.PinInfoViewClicked += (sender, e) => Debug.WriteLine("Info Window Clicked");
+            Map.PinInfoViewLongClicked += (sender, e) => Debug.WriteLine("Info Window Long Clicked");
             Map.MapClicked += (sender, e) => Debug.WriteLine($"Map Clicked, {{latitude: {((Position)e.Value).Latitude} longitude: {((Position)e.Value).Longitude}}}");
             Map.MapLongClicked += (sender, e) => Debug.WriteLine($"Map Long Clicked, {{latitude: {((Position)e.Value).Latitude} longitude: {((Position)e.Value).Longitude}}}");
             Map.PinLongClicked += (sender, e) => Debug.WriteLine("Pin Long Clicked");
