@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using fivenine.UnifiedMaps;
-using Sample.Annotations;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using System;
