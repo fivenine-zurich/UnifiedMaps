@@ -9,6 +9,7 @@ using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.iOS;
 using Foundation;
 using MapKit;
+using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -297,12 +298,14 @@ namespace fivenine.UnifiedMaps.iOS
 				var isAnnotation = false;
                 if (touches.FirstOrDefault() is UITouch touch && Control != null)
                 {
-                    // MKNewAnnotationContainerView is a private inner class, so you cannot compare directly
-                    if (touch.View.Class.Name == "MKNewAnnotationContainerView")
+                    // MKAnnotationContainerView is a private inner class, so you cannot compare directly
+                    var classHandle = Class.GetHandle("MKAnnotationContainerView");
+                    var myClass = classHandle != IntPtr.Zero ? new Class(classHandle) : null;
+                    if (myClass != null && touch.View.IsKindOfClass(myClass))
                     {
                         var cgPoint = touch.LocationInView(Control);
                         var location = Control.ConvertPoint(cgPoint, Control);
-                        if (touch.Timestamp - _touchBegan >= 1) // One second
+                        if (touch.Timestamp - _touchBegan >= 0.5) // 0.5 second like UILongPressGesture
                             Element.SendMapLongClicked(new Position(location.Latitude, location.Longitude));
                         else
                             Element.SendMapClicked(new Position(location.Latitude, location.Longitude));
@@ -312,10 +315,10 @@ namespace fivenine.UnifiedMaps.iOS
                     if (touch.View is MKAnnotationView view && view.Annotation is UnifiedPointAnnotation unifiedPoint)
                     {
                         isAnnotation = true;
-                        if (touch.Timestamp - _touchBegan >= 1) // One second
-                            Element.SendPinLongClicked(unifiedPoint.Data);
-                        else
+                        if (touch.Timestamp - _touchBegan < 0.5) // 0.5 second like UILongPressGesture
                             Element.SendPinClicked(unifiedPoint.Data);
+                        else if (!unifiedPoint.Data.Draggable)
+                            Element.SendPinLongClicked(unifiedPoint.Data);
                     }
                 }
 
