@@ -8,6 +8,14 @@ namespace fivenine.UnifiedMaps
     public interface IMapPin : IMapAnnotation
     {
         /// <summary>
+        /// Gets the id of the pin.
+        /// </summary>
+        /// <value>
+        /// The id of the pin.
+        /// </value>
+        string Id { get; }
+
+        /// <summary>
         /// Gets the title of the pin.
         /// </summary>
         /// <value>

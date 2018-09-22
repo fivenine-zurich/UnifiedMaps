@@ -18,6 +18,14 @@ namespace fivenine.UnifiedMaps
         }
 
         /// <summary>
+        /// Gets the id of the pin. You should set it as unique.
+        /// </summary>
+        /// <value>
+        /// The id of the pin.
+        /// </value>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets the title of the pin.
         /// </summary>
         /// <value>
