@@ -18,8 +18,8 @@ using Xamarin.Forms.Platform.Android;
 
 namespace fivenine.UnifiedMaps.Droid
 {
-    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>, 
-        GoogleMap.IOnCameraChangeListener,
+    public class UnifiedMapRenderer : ViewRenderer<UnifiedMap, MapView>,
+        GoogleMap.IOnCameraIdleListener,
         IOnMapReadyCallback, 
         GoogleMap.IOnInfoWindowClickListener,
         GoogleMap.IOnInfoWindowLongClickListener,
@@ -201,18 +201,16 @@ namespace fivenine.UnifiedMaps.Droid
             }
         }
 
-        public void OnCameraChange(CameraPosition position)
+        public void OnCameraIdle()
         {
-            if (_googleMap == null)
+            if (_googleMap != null)
             {
-                return;
+                var mapRegion = _googleMap.Projection.VisibleRegion.LatLngBounds;
+                var region = new MapRegion(mapRegion.Southwest.Longitude, mapRegion.Northeast.Latitude,
+                                           mapRegion.Northeast.Longitude, mapRegion.Southwest.Latitude);
+
+                Map.VisibleRegion = region;
             }
-
-            var mapRegion = _googleMap.Projection.VisibleRegion.LatLngBounds;
-            var region = new MapRegion(mapRegion.Southwest.Longitude, mapRegion.Northeast.Latitude,
-                                       mapRegion.Northeast.Longitude, mapRegion.Southwest.Latitude);
-
-            Map.VisibleRegion = region;
         }
 
         public void OnMapReady(GoogleMap googleMap)
@@ -559,7 +557,7 @@ namespace fivenine.UnifiedMaps.Droid
             _googleMap.SetOnInfoWindowLongClickListener(this);
             _googleMap.SetOnMarkerClickListener(this); 
             _googleMap.SetOnMarkerDragListener(this);
-            _googleMap.SetOnCameraChangeListener(this);
+            _googleMap.SetOnCameraIdleListener(this);
             _googleMap.SetOnMapClickListener(this);
             _googleMap.SetOnMapLongClickListener(this);
         }
@@ -570,7 +568,7 @@ namespace fivenine.UnifiedMaps.Droid
             _googleMap.SetOnInfoWindowLongClickListener(null);
             _googleMap.SetOnMarkerClickListener(null);
             _googleMap.SetOnMarkerDragListener(null);
-            _googleMap.SetOnCameraChangeListener(null);
+            _googleMap.SetOnCameraIdleListener(null);
             _googleMap.SetOnMapClickListener(null);
             _googleMap.SetOnMapLongClickListener(null);
         }
