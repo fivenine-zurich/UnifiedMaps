@@ -62,9 +62,7 @@ namespace fivenine.UnifiedMaps.iOS
                 // Only show the callout if there is something to display
                 annotationView.CanShowCallout = _renderer.Element.CanShowCalloutOnTap && !string.IsNullOrWhiteSpace(pinAnnotation.Data.Title);
 
-                if (annotationView.CanShowCallout
-                    && _renderer.Element.PinCalloutTappedCommand != null
-                    && pinAnnotation.Data != null)
+                if (annotationView.CanShowCallout && pinAnnotation.Data != null)
                 {
                     annotationView.RightCalloutAccessoryView = UIButton.FromType(UIButtonType.DetailDisclosure);
                 }
@@ -182,7 +180,7 @@ namespace fivenine.UnifiedMaps.iOS
             if (view.Annotation is UnifiedPointAnnotation pinAnnotation)
             {
                 var pinSelectedCommand = _renderer.Element.PinCalloutTappedCommand;
-                if (pinSelectedCommand.CanExecute(pinAnnotation.Data))
+                if (pinSelectedCommand != null && pinSelectedCommand.CanExecute(pinAnnotation.Data))
                 {
                     pinSelectedCommand.Execute(pinAnnotation.Data);
                 }
