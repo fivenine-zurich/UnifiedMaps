@@ -4,11 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.1] - 2018-10-01
+## Updated
+- iOS 12 MapPinClicked and MapPinLongClicked Events are not fired #93
+- iOS PinInfoViewClicked Event not fired #91
+
+
 ## [2.0.0] - 2018-09-14
 ## Added
 - Drag Pins and Long Click Events #83
 - Move to region with circle boundary #85
 - Changed naming of `PinCallout` Events and Methods to `PinCalloutView`. Old events are marked as Obsolete and will be removed in the future.
+
 ## Changed
 - Migrate to netstandard2.0 #86
 
