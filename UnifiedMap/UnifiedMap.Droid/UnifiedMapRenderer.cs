@@ -8,6 +8,7 @@ using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
 using Android.Util;
+using Android.Views;
 using fivenine.UnifiedMaps;
 using fivenine.UnifiedMaps.Droid;
 using Java.Lang;
@@ -66,6 +67,14 @@ namespace fivenine.UnifiedMaps.Droid
                 .Where(kv => kv.Value.Id.Equals(marker.Id))
                 .Select(kv => kv.Key as IMapPin)
                 .FirstOrDefault();
+        }
+
+        public override bool DispatchTouchEvent(MotionEvent e)
+        {
+            // Disallow intercept touch events to parents views.
+            base.Parent.RequestDisallowInterceptTouchEvent(true);
+            // Handle MapView's touch events.
+            return base.DispatchTouchEvent(e);
         }
 
         void OnMyLocationChanged(object sender, GoogleMap.MyLocationChangeEventArgs e)
