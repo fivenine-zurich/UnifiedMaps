@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.2] - 2019-03-22
+## Updated
+- Android: Map inside ScrollView shouldn't move the scrollView #98
+
 ## [2.0.1] - 2018-10-01
 ## Updated
 - iOS 12 MapPinClicked and MapPinLongClicked Events are not fired #93
