@@ -251,18 +251,15 @@ namespace fivenine.UnifiedMaps.iOS
             if (e.NewElement != null)
             {
                 RegisterEvents(e.NewElement);
-            }
-
-            if (Control == null)
-            {
-                var map = new MKMapView(RectangleF.Empty)
+                if (Control == null)
                 {
-                    Delegate = new UnifiedMapDelegate(this)
-                };
-
-                SetNativeControl(map);
-
-                _behavior.Initialize();
+                    var map = new MKMapView(RectangleF.Empty)
+                    {
+                        Delegate = new UnifiedMapDelegate(this)
+                    };
+                    SetNativeControl(map);
+                    _behavior.Initialize();
+                }
             }
         }
 
