@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2019-09-03
+## Changed
+- GooglePlayServices Update to 71.x #105
+
 ## [2.0.3] - 2019-05-31
 ## Fixed
 - SetNativeControl Null Exception on Xamarin.forms 4.0 #100
