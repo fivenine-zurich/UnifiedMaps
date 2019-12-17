@@ -135,6 +135,9 @@ namespace fivenine.UnifiedMaps.iOS
         {
             if (annotationView?.Annotation is UnifiedPointAnnotation unifiedPoint)
             {
+                var updatedPosition = new Position(annotationView.Annotation.Coordinate.Latitude, annotationView.Annotation.Coordinate.Longitude);
+                unifiedPoint.Data.Location = updatedPosition;
+
                 switch (newState)
                 {
                     case MKAnnotationViewDragState.Starting:
